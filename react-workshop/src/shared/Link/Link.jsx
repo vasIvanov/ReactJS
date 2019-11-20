@@ -1,9 +1,9 @@
 import React from 'react';
 import './Link.css';
 
-function Link({ children }) {
+function Link({ children, url }) {
     return <li className='listItem'>
-        <a href='#'>{ children }</a>
+        <a href={url}>{ children }</a>
     </li>;
 }
 
