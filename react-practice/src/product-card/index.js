@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import ProductPrice from '../product-price'
 import styles from './styles.module.css'
+import {Link} from 'react-router-dom'
 
 class ProductCard extends Component {
   constructor(props) {
@@ -27,10 +28,12 @@ class ProductCard extends Component {
   }
 
   render() {
-    const { image, title, brand, price } = this.props
+    const { image, title, brand, price, id } = this.props
     return (
       <div className={styles.container} onMouseEnter={this.handleMouseOver} onMouseLeave={this.handleMouseOut}>
-        <img className={styles["product-image"]} src={image} alt={title} />
+        <Link to={`/product/${id}`}>
+          <img className={styles["product-image"]} src={image} alt={title} />
+        </Link>
         <div>
           <span className={styles["product-brand"]}>{brand}</span>
           <span className={styles["product-title"]}>{title}</span>

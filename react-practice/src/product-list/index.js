@@ -5,6 +5,7 @@ import Header from '../header';
 import styles from './styles.module.css';
 import logged from '../logged';
 import styled, { css } from 'styled-components';
+import data from '../data'
 
 const Wrapper = styled.div`
   text-align: center;
@@ -37,7 +38,7 @@ const renderCards = (products) => {
 class ProductList extends React.Component  {
   state = {
     isRed: false,
-    ownerName: ''
+    ownerName: 'Placeholder'
   }
 
   handleClick = () => {
@@ -64,20 +65,12 @@ class ProductList extends React.Component  {
         {this.state.ownerName}
         <button onClick={this.handleClick}>Toggle Red</button>
         <Wrapper red={this.state.isRed}>
-          {renderCards(this.props.products)}
+          {renderCards(data)}
         </Wrapper>
       </Fragment>
     );
   }
 
-}
-
-ProductList.defaultProps = {
-  products: []
-}
-
-ProductList.propTypes = {
-  products: PropTypes.array.isRequired
 }
 
 export default ProductList;
