@@ -1,6 +1,13 @@
 import React from 'react';
-import './Create-Post.css'
+import './Create-Post.css';
+import Posts from '../Posts'
 
 export default function CreatePost() {
-    return <div>Create O</div>
+    return <div className="Input">
+        <form>
+            <textarea></textarea>
+            <button>Post</button>
+        </form>
+        <Posts />
+    </div>
 }

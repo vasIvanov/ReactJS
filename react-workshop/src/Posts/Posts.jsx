@@ -9,7 +9,7 @@ class Posts extends React.Component {
     };
 
     componentDidMount() {
-        postService.load().then(posts => {
+        postService.load(this.props.limit).then(posts => {
 
             this.setState({ posts });
         });
