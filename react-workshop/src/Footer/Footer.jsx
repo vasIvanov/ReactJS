@@ -8,9 +8,9 @@ function Footer() {
             <Link url='#'>
                 <img id="logo" src="logo192.png" alt=""/>
             </Link>
-            <Link url="#">Link 2</Link>
-            <Link url="#">Link 3</Link>
-            <Link url="#">Link 4</Link>
+            <Link url="/login">Login</Link>
+            <Link url="/register">Register</Link>
+            <Link url="/profile">Profile</Link>
         </ul>
     </nav>
 }

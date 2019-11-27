@@ -5,9 +5,9 @@ import Link from '../shared/Link/Link'
 function Aside() {
     return <aside className='Aside'>
         <ul>
-            <Link url="#">Link 2</Link>
-            <Link url="#">Link 3</Link>
-            <Link url="#">Link 4</Link>
+            <Link url="/login">Login</Link>
+            <Link url="/register">Register</Link>
+            <Link url="/profile">Profile</Link>
         </ul>
     </aside>
 }

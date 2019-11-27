@@ -1,0 +1,9 @@
+.Input {
+    display: inline-block;
+    padding: 0.5%;
+    width: 83%;
+}
+
+textarea{
+    width: 40%;
+}

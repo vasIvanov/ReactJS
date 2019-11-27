@@ -1,16 +1,18 @@
 import React from 'react';
 import './Navigation.css';
-import Link from '../shared/Link/Link'
+import Link from '../shared/Link/Link';
 
 function Navigation() {
     return <nav className='Navigation'>
         <ul>
-            <Link url='#'>
+            <Link to='/'>
                 <img id="logo" src="logo192.png" alt=""/>
             </Link>
-            <Link>Link 2</Link>
-            <Link>Link 3</Link>
-            <Link>Link 4</Link>
+            <Link to="/">Posts</Link>
+            <Link to="create-post">Create Post</Link>
+            <Link to="/login">Login</Link>
+            <Link to="/register">Register</Link>
+            <Link to="/profile">Profile</Link>
         </ul>
     </nav>
 }

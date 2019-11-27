@@ -1,9 +1,10 @@
 import React from 'react';
 import './Link.css';
+import {Link as ReactLink} from "react-router-dom";
 
-function Link({ children, url }) {
+function Link({ children, to }) {
     return <li className='listItem'>
-        <a href={url}>{ children }</a>
+        <ReactLink to={to} >{children}</ReactLink>
     </li>;
 }
 
