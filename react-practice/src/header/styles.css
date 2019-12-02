@@ -19,3 +19,11 @@
   font-size: 19px;
   padding: 0 5px;
 }
+
+.name, .checkout {
+  color: white;
+}
+
+.checkout {
+  float: right;
+}

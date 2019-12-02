@@ -7,6 +7,7 @@ import {
 import ProductList from './product-list';
 import ProductPage from './product-page';
 import ErrorPage from './error-page';
+import CheckoutPage from './checkout-page';
 
 const Navigation = () => {
     return (
@@ -14,6 +15,7 @@ const Navigation = () => {
             <Switch>
                 <Route path="/" exact component={ProductList}/>
                 <Route path="/product/:id" component={ProductPage}/>
+                <Route path="/checkout" component={CheckoutPage}/>
                 <Route component={ErrorPage}/>
             </Switch>
         </Router>
