@@ -2,12 +2,14 @@ import React from 'react';
 import './Aside.css';
 import Link from '../shared/Link/Link'
 
-function Aside() {
+function Aside({isLogged}) {
     return <aside className='Aside'>
         <ul>
-            <Link url="/login">Login</Link>
-            <Link url="/register">Register</Link>
-            <Link url="/profile">Profile</Link>
+            <Link to="/">Posts</Link>
+            {isLogged && <Link to="create-post">Create Post</Link>}
+            {!isLogged && <Link to="/login">Login</Link>}
+            {!isLogged && <Link to="/register">Register</Link>}
+            {isLogged && <Link to="/profile">Profile</Link>}
         </ul>
     </aside>
 }

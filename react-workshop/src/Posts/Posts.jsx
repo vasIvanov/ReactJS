@@ -9,8 +9,7 @@ class Posts extends React.Component {
     };
 
     componentDidMount() {
-        postService.load(this.props.limit).then(posts => {
-
+        postService.load(null, this.props.limit).then(posts => {
             this.setState({ posts });
         });
     }
@@ -18,7 +17,7 @@ class Posts extends React.Component {
     render() {
         const {posts} = this.state;
         return posts ? <div className='Posts'>
-            {posts.map(post => <Post key={post.id} imageUrl="/logo192.png" author={post.author.username}>{post.description}</Post>)}
+            {posts.map(post => <Post key={post._id} imageUrl="/logo192.png" author={post.author.username}>{post.description}</Post>)}
                  
         </div> : <div>Loading...</div>
     }

@@ -15,6 +15,6 @@ export default function () {
                 2
             </p>
         </div>
-        <Posts />
+        <Posts limit={3}/>
     </div>
 }

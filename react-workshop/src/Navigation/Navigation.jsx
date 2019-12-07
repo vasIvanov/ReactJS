@@ -2,17 +2,18 @@ import React from 'react';
 import './Navigation.css';
 import Link from '../shared/Link/Link';
 
-function Navigation() {
+function Navigation({isLogged}) {
     return <nav className='Navigation'>
         <ul>
             <Link to='/'>
                 <img id="logo" src="logo192.png" alt=""/>
             </Link>
             <Link to="/">Posts</Link>
-            <Link to="create-post">Create Post</Link>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
-            <Link to="/profile">Profile</Link>
+            {isLogged && <Link to="create-post">Create Post</Link>}
+            {!isLogged && <Link to="/login">Login</Link>}
+            {!isLogged && <Link to="/register">Register</Link>}
+            {isLogged && <Link to="/profile">Profile</Link>}
+            {isLogged && <Link to="/logout">Logout</Link>}
         </ul>
     </nav>
 }
