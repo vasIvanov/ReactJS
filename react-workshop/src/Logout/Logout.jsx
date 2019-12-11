@@ -6,4 +6,6 @@ function Logout({logout, history}) {
     return null;
 }  
 
+
+
 export default Logout;

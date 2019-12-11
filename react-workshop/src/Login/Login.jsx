@@ -4,9 +4,11 @@ import withForm from '../shared/hocs/withForm';
 import userService from '../services/user-service';
 
 class Login extends React.Component {
+    
 
     usernameChangeHandler = this.props.controlChangeHandler('username');
     passwordChangeHandler = this.props.controlChangeHandler('password');
+    
 
     submitHandler = () => {
         const errors = this.props.getErrorsState();
@@ -14,6 +16,7 @@ class Login extends React.Component {
             return;
         }
         const data = this.props.getFormState();
+
         this.props.login(this.props.history, data)
     }
 
