@@ -19,8 +19,9 @@ import {
   Redirect
 } from "react-router-dom";
 import userService from '../services/user-service';
+import Profile from '../Profile/Profile';
 
-const Profile = React.lazy(() => import('../Profile/Profile'));
+// const Profile = React.lazy(() => import('../Profile/Profile'));
 
 function render(title, Cmp, otherProps) {
   return function(props) {
@@ -42,12 +43,15 @@ class App extends React.Component {
     const cookies = parseCookies();
     const isLogged = !!cookies['x-auth-token'];
     this.state = {
-      isLogged
+      isLogged,
+      userData: null
     }
   }
 
   logout = (history) => {
-    userService.logout().then(() => {
+    userService.logout().then((text) => {
+      console.log(text);
+      
       this.setState({ isLogged: false });
       history.push('/');
       return null;
@@ -55,17 +59,16 @@ class App extends React.Component {
   }
  
   login = (history, data) => {
-    userService.login(data).then(() => {
-      this.setState({
-        isLogged: true
-      });
+    return userService.login(data).then((res) => {
+      
+      this.setState({isLogged: true, userData: res});
       history.push('/')
-      return null
-    })
+    });
   }
 
   render() {
-    const {isLogged} = this.state;
+    const {isLogged, userData} = this.state;
+    
     return (
       <Router>
         <div className="App">
@@ -77,24 +80,20 @@ class App extends React.Component {
                 <Route path="/" exact><Redirect to='/posts'/></Route>
                 <Route path="/posts" render={render('Posts', Posts, {isLogged})}/>
   
-  
-  
-  
-                <Route path="/create-post">
-                  <Main title="Create Posts"><CreatePosts /></Main>
-                </Route>
-  
-                <Route path="/profile">
+                {isLogged && <Route path="/create-post" render={render('Create Post', CreatePosts, {isLogged})} />}
+
+                {isLogged && <Route path="/profile" render={render('Profile', Profile, {isLogged, userData})} />}
+                {/* <Route path="/profile">
                   <Main title="Profile">
                     <React.Suspense fallback={<Loader isLoading={true} />}>
                       <Profile />
                     </React.Suspense>
                   </Main>
-                </Route> 
+                </Route>  */}
   
-                <Route path="/login" render={render('Login', Login, {isLogged, login: this.login})}/>
-                <Route path="/register" render={render('Register', Register, {isLogged})}/>
-                <Route path="/logout" render={render('Logout', Logout, { isLogged, logout: this.logout })} />
+                {!isLogged && <Route path="/login" render={render('Login', Login, {isLogged, login: this.login})}/>}
+                {!isLogged && <Route path="/register" render={render('Register', Register, {isLogged})}/>}
+                {isLogged && <Route path="/logout" render={render('Logout', Logout, { isLogged, logout: this.logout })} />}
   
                 <Route>
                   <Main title="Not Found"><NotFound /></Main>

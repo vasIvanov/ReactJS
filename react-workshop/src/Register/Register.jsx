@@ -14,6 +14,7 @@ class Register  extends React.Component {
     rePasswordOnChangeHandler = this.props.controlChangeHandler('rePassword');
 
     submitHandler = () => {
+        
         this.props.runValidations().then(() => {
             const errors = this.props.getErrorsState();
             if(!!errors) {
@@ -23,7 +24,7 @@ class Register  extends React.Component {
             userService.register(data).then(() => {
                 this.props.history.push('/login')
             })
-        });
+        })
         
     }
 

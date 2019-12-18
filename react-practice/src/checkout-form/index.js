@@ -14,6 +14,7 @@ const CheckoutForm = (props) => {
         e.preventDefault();
         if(username == '') {
             setError("Username is required")
+            
         } else {
             setError(null)
         }

@@ -1,27 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Posts.css';
 import Post from './Post/Post';
 import postService from '../services/post-service';
 
-class Posts extends React.Component {
-    state = {
-        posts: null
-    };
+const Posts = ({limit, userId}) => {
+    const [posts, setPosts] = useState(null);
 
-    componentDidMount() {
-        postService.load(null, this.props.limit).then(posts => {
-            this.setState({ posts });
+    useEffect(() => {
+        postService.load(null, limit, userId).then(posts => {
+            setPosts(posts)
         });
-    }
+    }, [posts])
 
-    render() {
-        const {posts} = this.state;
-        return posts ? <div className='Posts'>
-            {posts.map(post => <Post key={post._id} imageUrl="/logo192.png" author={post.author.username}>{post.description}</Post>)}
-                 
-        </div> : <div>Loading...</div>
-    }
+    return posts ? <div className='Posts'>
+        {posts.map(post => <Post key={post._id} imageUrl="/logo192.png" author={post.author.username}>{post.description}</Post>)}
+                
+    </div> : <div>Loading...</div>
+    
 }
+
+// class Posts extends React.Component {
+//     state = {
+//         posts: null
+//     };
+
+//     componentDidMount() {
+        
+//         postService.load(null, this.props.limit, this.props.userId).then(posts => {
+//             this.setState({ posts });
+//         });
+//     }
+
+//     render() {
+//         const {posts} = this.state;
+//         return posts ? <div className='Posts'>
+//             {posts.map(post => <Post key={post._id} imageUrl="/logo192.png" author={post.author.username}>{post.description}</Post>)}
+                 
+//         </div> : <div>Loading...</div>
+//     }
+// }
 
 // function Posts() {
 //     return <div className='Posts'>

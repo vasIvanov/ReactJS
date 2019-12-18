@@ -2,19 +2,21 @@ import React from 'react';
 import './Profile.css'
 import Posts from '../Posts/Posts'
 
-export default function () {
+export default function ({userData}) {
+    
+
     return <div className="Profile">
         <div className="personal-info">
             <img src="" alt=""/>
             <p>
-                <span>Email</span>
-                test@abv.bg
+                <span>Username: </span>
+                {userData.username}
             </p>
             <p>
-                <span>Posts</span>
-                2
+                <span>Posts: </span>
+                {userData.posts.length}
             </p>
         </div>
-        <Posts limit={3}/>
+        <Posts userId={userData._id} />
     </div>
 }
