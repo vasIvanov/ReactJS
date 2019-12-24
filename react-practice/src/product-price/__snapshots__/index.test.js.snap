@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProductPrice component should render discount message if user is auth  1`] = `
+<div
+  className="product-price"
+>
+  Price:
+  <span>
+    5
+    $
+  </span>
+  <p>
+    You have discount!
+  </p>
+</div>
+`;
+
+exports[`ProductPrice component should render null if price is 5$  1`] = `
+<div
+  className="product-price"
+>
+  Price:
+  <span>
+    5
+    $
+  </span>
+</div>
+`;
+
+exports[`ProductPrice component should render null if price is undefined  1`] = `null`;

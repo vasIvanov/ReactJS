@@ -4,6 +4,7 @@ import CheckoutForm from '../checkout-form'
 import LibraryForm from '../checkout-form/library-form'
 import Form from '../checkout-form/'
 
+
 class CheckoutPage extends React.Component  {
     componentDidMount() {
 
@@ -14,7 +15,7 @@ class CheckoutPage extends React.Component  {
         return (
             <div>
                 <Header/>
-                <Form />
+                <Form/>
             </div>
         )
     }

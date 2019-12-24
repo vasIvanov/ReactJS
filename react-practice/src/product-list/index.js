@@ -29,7 +29,7 @@ const renderCards = (products) => {
   return products.map(product => {
     return (
       <Fragment key={product.id}>
-        {logged(ProductCard, product)}
+        {<ProductCard {...product }/>}
       </Fragment>
       );
   });
