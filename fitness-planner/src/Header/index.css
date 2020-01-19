@@ -1,0 +1,13 @@
+.link {
+    padding: 0.5em;
+    color: grey;
+}
+
+.link:hover, .brand:hover {
+    text-decoration: none;
+    color: red;
+}
+
+.brand {
+    color: green;
+}
