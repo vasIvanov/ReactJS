@@ -6,6 +6,10 @@
     border-radius: 4px;
 }
 
+.media {
+    max-width: 60em;
+}
+
 .description {
     word-wrap: break-word;
     padding: 0.5%;

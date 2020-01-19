@@ -3,7 +3,9 @@ import './Post.css';
 
 function Post({ imageUrl, children, author }) {
     return <div className='Post'>
-        <img src={imageUrl} alt=""/>
+        <div className="media">
+            <img src={imageUrl} alt=""/>
+        </div>
         <p className="description">
             {children}
         </p>

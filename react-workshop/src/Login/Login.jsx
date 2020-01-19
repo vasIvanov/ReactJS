@@ -2,6 +2,7 @@ import React from 'react';
 import './Login.css';
 import withForm from '../shared/hocs/withForm';
 import userService from '../services/user-service';
+import {userContext} from '../userContext';
 
 class Login extends React.Component {
     

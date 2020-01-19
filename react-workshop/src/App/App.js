@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import Loader from './Loader/Loader';
 import Navigation from '../Navigation/Navigation';
@@ -7,7 +7,6 @@ import Posts from '../Posts/Posts';
 import Main from './Main/Main';
 import Footer from '../Footer/Footer';
 import CreatePosts from '../Posts/Create-Post/Create-Post'
-// import Profile from '../Profile/Profile'
 import Login from '../Login/Login'
 import Register from '../Register/Register'
 import Logout from '../Logout/Logout'
@@ -20,8 +19,7 @@ import {
 } from "react-router-dom";
 import userService from '../services/user-service';
 import Profile from '../Profile/Profile';
-
-// const Profile = React.lazy(() => import('../Profile/Profile'));
+import {userContext} from '../userContext'
 
 function render(title, Cmp, otherProps) {
   return function(props) {
@@ -37,6 +35,8 @@ function parseCookies() {
   }, {})
 }
 
+
+
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -49,10 +49,8 @@ class App extends React.Component {
   }
 
   logout = (history) => {
-    userService.logout().then((text) => {
-      console.log(text);
-      
-      this.setState({ isLogged: false });
+    userService.logout().then(() => {
+      this.setState({ isLogged: false, userData: null });
       history.push('/');
       return null;
     });
@@ -66,42 +64,40 @@ class App extends React.Component {
     });
   }
 
+  
+
   render() {
     const {isLogged, userData} = this.state;
     
     return (
       <Router>
-        <div className="App">
-          <Loader local={true} isLoading={false} />
-          <Navigation isLogged={isLogged} />
-          <div className='Container'>
-            <Aside isLogged={isLogged}  />
-              <Switch>
-                <Route path="/" exact><Redirect to='/posts'/></Route>
-                <Route path="/posts" render={render('Posts', Posts, {isLogged})}/>
-  
-                {isLogged && <Route path="/create-post" render={render('Create Post', CreatePosts, {isLogged})} />}
+        <userContext.Provider value={userData}>
+          <div className="App">
+            <Loader local={true} isLoading={false} />
+            <Navigation isLogged={isLogged} />
+            <div className='Container'>
+              <Aside isLogged={isLogged}  />
+                <Switch>
+                  <Route path="/" exact><Redirect to='/posts'/></Route>
+                  <Route path="/posts" render={render('Posts', Posts, {isLogged})}/>
+    
+                  {isLogged && <Route path="/create-post" render={render('Create Post', CreatePosts, {isLogged})} />}
 
-                {isLogged && <Route path="/profile" render={render('Profile', Profile, {isLogged, userData})} />}
-                {/* <Route path="/profile">
-                  <Main title="Profile">
-                    <React.Suspense fallback={<Loader isLoading={true} />}>
-                      <Profile />
-                    </React.Suspense>
-                  </Main>
-                </Route>  */}
-  
-                {!isLogged && <Route path="/login" render={render('Login', Login, {isLogged, login: this.login})}/>}
-                {!isLogged && <Route path="/register" render={render('Register', Register, {isLogged})}/>}
-                {isLogged && <Route path="/logout" render={render('Logout', Logout, { isLogged, logout: this.logout })} />}
-  
-                <Route>
-                  <Main title="Not Found"><NotFound /></Main>
-                </Route>
-              </Switch>
+                  {isLogged && <Route path="/profile" render={render('Profile', Profile, {isLogged})} />}
+                  
+    
+                  {!isLogged && <Route path="/login" render={render('Login', Login, {isLogged, login: this.login})}/>}
+                  {!isLogged && <Route path="/register" render={render('Register', Register, {isLogged})}/>}
+                  {isLogged && <Route path="/logout" render={render('Logout', Logout, { isLogged, logout: this.logout })} />}
+    
+                  <Route>
+                    <Main title="Not Found"><NotFound /></Main>
+                  </Route>
+                </Switch>
+            </div>
+            <Footer isLogged={isLogged}  />
           </div>
-          <Footer isLogged={isLogged}  />
-        </div>
+        </userContext.Provider>
       </Router>
     );
   }

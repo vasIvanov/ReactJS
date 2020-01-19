@@ -66,6 +66,7 @@ class ProductList extends React.Component  {
         <Wrapper red={this.state.isRed}>
           {renderCards(data)}
         </Wrapper>
+
       </Fragment>
     );
   }

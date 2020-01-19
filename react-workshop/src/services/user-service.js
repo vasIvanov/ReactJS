@@ -25,7 +25,17 @@ const userService = {
             method: 'POST',
             credentials: 'include'
         }).then(res => res.text());
-    }   
+    },
+    update: function(data) {
+        return fetch(`http://localhost:9999/api/user/${data._id}`, {
+            method: 'PUT',
+            credentials: 'include',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-type': 'application/json'
+            }
+        }).then(res => res.text());
+    }
 };
 
 export default userService;

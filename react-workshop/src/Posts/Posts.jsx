@@ -10,7 +10,7 @@ const Posts = ({limit, userId}) => {
         postService.load(null, limit, userId).then(posts => {
             setPosts(posts)
         });
-    }, [posts])
+    }, [limit, userId])
 
     return posts ? <div className='Posts'>
         {posts.map(post => <Post key={post._id} imageUrl="/logo192.png" author={post.author.username}>{post.description}</Post>)}

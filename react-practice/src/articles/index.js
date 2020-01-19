@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Article from './article/index';
+import './index.css'
 const Articles = () => {
     const [articles, setArticles] = useState('');
     const [country, setCountry] = useState('')
@@ -9,8 +10,6 @@ const Articles = () => {
         'united states': 'us',
         'united kingdom': 'gb'
     }
-
-  
 
     const getArticles = () => {
         code = countryCode[country.toLowerCase()];
@@ -23,27 +22,12 @@ const Articles = () => {
     }
 
 
-
-    
-        // fetch(code ? 'https://newsapi.org/v2/top-headlines?' +
-        // `country=${code}&category=sports&` +
-        // 'apiKey=8f3de2becb8e473e98feb07354e8ff2d'
-        // :
-        // 'https://newsapi.org/v2/top-headlines?' +
-        // `country=us&category=sports&` +
-        // 'apiKey=8f3de2becb8e473e98feb07354e8ff2d)'
-        
-        
-    
-    
-
-
-
     return articles ? <div className='Posts'>
       Type Country
     <input type='text' onChange={(e) => {console.log(e.target.value); setCountry(e.target.value)}}/>
     <button type="button" onClick={getArticles}>Search news</button>
     {articles.map((article, i) => <Article key={i}  articleInfo={article}/>)}
+    
             
 </div> : <div>
     
