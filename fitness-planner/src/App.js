@@ -6,9 +6,9 @@ import {
   Route,
 } from 'react-router-dom'
 import Login from './Login'
-import Header from './Header'
 import Register from './Register'
 import Home from './Home'
+import CreatePlan from './Create-plan'
 
 
 const App = () => {
@@ -21,6 +21,7 @@ const App = () => {
         <Route path='/' exact component={Home} />
         <Route path='/login'  component={Login} />
         <Route path='/register'  component={Register} />
+        <Route path='/create-plan'  component={CreatePlan} />
       </Switch>
     </Router>
     
