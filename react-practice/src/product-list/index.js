@@ -61,7 +61,6 @@ class ProductList extends React.Component  {
   render() {
     return (
       <Fragment>
-        <Header />
         {this.state.ownerName}
         <button onClick={this.handleClick}>Toggle Red</button>
         <Wrapper red={this.state.isRed}>

@@ -14,7 +14,6 @@ class CheckoutPage extends React.Component  {
 
         return (
             <div>
-                <Header/>
                 <Form/>
             </div>
         )

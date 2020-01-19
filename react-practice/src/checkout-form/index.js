@@ -1,8 +1,9 @@
 /*eslint-disable no-undef */
-import React, {useState, useContext} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import UsernameInput from './username-input'
 import {AuthContext} from '../ContextWrapper'
 import {ThemeContext} from '../ContextWrapper'
+import Articles from './../articles'
 
 
 const CheckoutForm = (props) => {
@@ -15,6 +16,7 @@ const CheckoutForm = (props) => {
     const [error, setError] = useState(null);
     const authValue = useContext(AuthContext)
     const themeValue = useContext(ThemeContext)
+    
 
     const myWidget = cloudinary.createUploadWidget({
         cloudName: 'dhkrkvztl', 
@@ -26,9 +28,12 @@ const CheckoutForm = (props) => {
           }
         }
     )
+
     
 
     const handleSubmit = (e) => {
+        console.log(articles[0].title);
+        
         e.preventDefault();
         if(username == '') {
             setError("Username is required")
@@ -40,6 +45,7 @@ const CheckoutForm = (props) => {
 
     return (
         <form onSubmit={handleSubmit}>
+            
             <UsernameInput username={username} changeUsername={(e) => setUsername(e.target.value)} />
 
             <div>
@@ -67,6 +73,8 @@ const CheckoutForm = (props) => {
             <div>
                 <label htmlFor="terms">Terms of Service</label>
                 <input onChange={(e) => setTerms(e.target.value)} selected={terms} type="checkbox" />
+
+                
             </div>
             <button type="submit">Submit</button>
             {error ? 
@@ -80,6 +88,7 @@ const CheckoutForm = (props) => {
 
             </div>
             <button type='button' onClick={() => myWidget.open()} id="upload_widget" className="cloudinary-button">Upload files</button>
+
             <p>Auth: {`${authValue.auth}`}</p>
             <p>Auth: {`${authValue.private}`}</p>
             <p>Theme: {`${themeValue.theme}`}</p>

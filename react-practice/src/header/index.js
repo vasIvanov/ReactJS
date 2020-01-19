@@ -19,6 +19,7 @@ class Header extends Component {
       <div className="header-container">
         <Link className="name" to="/">SoftUni React.js course</Link>
         <Link className="checkout" to="/checkout">Checkout</Link>
+        <Link className="checkout" to="/articles">Articles</Link>
         <input value={searchValue} onChange={this.handleChange} placeholder="Search..." />
       </div>
     )
