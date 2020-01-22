@@ -1,0 +1,23 @@
+.days-table {
+    display: flex;
+    
+}
+
+textarea {
+    width: 100%;
+}
+
+.wrapper {
+    max-width: 80em;
+    margin: 0 auto;
+    padding: 1em;
+}
+
+
+.plan-name {
+    text-align: center;
+}
+
+.plan-details {
+    font-size: 1.2em;
+}

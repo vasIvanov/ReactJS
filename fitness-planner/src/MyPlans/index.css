@@ -1,0 +1,13 @@
+.plans {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.plan {
+    padding: 0.5em;
+}
+
+.plans-tabs {
+    max-width: 80em;
+    margin: 0 auto;
+}

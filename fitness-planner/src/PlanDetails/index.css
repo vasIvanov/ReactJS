@@ -1,0 +1,13 @@
+.details {
+    padding: 0 1em;
+    max-width: 80em;
+    margin: 0 auto;
+}
+
+.media {
+}
+
+.media img  {
+    width: 100%;
+    height: auto;
+}

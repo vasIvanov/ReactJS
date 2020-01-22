@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
-import Header from '../Header';
-import {Form, Table} from 'react-bootstrap';
+import {Form} from 'react-bootstrap';
 import WeekTable from './weekTable';
-
+import './index.css';
 
 const CreatePlan = () => {
     const [planName, setPlanName] = useState('');
@@ -45,42 +44,48 @@ const CreatePlan = () => {
     }
     return (
         <React.Fragment>
-            <Header />
-            <Form>
-                <Form.Group controlId="exampleForm.ControlInput1">
-                    <Form.Label>Plan name</Form.Label>
-                    <Form.Control onChange={(e) => setPlanName(e.target.value)} type="text" />
-                </Form.Group>
-                <Form.Group controlId="exampleForm.ControlInput1">
-                    <Form.Label>Plan Image Url</Form.Label>
-                    <Form.Control onChange={(e) => setPlanImage(e.target.value)} type="text" />
-                </Form.Group>
-                <Form.Group controlId="exampleForm.ControlSelect1">
-                    <Form.Label>Complexity level</Form.Label>
-                    <Form.Control onChange={(e) => setLevel(e.target.value)} as="select">
-                    <option>Select ...</option>
-                    <option>Beginner</option>
-                    <option>Advanced</option>
-                    </Form.Control>
-                </Form.Group>
-                <Form.Group controlId="exampleForm.ControlSelect1">
-                    <Form.Label>Plan goal</Form.Label>
-                    <Form.Control onChange={(e) => setgoal(e.target.value)} as="select">
-                    <option>Select ...</option>
-                    <option>Muscle gain</option>
-                    <option>Weight loss</option>
-                    </Form.Control>
-                </Form.Group>
-                <Form.Group controlId="exampleForm.ControlTextarea1">
-                    <Form.Label>Plan details</Form.Label>
-                    <Form.Control onChange={(e) => setPlanDetails(e.target.value)} as="textarea" rows="3" />
-                </Form.Group>
-            </Form>
-            <WeekTable setEx1={setMonday1}  setEx2={setMonday2} setEx3={setMonday3} setEx4={setMonday4}  setEx5={setMonday5} setEx6={setMonday6} day="Moday"/>
-            <WeekTable setEx1={setTue1}  setEx2={setTue2} setEx3={setTue3} setEx4={setTue4}  setEx5={setTue5} setEx6={setTue6}  day="Tuesday"/>
-            <WeekTable setEx1={setThu1}  setEx2={setThu2} setEx3={setThu3} setEx4={setThu4}  setEx5={setThu5} setEx6={setThu6} day="Thursday"/>
-            <WeekTable setEx1={setFri1}  setEx2={setFri2} setEx3={setFri3} setEx4={setFri4}  setEx5={setFri5} setEx6={setFri6} day="Friday"/>
-            <button type="button" onClick={logResult}>Create</button>
+            <div className="wrapper">
+                <Form>
+                    <Form.Group controlId="exampleForm.ControlInput1">
+                        <Form.Label>Plan name</Form.Label>
+                        <Form.Control onChange={(e) => setPlanName(e.target.value)} type="text" />
+                    </Form.Group>
+                    <Form.Group controlId="exampleForm.ControlInput1">
+                        <Form.Label>Plan Image Url</Form.Label>
+                        <Form.Control onChange={(e) => setPlanImage(e.target.value)} type="text" />
+                    </Form.Group>
+                    <Form.Group controlId="exampleForm.ControlSelect1">
+                        <Form.Label>Complexity level</Form.Label>
+                        <Form.Control onChange={(e) => setLevel(e.target.value)} as="select">
+                        <option>Select ...</option>
+                        <option>Beginner</option>
+                        <option>Advanced</option>
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group controlId="exampleForm.ControlSelect1">
+                        <Form.Label>Plan goal</Form.Label>
+                        <Form.Control onChange={(e) => setgoal(e.target.value)} as="select">
+                        <option>Select ...</option>
+                        <option>Muscle gain</option>
+                        <option>Weight loss</option>
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group controlId="exampleForm.ControlTextarea1">
+                        <Form.Label>Plan details</Form.Label>
+                        <Form.Control onChange={(e) => setPlanDetails(e.target.value)} as="textarea" rows="3" />
+                    </Form.Group>
+                </Form>
+                <div className="days-table">
+                    <WeekTable setEx1={setMonday1}  setEx2={setMonday2} setEx3={setMonday3} setEx4={setMonday4}  setEx5={setMonday5} setEx6={setMonday6} day="Day 1"/>
+                    <WeekTable setEx1={setTue1}  setEx2={setTue2} setEx3={setTue3} setEx4={setTue4}  setEx5={setTue5} setEx6={setTue6}  day="Day 2"/>
+                </div>
+                <div className="days-table">
+                    <WeekTable setEx1={setThu1}  setEx2={setThu2} setEx3={setThu3} setEx4={setThu4}  setEx5={setThu5} setEx6={setThu6} day="Day 4"/>
+                    <WeekTable setEx1={setFri1}  setEx2={setFri2} setEx3={setFri3} setEx4={setFri4}  setEx5={setFri5} setEx6={setFri6} day="Day 5"/>
+                </div>
+
+                <button type="button" onClick={logResult}>Create</button>
+            </div>
         </React.Fragment>
     )
 }

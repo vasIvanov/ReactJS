@@ -3,27 +3,32 @@ import './index.css';
 import { Button, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from '../Header';
+import userService from '../services/user-service';
 
+const Login = ({history, login}) => {
 
-const Login = ({history}) => {
-
-    const [email, emailChange] = useState('');
+    const [username, setUsername] = useState('');
     const [password, passwordChange] = useState('');
   
     const handleSubmit = (e) => {
-      e.preventDefault()
-      history.push('/');
-      
+      const data = {
+        username,
+        password
+      }
+      login(history, data).catch(error => {
+        console.log(error);
+        
+      })
     }
+      
     return (
       <Fragment>
-        <Header/>
         <div className="form">
-        <Form onSubmit={handleSubmit}>
+        <Form>
 
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control value={email} onChange={(e) => emailChange(e.target.value)} type="email" placeholder="Enter email" />
+          <Form.Group controlId="formBasicUsername">
+            <Form.Label>Username</Form.Label>
+            <Form.Control value={username} onChange={(e) => setUsername(e.target.value)} type="text" placeholder="Enter username" />
 
             <Form.Text className="text-muted">
               We'll never share your email with anyone else.
@@ -38,7 +43,7 @@ const Login = ({history}) => {
             <Form.Group controlId="formBasicCheckbox">
               <Form.Check type="checkbox" label="Check me out" />
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button onClick={handleSubmit} variant="primary" type="button">
               Submit
             </Button>
           </Form>

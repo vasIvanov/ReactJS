@@ -6,7 +6,9 @@ import {
   Link
 } from 'react-router-dom'
 
-const Header = () => {
+const Header = ({isLogged, userData}) => {
+  console.log(userData, isLogged);
+
   
 
     return (
@@ -17,10 +19,12 @@ const Header = () => {
         <Nav className="mr-auto">
 
           <Link className='link' to="/">Home</Link>
-          <Link className='link' to="/login">Login</Link>
-          <Link className='link' to="/register">Register</Link>
-          <Link className='link' to="/create-plan">Create Plan</Link>
-
+          {!isLogged && <Link className='link' to="/login">Login</Link>}
+          {!isLogged && <Link className='link' to="/register">Register</Link>}
+          {isLogged && userData && userData.instructor && <Link className='link' to="/create-plan">Create Plan</Link>}
+          {isLogged && <Link className='link' to="/logout">Logout</Link>}
+          {isLogged && <Link className='link' to="/my-plans">My Plans</Link>}
+          
           
       </Nav>
       <Form inline>

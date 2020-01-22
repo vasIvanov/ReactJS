@@ -3,25 +3,31 @@ import './index.css';
 import { Button, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from '../Header';
+import userService from '../services/user-service';
 
 const Register = ({history}) => {
     const [username, emailChange] = useState('');
     const [password, passwordChange] = useState('');
     const [rePassword, rePasswordChange] = useState('');
+    const [instructor, setInstructor] = useState(false);
   
-    const handleSubmit = (e) => {
-      e.preventDefault()
-      console.log(username);
-      console.log(password);
-      history.push('/');
+    const submitHandler = () => {
+      const data = {
+        username,
+        password,
+        instructor
+      }
+      
+      userService.register(data).then(() => {
+        history.push('/login')
+      })
       
     }
+
     return (
       <Fragment>
-        <Header/>
         <div className="form">
-          <Form onSubmit={handleSubmit}>
-
+          <Form>
             <Form.Group controlId="formBasicUsername">
               <Form.Label>Username</Form.Label>
               <Form.Control value={username} onChange={(e) => emailChange(e.target.value)} type="text" placeholder="Enter username" />
@@ -38,9 +44,9 @@ const Register = ({history}) => {
             </Form.Group>
 
             <Form.Group controlId="formBasicCheckbox">
-              <Form.Check type="checkbox" label="Register as Instructor" />
+              <Form.Check  onChange={(e) => {setInstructor(e.target.checked)}} type="checkbox" label="Register as Instructor" />
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button onClick={submitHandler} variant="primary" type="button">
               Submit
             </Button>
           </Form>
