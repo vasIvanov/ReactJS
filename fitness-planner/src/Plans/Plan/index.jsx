@@ -3,19 +3,18 @@ import {Tabs, Tab, Card, Button} from 'react-bootstrap';
 import {
     Link
   } from 'react-router-dom'
-const Plan = ({isLogged}) => {
+const Plan = ({isLogged, plan}) => {
+    let detailUrl = `/details/${plan._id}`
     return (
         <div className="plan">
             <Card>
-                <Card.Img variant="top" src="https://www.thehealthcloud.co.uk/wp-content/uploads/weights-e1443430990483-1920x1024.jpg" />
+                <Card.Img variant="top" src={plan.imageUrl} />
                 <Card.Body>
-                    <Card.Title>Card Title</Card.Title>
+                    <Card.Title>{plan.name}</Card.Title>
                     <Card.Text>
-                    Some quick example text to build on the card title and make up the bulk of
-                    the card's contentSome quick example text to build on the card title and make up the bulk of
-                    the card's content...
+                        {plan.details}
                     </Card.Text>
-                    {isLogged && <Link className='link' to="/details">Details</Link>}
+                    {isLogged && <Link className='link' to={detailUrl}>Details</Link>}
                 </Card.Body>
             </Card>
         </div>

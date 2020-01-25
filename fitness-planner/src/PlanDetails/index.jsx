@@ -1,19 +1,53 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Header from '../Header'
 import {Table} from 'react-bootstrap';
 import './index.css';
+import planService from '../services/plan-service'
+import userServices from '../services/user-service'
 
-const PlanDetails = () => {
-    return (
+const PlanDetails = ({match, isLogged, userData, history}) => {
+    const [plan, setPlan] = useState('');
+    const userId = userData._id;
+    const planId = match.params.id;
+    const [added, setAdded] = useState(false);
+
+    useEffect(() => {
+        planService.load(planId).then(plan => {
+            setPlan(plan)
+            userServices.getUsers().then(r => {
+                const user = r.filter(u => u._id == userId)[0];
+                user.plans.forEach(p => {
+                    if(p._id == planId) {
+                        setAdded(true);
+                        return;
+                    }
+                })
+            })
+        })
+    }, [])
+
+    const handleAddClick = () => {
+        userServices.update({_id: userData._id, planId, add: true}).then(() => {
+            history.push('/')
+        })
+    }
+
+    const handleRemoveClick = () => {
+        userServices.update({_id: userData._id, planId, add: false}).then(() => {
+            history.push('/')
+        })
+    }
+
+    return plan ? (
         <React.Fragment>
             <div className="details">
                 <div className="media">
-                    <img src="https://www.thehealthcloud.co.uk/wp-content/uploads/weights-e1443430990483-1920x1024.jpg" alt=""/>
+                    <img src={plan.imageUrl} alt=""/>
                 </div>
                 <div>
-                    <h2 className="plan-name">Plan name</h2>
-                    <p className="plan-complexity">Plan complexity</p>
-                    <p className="plan-details">Plan details</p>
+                    <h2 className="plan-name">{plan.name}</h2>
+                    <p className="plan-complexity">{plan.level}</p>
+                    <p className="plan-details">{plan.details}</p>
                 </div>
                 <div>
                 <Table responsive>
@@ -29,55 +63,54 @@ const PlanDetails = () => {
                     <tbody>
                         <tr>
                         <td>1</td>
-                        <td>Exercise 1 day 1</td>
-                        <td>Exercise 1 day 2</td>
-                        <td>Exercise 1 day 3</td>
-                        <td>Exercise 1 day 4</td>
+                        <td>{plan.exercices.day1[0]}</td>
+                        <td>{plan.exercices.day2[0]}</td>
+                        <td>{plan.exercices.day3[0]}</td>
+                        <td>{plan.exercices.day4[0]}</td>
                         </tr>
                         <tr>
                         <td>2</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
+                        <td>{plan.exercices.day1[1]}</td>
+                        <td>{plan.exercices.day2[1]}</td>
+                        <td>{plan.exercices.day3[1]}</td>
+                        <td>{plan.exercices.day4[1]}</td>
                         </tr>
                         <tr>
                         <td>3</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
+                        <td>{plan.exercices.day1[2]}</td>
+                        <td>{plan.exercices.day2[2]}</td>
+                        <td>{plan.exercices.day3[2]}</td>
+                        <td>{plan.exercices.day4[2]}</td>
                         </tr>
                         <tr>
-                        <td>3</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
+                        <td>4</td>
+                        <td>{plan.exercices.day1[3]}</td>
+                        <td>{plan.exercices.day2[3]}</td>
+                        <td>{plan.exercices.day3[3]}</td>
+                        <td>{plan.exercices.day4[3]}</td>
                         </tr>
                         <tr>
-                        <td>3</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
+                        <td>5</td>
+                        <td>{plan.exercices.day1[4]}</td>
+                        <td>{plan.exercices.day2[4]}</td>
+                        <td>{plan.exercices.day3[4]}</td>
+                        <td>{plan.exercices.day4[4]}</td>
                         </tr>
                         <tr>
-                        <td>3</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
+                        <td>6</td>
+                        <td>{plan.exercices.day1[5]}</td>
+                        <td>{plan.exercices.day2[5]}</td>
+                        <td>{plan.exercices.day3[5]}</td>
+                        <td>{plan.exercices.day4[5]}</td>
                         </tr>
                     </tbody>
 
                 </Table>
-                <button type='button'>Add to Favorites </button>
-                <button type='button'>Remove from Favorites </button>
+                {added ? (<button onClick={handleRemoveClick} type='button'>Remove from Favorites </button>) : <button onClick={handleAddClick} type='button'>Add to Favorites </button>}
                 </div>
             </div>
         </React.Fragment>
-    )
+    ) : <div>Loading ...</div>
 }
 
 export default PlanDetails;

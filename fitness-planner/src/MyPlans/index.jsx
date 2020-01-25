@@ -1,13 +1,21 @@
-import React from 'react';
-import Header from '../Header';
-import {Card, Button} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
 import './index.css'
 import Plans from '../Plans';
+import userServices from '../services/user-service'
 
-const MyPlans = ({isLogged}) => {
+const MyPlans = ({isLogged, userData}) => {
+    const userId = userData._id
+    const [plans, setPlans] = useState('');
+
+    useEffect(() => {
+        userServices.getUsers().then(r => {
+            const user = r.filter(u => u._id == userId)[0];
+            setPlans(user.plans);
+        })
+    }, [])
+
     return (
-        <Plans isLogged={isLogged}/>
+        <Plans plans={plans} isLogged={isLogged} categoriezed={false} />
     )
 }
 

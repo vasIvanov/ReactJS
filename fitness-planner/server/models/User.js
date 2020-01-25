@@ -19,7 +19,7 @@ const userSchema = new Schema({
         require: true
     },
 
-    plans: [{ type: ObjectId, ref: "" }],
+    plans: [{ type: ObjectId, ref: "Plan" }],
 
     instructor: {
         type: Boolean

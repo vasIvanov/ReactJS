@@ -14,6 +14,7 @@ import MyPlans from './MyPlans';
 import Header from './Header';
 import Logout from './Logout';
 import NotFound from './NotFound';
+import SearchedResults from './SearchedResults';
 import userService from './services/user-service';
 import {userContext} from './userContext';
 
@@ -78,8 +79,9 @@ class App extends React.Component {
             {isLogged && <Route path="/logout" render={render(Logout, { isLogged, logout: this.logout })} />}
 
             {isLogged && userData && userData.instructor && <Route path='/create-plan'  render={render(CreatePlan, {isLogged, userData})}  />}
-            <Route path='/details'  component={PlanDetails} />
-            {isLogged && <Route path="/my-plans" render={render(MyPlans, { isLogged })} />}
+            <Route path='/details/:id'  render={render(PlanDetails, {isLogged, userData})} />
+            <Route path='/search/:query?' render={render(SearchedResults, {isLogged, userData})} />
+            {isLogged && <Route path="/my-plans" render={render(MyPlans, { isLogged, userData })} />}
 
             <Route component={NotFound}  />
           </Switch>

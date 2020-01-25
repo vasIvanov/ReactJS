@@ -2,8 +2,9 @@ import React, {useState} from 'react';
 import {Form} from 'react-bootstrap';
 import WeekTable from './weekTable';
 import './index.css';
+import postService from '../services/plan-service';
 
-const CreatePlan = () => {
+const CreatePlan = ({history}) => {
     const [planName, setPlanName] = useState('');
     const [planImage, setPlanImage] = useState('');
     const [level, setLevel] = useState('');
@@ -33,15 +34,29 @@ const CreatePlan = () => {
     const [fri4, setFri4] = useState('');
     const [fri5, setFri5] = useState('');
     const [fri6, setFri6] = useState('');
-    const logResult = () => {
-        console.log(fri1);
-        console.log(fri2);
-        console.log(fri3);
-        console.log(fri4);
-        console.log(fri5);
-        console.log(fri6);
+
+    const handleSubmit = () => {
+        const data = {
+            name: planName,
+            imageUrl: planImage,
+            level,
+            goal,
+            details: planDetails,
+            exercices: {
+                day1:[monday1, monday2, monday3, monday4, monday5, monday6],
+                day2:[tue1, tue2, tue3, tue4, tue5, tue6],
+                day3: [thu1, thu2, thu3, thu4, thu5, thu6],
+                day4: [fri1, fri2, fri3, fri4, fri5, fri6]
+            }
+        }
+        postService.create(data).then(r => {
+            console.log(r);
+            history.push('/');
+        })
+        
         
     }
+
     return (
         <React.Fragment>
             <div className="wrapper">
@@ -84,7 +99,7 @@ const CreatePlan = () => {
                     <WeekTable setEx1={setFri1}  setEx2={setFri2} setEx3={setFri3} setEx4={setFri4}  setEx5={setFri5} setEx6={setFri6} day="Day 5"/>
                 </div>
 
-                <button type="button" onClick={logResult}>Create</button>
+                <button type="button" onClick={handleSubmit}>Create</button>
             </div>
         </React.Fragment>
     )

@@ -2,12 +2,14 @@ import React, { useState, Fragment, useEffect } from 'react';
 import './index.css';
 import Jumbotron from '../Jumbotron';
 import Plans from '../Plans';
+import planService from '../services/plan-service';
 
 const Home = ({isLogged}) => {
     const [temperature, setTemperature] = useState('');
     const [feelTemp, setFeelTemp] = useState('');
     const [units, setUnits] = useState('metric');
     const [unitsSign, setUnitsSign] = useState('C');
+    const [plans, setPlans] = useState('');
     let message = '';
     
     if((feelTemp >=10 && unitsSign === 'C') || (feelTemp >= 50 && unitsSign === 'F')) {
@@ -21,6 +23,12 @@ const Home = ({isLogged}) => {
         })
     }, [units, unitsSign])
 
+    useEffect(() => {
+        planService.load().then(r => {
+            setPlans(r)
+        })
+    }, [])
+
     return (
         <Fragment>
             <div className='home-content'>
@@ -29,7 +37,8 @@ const Home = ({isLogged}) => {
                 <p>{message ? message : null}</p>
                 <button onClick={() => {setUnits('imperial'); setUnitsSign('F') }} type="button">Imperial</button>
                 <button onClick={() => {setUnits('metric'); setUnitsSign('C') }} type="button">Metric</button>
-                <Plans  isLogged={isLogged}/>
+                {plans ? <Plans plans={plans}  isLogged={isLogged} categoriezed={true}/> : <div>Loading...</div>}
+                
                 
             </div>
         </Fragment>

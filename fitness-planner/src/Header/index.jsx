@@ -1,15 +1,36 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './index.css';
 import { Button, Form, Navbar, NavDropdown, Nav, FormControl } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Link
 } from 'react-router-dom'
+import planService from '../services/plan-service';
+import { useEffect } from 'react';
+
 
 const Header = ({isLogged, userData}) => {
-  console.log(userData, isLogged);
+  const [search, setSearch] = useState('');
+  const [url, setUrl] = useState('/search?');
 
-  
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+    
+  }
+
+  useEffect(() => {
+    setUrl(`/search/${search}`)
+  }, [search])
+
+  const handleSearchClick = (e) => {
+    e.preventDefault();
+    console.log(search);
+    planService.load().then(r => {
+      console.log(r);
+      
+  })
+    
+  }
 
     return (
         <Navbar bg="light" expand="lg">
@@ -28,8 +49,9 @@ const Header = ({isLogged, userData}) => {
           
       </Nav>
       <Form inline>
-        <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-        <Button variant="outline-success">Search</Button>
+        <FormControl onChange={handleSearchChange} type="text" placeholder="Search" className="mr-sm-2" />
+        
+        <Link className='link custom-link' to={url} >Search</Link>
       </Form>
     </Navbar.Collapse>
   </Navbar>

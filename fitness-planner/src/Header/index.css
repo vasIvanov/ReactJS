@@ -1,6 +1,7 @@
 .link {
-    padding: 0.5em;
+    padding: 0.5em 1em;
     color: grey;
+
 }
 
 .link:hover, .brand:hover {
@@ -9,5 +10,15 @@
 }
 
 .brand {
+    color: green;
+}
+
+.custom-link {
+    border: 1px solid green;
+    border-radius: 0.8em;
+}
+
+.custom-link:hover, .brand:hover {
+    text-decoration: none;
     color: green;
 }

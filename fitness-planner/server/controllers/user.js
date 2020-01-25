@@ -4,7 +4,7 @@ const utils = require('../utils');
 
 module.exports = {
   get: (req, res, next) => {
-    models.User.find()
+    models.User.find().populate('plans')
       .then((users) => res.send(users))
       .catch(next)
   },
@@ -53,10 +53,16 @@ module.exports = {
 
   put: (req, res, next) => {
     const id = req.params.id;
-    const { username, password, imageUrl } = req.body;
-    models.User.update({ _id: id }, { username, password, imageUrl })
-      .then((updatedUser) => res.send(updatedUser))
-      .catch(next)
+    const { planId, add } = req.body;
+    if(add) {
+      models.User.updateOne({ _id: id },  { $push: { plans: planId }})
+        .then((updatedUser) => res.send(updatedUser))
+        .catch(next)
+    } else {
+      models.User.updateOne({ _id: id },  { $pull: { plans: planId }})
+        .then((updatedUser) => res.send(updatedUser))
+        .catch(next)
+    }
   },
 
   delete: (req, res, next) => {

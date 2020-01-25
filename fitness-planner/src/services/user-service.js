@@ -1,4 +1,13 @@
 const userService = {
+    getUsers: function() {
+        return fetch(`http://localhost:9999/api/user/`, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        }).then(res => res.json())
+    },
+
     register: function(data) {
         return fetch(`http://localhost:9999/api/user/register`,{
             body: JSON.stringify(data),
