@@ -12,13 +12,21 @@ module.exports = {
   post: {
     register: (req, res, next) => {
       const { username, password, instructor } = req.body;
+
+      models.User.findOne({username}).then(result => {
+        if(result) {
+          return res.send({errorMessage:'Username in use'});
+        } else {
+          models.User.create({ username, password, instructor })
+            .then((createdUser) => res.send(createdUser))
+            .catch(err => {
+              console.log(err);
+              
+          })
+        }
+      }).catch(next)
       
-      models.User.create({ username, password, instructor })
-        .then((createdUser) => res.send(createdUser))
-        .catch(err => {
-          console.log(err);
-          
-        })
+      
     },
 
     login: (req, res, next) => {
@@ -27,13 +35,13 @@ module.exports = {
       models.User.findOne({ username })
         .then((user) => !!user ?  Promise.all([user, user.matchPassword(password)]) : [null, false])
         .then(([user, match]) => {
-          if (!match) {
-            res.status(401).send('Invalid username or password');
-            return;
+          if (!match || !user) {
+            return res.status(401).send({errorMessage:'Invalid username or password'});
+          } else {
+            const token = utils.jwt.createToken({ id: user._id });
+            res.cookie(config.authCookieName, token).send(user);
           }
 
-          const token = utils.jwt.createToken({ id: user._id });
-          res.cookie(config.authCookieName, token).send(user);
         })
         .catch(err => {
           console.log(err);
@@ -46,8 +54,7 @@ module.exports = {
       console.log('-'.repeat(100));
       console.log(token);
       console.log('-'.repeat(100));
-      res.clearCookie(config.authCookieName).send('Logout successfully!')
-        .catch(next);
+      res.clearCookie(config.authCookieName).send('Logout successfully!');
     }
   },
 

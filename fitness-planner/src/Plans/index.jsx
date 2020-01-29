@@ -1,6 +1,6 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React from 'react';
 import './index.css';
-import {Tabs, Tab, Card, Button} from 'react-bootstrap';
+import {Tabs, Tab} from 'react-bootstrap';
 import Plan from './Plan';
 
 const Plans = ({isLogged, plans, categoriezed}) => {

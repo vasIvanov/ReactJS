@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import Header from '../Header'
 import {Table} from 'react-bootstrap';
 import './index.css';
 import planService from '../services/plan-service'
@@ -15,16 +14,16 @@ const PlanDetails = ({match, isLogged, userData, history}) => {
         planService.load(planId).then(plan => {
             setPlan(plan)
             userServices.getUsers().then(r => {
-                const user = r.filter(u => u._id == userId)[0];
+                const user = r.filter(u => u._id === userId)[0];
                 user.plans.forEach(p => {
-                    if(p._id == planId) {
+                    if(p._id === planId) {
                         setAdded(true);
                         return;
                     }
                 })
             })
         })
-    }, [])
+    }, [planId, userId])
 
     const handleAddClick = () => {
         userServices.update({_id: userData._id, planId, add: true}).then(() => {

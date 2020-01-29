@@ -64,7 +64,11 @@ module.exports = {
         .then(([planObj]) => {
           res.send(planObj);
         })
-        .catch(next);
+        .catch(err => {
+          if(err.errmsg.includes('duplicate key')){
+             res.send({errMsg: 'Plan name already in use!'})
+          }
+        });
     },
   
     put: (req, res, next) => {

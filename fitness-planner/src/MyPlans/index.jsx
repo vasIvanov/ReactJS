@@ -9,10 +9,10 @@ const MyPlans = ({isLogged, userData}) => {
 
     useEffect(() => {
         userServices.getUsers().then(r => {
-            const user = r.filter(u => u._id == userId)[0];
+            const user = r.filter(u => u._id === userId)[0];
             setPlans(user.plans);
         })
-    }, [])
+    }, [userId])
 
     return (
         <Plans plans={plans} isLogged={isLogged} categoriezed={false} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Table} from 'react-bootstrap';
+import {Table} from 'react-bootstrap';
 
 const WeekTable = ({day, setEx1, setEx2, setEx3, setEx4, setEx5, setEx6}) => {
     return (

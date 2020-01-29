@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
 import './index.css';
-import { Button, Form, Navbar, NavDropdown, Nav, FormControl } from 'react-bootstrap';
+import { Form, Navbar, Nav, FormControl } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Link
 } from 'react-router-dom'
-import planService from '../services/plan-service';
 import { useEffect } from 'react';
 
 
@@ -21,16 +20,6 @@ const Header = ({isLogged, userData}) => {
   useEffect(() => {
     setUrl(`/search/${search}`)
   }, [search])
-
-  const handleSearchClick = (e) => {
-    e.preventDefault();
-    console.log(search);
-    planService.load().then(r => {
-      console.log(r);
-      
-  })
-    
-  }
 
     return (
         <Navbar bg="light" expand="lg">

@@ -17,6 +17,7 @@ import NotFound from './NotFound';
 import SearchedResults from './SearchedResults';
 import userService from './services/user-service';
 import {userContext} from './userContext';
+import { Toast } from 'react-bootstrap';
 
 function render(Cmp, otherProps) {
   return function(props) {
@@ -40,15 +41,14 @@ class App extends React.Component {
     const isLogged = !!cookies['x-auth-token'];
     this.state = {
       isLogged,
-      userData: null
+      userData: null,
+      show: false,
+      message: ''
     }
   }
-
-
-
   logout = (history) => {
     userService.logout().then(() => {
-      this.setState({ isLogged: false, userData: null });
+      this.setState({ isLogged: false, userData: null, show: true, message:'Logout Successful!' });
       history.push('/');
       return null;
     });
@@ -56,11 +56,9 @@ class App extends React.Component {
  
   login = (history, data) => {
     return userService.login(data).then((res) => {
-      
-      this.setState({isLogged: true, userData: res});
-      
+      this.setState({isLogged: true, userData: res, show: true, message:'Login Successful!'});
       history.push('/')
-    });
+    })
   }
   
   
@@ -68,25 +66,46 @@ class App extends React.Component {
     const {isLogged, userData} = this.state;
     
     return(
-      <Router>
-        <userContext.Provider value={userData}>
-          <Header userData={userData} isLogged={isLogged}/>
-          <Switch>
+      <React.Fragment>
+        <Router>
+          <userContext.Provider value={userData}>
+            <Header userData={userData} isLogged={isLogged}/>
+            <div
+            aria-live="polite"
+            aria-atomic="true"
+            style={{
+              position: 'relative',
+              minHeight: '0px',
+            }} >
+              <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+              }} >
+                <Toast style={{backgroundColor:"#D4EDDA", color: '#155724'}} onClose={() => this.setState({show:false})} show={this.state.show} delay={3000} autohide>
+                <Toast.Body>
+                    {this.state.message}
+                </Toast.Body>
+              </Toast>
+            </div>
+          </div>
+            <Switch>
+              <Route exact path="/" render={render(Home, {isLogged, userData})} />
+              {!isLogged && <Route path="/login" render={render(Login, {isLogged, login: this.login})}/>}
+              {!isLogged && <Route path="/register" render={render(Register, {isLogged, showChange: () => this.setState({show: true, message: 'Registration Successful'})})}/>}
+              {isLogged && <Route path="/logout" render={render(Logout, { isLogged, logout: this.logout })} />}
 
-            <Route exact path="/" render={render(Home, {isLogged, userData})} />
-            {!isLogged && <Route path="/login" render={render(Login, {isLogged, login: this.login})}/>}
-            {!isLogged && <Route path="/register" render={render(Register, {isLogged})}/>}
-            {isLogged && <Route path="/logout" render={render(Logout, { isLogged, logout: this.logout })} />}
+              {isLogged && userData && userData.instructor && <Route path='/create-plan'  render={render(CreatePlan, {isLogged, userData, showChange: () => this.setState({show: true, message: 'Plan Created'})})}  />}
+              <Route path='/details/:id'  render={render(PlanDetails, {isLogged, userData})} />
+              <Route path='/search/:query?' render={render(SearchedResults, {isLogged, userData})} />
+              {isLogged && <Route path="/my-plans" render={render(MyPlans, { isLogged, userData })} />}
 
-            {isLogged && userData && userData.instructor && <Route path='/create-plan'  render={render(CreatePlan, {isLogged, userData})}  />}
-            <Route path='/details/:id'  render={render(PlanDetails, {isLogged, userData})} />
-            <Route path='/search/:query?' render={render(SearchedResults, {isLogged, userData})} />
-            {isLogged && <Route path="/my-plans" render={render(MyPlans, { isLogged, userData })} />}
-
-            <Route component={NotFound}  />
-          </Switch>
-        </userContext.Provider>
-      </Router>
+              <Route component={NotFound}  />
+            </Switch>
+          </userContext.Provider>
+        </Router>
+      </React.Fragment>
     )
     
   }

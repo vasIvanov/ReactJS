@@ -1,10 +1,16 @@
 import React, {useState} from 'react';
-import {Form} from 'react-bootstrap';
+import {Form, Alert} from 'react-bootstrap';
 import WeekTable from './weekTable';
 import './index.css';
 import postService from '../services/plan-service';
+import * as yup from 'yup';
 
-const CreatePlan = ({history}) => {
+const CreatePlan = ({history, showChange}) => {
+    const schema = yup.object({
+        planName: yup.string('Plan name must be a string').required('Plan name is required').min(4, 'plan name must be 4 or more chars').max(150, 'Plan name must be 150 char max'),
+        planImage: yup.string('Image url must be a string').required('Image url is required').min(6, 'Image url must be 6 or more chars'),
+        planDetails: yup.string('Plan details must be a string').required('Plan details is required').min(6, 'Plan details must be 6 or more chars').max(500, 'Plan details must be 500 chars max')
+      });
     const [planName, setPlanName] = useState('');
     const [planImage, setPlanImage] = useState('');
     const [level, setLevel] = useState('');
@@ -34,8 +40,15 @@ const CreatePlan = ({history}) => {
     const [fri4, setFri4] = useState('');
     const [fri5, setFri5] = useState('');
     const [fri6, setFri6] = useState('');
+    const [nameError, setNameError] = useState('');
+    const [imageUrlError, setImageUrlError] = useState('');
+    const [detailsError, setDetailsError] = useState('');
+    const [serverError, setServerError] = useState('');
 
     const handleSubmit = () => {
+        setNameError('');
+        setImageUrlError('');
+        setDetailsError('');
         const data = {
             name: planName,
             imageUrl: planImage,
@@ -49,10 +62,34 @@ const CreatePlan = ({history}) => {
                 day4: [fri1, fri2, fri3, fri4, fri5, fri6]
             }
         }
-        postService.create(data).then(r => {
-            console.log(r);
-            history.push('/');
-        })
+
+        schema
+            .validate({planName, planImage, planDetails}, {abortEarly: false})
+            .then(() => {
+                postService.create(data).then((e) => {
+                    if(e.errMsg) {
+                        setServerError(e.errMsg);
+                        window.scrollTo(0, 0);
+                        return;
+                    }
+                    showChange();
+                    history.push('/');
+                })
+            })
+            .catch(err => {
+                err.inner.forEach(error => {
+                if(error.path === 'planName') {
+                    setNameError(error.message);
+                } else if(error.path === 'planImage') {
+                    setImageUrlError(error.message);
+                } else if (error.path === 'planDetails') {
+                    setDetailsError(error.message);
+                }
+                })
+                window.scrollTo(0, 0);
+            }) 
+
+        
         
         
     }
@@ -64,12 +101,15 @@ const CreatePlan = ({history}) => {
                     <Form.Group controlId="exampleForm.ControlInput1">
                         <Form.Label>Plan name</Form.Label>
                         <Form.Control onChange={(e) => setPlanName(e.target.value)} type="text" />
+                        {nameError ? <Alert variant={'danger'}>{nameError}</Alert> : null}
+                        {serverError ? <Alert variant={'danger'}>{serverError}</Alert> : null}
                     </Form.Group>
-                    <Form.Group controlId="exampleForm.ControlInput1">
+                    <Form.Group controlId="exampleForm.ControlInput2">
                         <Form.Label>Plan Image Url</Form.Label>
                         <Form.Control onChange={(e) => setPlanImage(e.target.value)} type="text" />
+                        {imageUrlError ? <Alert variant={'danger'}>{imageUrlError}</Alert> : null}
                     </Form.Group>
-                    <Form.Group controlId="exampleForm.ControlSelect1">
+                    <Form.Group controlId="exampleForm.ControlSelect3">
                         <Form.Label>Complexity level</Form.Label>
                         <Form.Control onChange={(e) => setLevel(e.target.value)} as="select">
                         <option>Select ...</option>
@@ -77,7 +117,7 @@ const CreatePlan = ({history}) => {
                         <option>Advanced</option>
                         </Form.Control>
                     </Form.Group>
-                    <Form.Group controlId="exampleForm.ControlSelect1">
+                    <Form.Group controlId="exampleForm.ControlSelect4">
                         <Form.Label>Plan goal</Form.Label>
                         <Form.Control onChange={(e) => setgoal(e.target.value)} as="select">
                         <option>Select ...</option>
@@ -85,9 +125,10 @@ const CreatePlan = ({history}) => {
                         <option>Weight loss</option>
                         </Form.Control>
                     </Form.Group>
-                    <Form.Group controlId="exampleForm.ControlTextarea1">
+                    <Form.Group controlId="exampleForm.ControlTextarea5">
                         <Form.Label>Plan details</Form.Label>
                         <Form.Control onChange={(e) => setPlanDetails(e.target.value)} as="textarea" rows="3" />
+                        {detailsError ? <Alert variant={'danger'}>{detailsError}</Alert> : null}
                     </Form.Group>
                 </Form>
                 <div className="days-table">

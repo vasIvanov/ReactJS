@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import { Jumbotron, Button, Container, Carousel } from 'react-bootstrap';
+import { Jumbotron, Container } from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {userContext} from '../userContext';

@@ -1,37 +1,58 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState } from 'react';
 import './index.css';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Header from '../Header';
-import userService from '../services/user-service';
-
+import * as  yup from 'yup'
 const Login = ({history, login}) => {
+    const schema = yup.object({
+      username: yup.string('username must be a string').required('username is required').min(4, 'Invalid username or password').max(25, 'Invalid username or password'),
+      password: yup.string('Password must be a string').required('Password is required').min(6, 'Invalid username or password').max(25, 'Invalid username or password'),
+    });
 
     const [username, setUsername] = useState('');
     const [password, passwordChange] = useState('');
+    const [error, setError] = useState('');
   
-    const handleSubmit = (e) => {
+    const handleSubmit = () => {
+      setError('');
       const data = {
         username,
         password
       }
-      login(history, data).catch(error => {
-        console.log(error);
-        
-      })
+
+      schema
+        .validate({username, password}, {abortEarly: false})
+        .then(() => {
+          login(history, data)
+          .catch(error => {
+            setError(error.errorMessage);
+          })
+        })
+        .catch(err => {
+          err.inner.forEach(error => {
+            console.log(error);
+            
+            if(error.path === 'username') {
+              setError(error.message);
+            } else if(error.path === 'password') {
+              setError(error.message);
+            } 
+          })
+        }) 
+
+      
     }
       
     return (
-      <Fragment>
         <div className="form">
         <Form>
-
           <Form.Group controlId="formBasicUsername">
             <Form.Label>Username</Form.Label>
             <Form.Control value={username} onChange={(e) => setUsername(e.target.value)} type="text" placeholder="Enter username" />
+            
 
             <Form.Text className="text-muted">
-              We'll never share your email with anyone else.
+              We'll never share your information with anyone else.
               </Form.Text>
             </Form.Group>
 
@@ -39,16 +60,15 @@ const Login = ({history, login}) => {
               <Form.Label>Password</Form.Label>
               <Form.Control value={password} onChange={(e) => passwordChange(e.target.value)} type="password" placeholder="Password" />
             </Form.Group>
-
-            <Form.Group controlId="formBasicCheckbox">
-              <Form.Check type="checkbox" label="Check me out" />
-            </Form.Group>
+            
+            {error ? <Alert variant={'danger'}>
+              {error}
+            </Alert> : null}
             <Button onClick={handleSubmit} variant="primary" type="button">
               Submit
             </Button>
           </Form>
         </div>
-      </Fragment>
     )
 }
 
