@@ -11,13 +11,13 @@ module.exports = {
 
   post: {
     register: (req, res, next) => {
-      const { username, password, instructor } = req.body;
+      const { username, password, city, instructor } = req.body;
 
       models.User.findOne({username}).then(result => {
         if(result) {
           return res.send({errorMessage:'Username in use'});
         } else {
-          models.User.create({ username, password, instructor })
+          models.User.create({ username, password, city, instructor })
             .then((createdUser) => res.send(createdUser))
             .catch(err => {
               console.log(err);

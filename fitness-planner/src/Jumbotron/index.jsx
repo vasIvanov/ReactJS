@@ -9,24 +9,24 @@ const JumbotronFunc = ({isLogged}) => {
     return (
         <Jumbotron style={{ backgroundImage: `url()`, backgroundSize: 'cover' }} fluid>
             <Container>
-                    {isLogged && <div>
-                        <h1>Browse our Plans {userValue.username}!</h1>
+                {isLogged && <div>
+                    <h1>Browse our Plans {userValue.username}!</h1>
+                    <p>
+                    This is a simple hero unit, a simple jumbotron-style component for calling
+                        extra attention to featured content or information
+                    </p>
+                    </div> 
+                }
+                {!isLogged && 
+                    <div>
+                        <h1>Begin your training today!</h1>
                         <p>
-                        This is a simple hero unit, a simple jumbotron-style component for calling
+                            This is a simple hero unit, a simple jumbotron-style component for calling
                             extra attention to featured content or information
-                        </p>
-                        </div> 
-                    }
-                    {!isLogged && 
-                        <div>
-                            <h1>Begin your training today!</h1>
-                            <p>
-                                This is a simple hero unit, a simple jumbotron-style component for calling
-                                extra attention to featured content or information
-                            </p> 
-                            <Link className='link' to="/register">Register</Link>
-                        </div>
-                    }
+                        </p> 
+                        <Link className='link' to="/register">Register</Link>
+                    </div>
+                }
             </Container>
         </Jumbotron>
     )

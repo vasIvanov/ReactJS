@@ -19,6 +19,10 @@ const userSchema = new Schema({
         require: true
     },
 
+    city: {
+        type: String
+    },
+
     plans: [{ type: ObjectId, ref: "Plan" }],
 
     instructor: {

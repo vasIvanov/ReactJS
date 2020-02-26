@@ -14,6 +14,7 @@ const Register = ({history, showChange}) => {
     const [username, emailChange] = useState('');
     const [password, passwordChange] = useState('');
     const [rePassword, rePasswordChange] = useState('');
+    const [city, setCity] = useState('');
     const [instructor, setInstructor] = useState(false);
     const [usernameError, setUsernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
@@ -26,6 +27,7 @@ const Register = ({history, showChange}) => {
       const data = {
         username,
         password,
+        city,
         instructor
       }
       schema
@@ -63,6 +65,11 @@ const Register = ({history, showChange}) => {
               <Form.Control value={username} onChange={(e) => emailChange(e.target.value)} type="text" placeholder="Enter username" />
               {usernameError ? <div>{usernameError}</div> : null}
               {userError ? <div>{userError}</div> : null}
+            </Form.Group>
+
+            <Form.Group controlId="formBasicCity">
+              <Form.Label>City</Form.Label>
+              <Form.Control value={city} onChange={(e) => setCity(e.target.value)} type="text" placeholder="City" />
             </Form.Group>
 
             <Form.Group controlId="formBasicPassword">

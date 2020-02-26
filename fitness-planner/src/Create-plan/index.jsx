@@ -2,15 +2,11 @@ import React, {useState} from 'react';
 import {Form, Alert} from 'react-bootstrap';
 import WeekTable from './weekTable';
 import './index.css';
+import validate from './schema';
 import postService from '../services/plan-service';
-import * as yup from 'yup';
+import widget from './cloudinaryWidget';
 
 const CreatePlan = ({history, showChange}) => {
-    const schema = yup.object({
-        planName: yup.string('Plan name must be a string').required('Plan name is required').min(4, 'plan name must be 4 or more chars').max(150, 'Plan name must be 150 char max'),
-        planImage: yup.string('Image url must be a string').required('Image url is required').min(6, 'Image url must be 6 or more chars'),
-        planDetails: yup.string('Plan details must be a string').required('Plan details is required').min(6, 'Plan details must be 6 or more chars').max(500, 'Plan details must be 500 chars max')
-      });
     const [planName, setPlanName] = useState('');
     const [planImage, setPlanImage] = useState('');
     const [level, setLevel] = useState('');
@@ -44,7 +40,8 @@ const CreatePlan = ({history, showChange}) => {
     const [imageUrlError, setImageUrlError] = useState('');
     const [detailsError, setDetailsError] = useState('');
     const [serverError, setServerError] = useState('');
-
+    const myWidget = widget(setPlanImage);
+    
     const handleSubmit = () => {
         setNameError('');
         setImageUrlError('');
@@ -62,9 +59,7 @@ const CreatePlan = ({history, showChange}) => {
                 day4: [fri1, fri2, fri3, fri4, fri5, fri6]
             }
         }
-
-        schema
-            .validate({planName, planImage, planDetails}, {abortEarly: false})
+        validate(planName, planImage, planDetails)
             .then(() => {
                 postService.create(data).then((e) => {
                     if(e.errMsg) {
@@ -88,10 +83,6 @@ const CreatePlan = ({history, showChange}) => {
                 })
                 window.scrollTo(0, 0);
             }) 
-
-        
-        
-        
     }
 
     return (
@@ -104,11 +95,15 @@ const CreatePlan = ({history, showChange}) => {
                         {nameError ? <Alert variant={'danger'}>{nameError}</Alert> : null}
                         {serverError ? <Alert variant={'danger'}>{serverError}</Alert> : null}
                     </Form.Group>
+                    
                     <Form.Group controlId="exampleForm.ControlInput2">
                         <Form.Label>Plan Image Url</Form.Label>
-                        <Form.Control onChange={(e) => setPlanImage(e.target.value)} type="text" />
+                        <div>
+                            <button type='button' onClick={() => myWidget.open()} id="upload_widget" className="cloudinary-button">Upload files</button>
+                        </div>
                         {imageUrlError ? <Alert variant={'danger'}>{imageUrlError}</Alert> : null}
                     </Form.Group>
+
                     <Form.Group controlId="exampleForm.ControlSelect3">
                         <Form.Label>Complexity level</Form.Label>
                         <Form.Control onChange={(e) => setLevel(e.target.value)} as="select">
