@@ -3,11 +3,12 @@ import { Jumbotron, Container } from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {userContext} from '../userContext';
+import './index.css'
 
 const JumbotronFunc = ({isLogged}) => {
     const userValue = useContext(userContext);
     return (
-        <Jumbotron style={{ backgroundImage: `url()`, backgroundSize: 'cover' }} fluid>
+        <div className='jumbotron-comp' >
             <Container>
                 {isLogged && <div>
                     <h1>Browse our Plans {userValue.username}!</h1>
@@ -28,7 +29,7 @@ const JumbotronFunc = ({isLogged}) => {
                     </div>
                 }
             </Container>
-        </Jumbotron>
+        </div>
     )
 }
 

@@ -1,0 +1,7 @@
+.jumbotron-comp {
+    background: linear-gradient(to top, rgba(179, 171, 171, 0.1), rgba(179, 171, 171, 0.3)), url('https://cameronscookware.com/wp-content/uploads/2019/12/gym-wallpaper-hd-elegant-gym-wallpapers-hd-wallpaper-cave-this-week-of-gym-wallpaper-hd.jpg') no-repeat center center;
+    background-size: cover;
+    padding: 10em 0 25em 0;
+    color: #fff;
+    text-shadow: -1px 3px 3px rgba(0,0,0,0.79);
+}

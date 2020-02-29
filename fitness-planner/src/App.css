@@ -1,0 +1,15 @@
+.toast-outer {
+    position: relative;
+     min-height: 0px;
+}
+
+.toast-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.toast-body {
+    background-color:#3f9653;
+    color: #D4EDDA;
+}

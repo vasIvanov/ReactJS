@@ -2,13 +2,9 @@ import React, { useState } from 'react';
 import './index.css';
 import { Button, Form, Alert } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import * as  yup from 'yup'
-const Login = ({history, login}) => {
-    const schema = yup.object({
-      username: yup.string('username must be a string').required('username is required').min(4, 'Invalid username or password').max(25, 'Invalid username or password'),
-      password: yup.string('Password must be a string').required('Password is required').min(6, 'Invalid username or password').max(25, 'Invalid username or password'),
-    });
+import validate from './schema';
 
+const Login = ({history, login}) => {
     const [username, setUsername] = useState('');
     const [password, passwordChange] = useState('');
     const [error, setError] = useState('');
@@ -20,8 +16,7 @@ const Login = ({history, login}) => {
         password
       }
 
-      schema
-        .validate({username, password}, {abortEarly: false})
+      validate(username, password)
         .then(() => {
           login(history, data)
           .catch(error => {
@@ -30,17 +25,13 @@ const Login = ({history, login}) => {
         })
         .catch(err => {
           err.inner.forEach(error => {
-            console.log(error);
-            
             if(error.path === 'username') {
               setError(error.message);
             } else if(error.path === 'password') {
               setError(error.message);
             } 
           })
-        }) 
-
-      
+        })
     }
       
     return (
@@ -49,7 +40,6 @@ const Login = ({history, login}) => {
           <Form.Group controlId="formBasicUsername">
             <Form.Label>Username</Form.Label>
             <Form.Control value={username} onChange={(e) => setUsername(e.target.value)} type="text" placeholder="Enter username" />
-            
 
             <Form.Text className="text-muted">
               We'll never share your information with anyone else.
