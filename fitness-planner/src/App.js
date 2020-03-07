@@ -23,16 +23,29 @@ import {loginFunc, logoutFunc} from './utils/user';
 
 const App = () => {
   const cookies = parseCookies();
-  const [isLogged, setIsLogged] = useState(!!cookies['x-auth-token']);
   const [userData, setUserData] = useState(null);
+  const [isLogged, setIsLogged] = useState(!!cookies['x-auth-token']);
   const [show, setShow] = useState(false);
   const [message, setMessage] = useState('');
+
+  if(isLogged && userData) {
+    window.onbeforeunload = function() {
+      localStorage.setItem('username', userData.username);
+      if(userData.city) {
+        localStorage.setItem('city', userData.city);
+      }
+      localStorage.setItem('_id', userData._id);
+      localStorage.setItem('instructor', userData.instructor);
+    }
+  }
+
+
   
     return (
       <React.Fragment>
         <Router>
           <userContext.Provider value={userData}>
-            <Header userData={userData} isLogged={isLogged}/>
+            <Header isLogged={isLogged}/>
             <div aria-live="polite" aria-atomic="true" className='toast-outer' >
               <div className='toast-inner' >
                 <Toast  onClose={() => setShow(false)} show={show} delay={3000} autohide>
@@ -43,15 +56,15 @@ const App = () => {
             </div>
           </div>
             <Switch>
-              <Route exact path="/" render={render(Home, {isLogged, userData})} />
+              <Route exact path="/" render={render(Home, {isLogged})} />
               {!isLogged && <Route path="/login" render={render(Login, {isLogged, login: loginFunc(setIsLogged, setUserData, setShow, setMessage)})}/>}
               {!isLogged && <Route path="/register" render={render(Register, {isLogged, showChange: () => {setShow(true); setMessage('Registration Successful')}})}/>}
               {isLogged && <Route path="/logout" render={render(Logout, { isLogged, logout: logoutFunc(setIsLogged, setUserData, setShow, setMessage) })} />}
 
-              {isLogged && userData && userData.instructor && <Route path='/create-plan'  render={render(CreatePlan, {isLogged, userData, showChange: () => {setShow(true); setMessage('Plan Created')}})}  />}
-              <Route path='/details/:id'  render={render(PlanDetails, {isLogged, userData})} />
-              <Route path='/search/:query?' render={render(SearchedResults, {isLogged, userData})} />
-              {isLogged && <Route path="/my-plans" render={render(MyPlans, { isLogged, userData })} />}
+              {isLogged && ((userData && userData.instructor) || localStorage.getItem('instructor')) ? <Route path='/create-plan'  render={render(CreatePlan, {isLogged, showChange: () => {setShow(true); setMessage('Plan Created')}})}  /> : null}
+              <Route path='/details/:id'  render={render(PlanDetails, {isLogged})} />
+              <Route path='/search/:query?' render={render(SearchedResults, {isLogged})} />
+              {isLogged && <Route path="/my-plans" render={render(MyPlans, { isLogged })} />}
 
               <Route component={NotFound}  />
             </Switch>

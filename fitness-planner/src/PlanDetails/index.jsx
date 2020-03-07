@@ -1,12 +1,14 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {Table} from 'react-bootstrap';
 import './index.css';
 import planService from '../services/plan-service'
 import userServices from '../services/user-service'
+import {userContext} from '../userContext';
 
-const PlanDetails = ({match, isLogged, userData, history}) => {
+const PlanDetails = ({match, isLogged, history}) => {
     const [plan, setPlan] = useState('');
-    const userId = userData._id;
+    const userValue = useContext(userContext)
+    const userId = (userValue && userValue._id) || localStorage.getItem('_id');
     const planId = match.params.id;
     const [added, setAdded] = useState(false);
 
@@ -26,13 +28,13 @@ const PlanDetails = ({match, isLogged, userData, history}) => {
     }, [planId, userId])
 
     const handleAddClick = () => {
-        userServices.update({_id: userData._id, planId, add: true}).then(() => {
+        userServices.update({_id: userId, planId, add: true}).then(() => {
             history.push('/')
         })
     }
 
     const handleRemoveClick = () => {
-        userServices.update({_id: userData._id, planId, add: false}).then(() => {
+        userServices.update({_id: userId, planId, add: false}).then(() => {
             history.push('/')
         })
     }

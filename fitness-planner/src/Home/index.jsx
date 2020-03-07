@@ -13,19 +13,23 @@ const Home = ({isLogged}) => {
     const [plans, setPlans] = useState('');
     const userValue = useContext(userContext);
     let message = '';
+    let city = '';
+    if(isLogged) {
+        city = (userValue && userValue.city) || localStorage.getItem('city') || false;
+    }
     
     if((feelTemp >=10 && unitsSign === 'C') || (feelTemp >= 50 && unitsSign === 'F')) {
         message = 'Consider going for a walk.'
     }
 
     useEffect(() => {
-        if(isLogged && userValue.city) {
-            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${userValue.city.toLowerCase()}&APPID=c27fcad2928805171f49ebfa27cfa75b&units=${units}`).then(r => r.json()).then(r => {
+        if(isLogged && city) {
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city.toLowerCase()}&APPID=c27fcad2928805171f49ebfa27cfa75b&units=${units}`).then(r => r.json()).then(r => {
                 setTemperature(r.main.temp);
                 setFeelTemp(r.main.feels_like)
             })
         }
-    }, [units, unitsSign, isLogged])
+    }, [units, unitsSign, isLogged, city])
 
     useEffect(() => {
         planService.load().then(r => {
@@ -37,16 +41,15 @@ const Home = ({isLogged}) => {
         <Fragment>
             <div className='home-content'>
                 <Jumbotron isLogged={isLogged}/>
-                {isLogged && userValue.city ? <div>
-                    <p>{temperature && feelTemp ? `Temperature in Plovdiv is ${temperature}${unitsSign}  Real feel ${feelTemp}${unitsSign}.` : 'Loading...'}</p>
-                    <p>{message ? message : null}</p>
-                    <button onClick={() => {setUnits('imperial'); setUnitsSign('F') }} type="button">Imperial</button>
-                    <button onClick={() => {setUnits('metric'); setUnitsSign('C') }} type="button">Metric</button>
-                </div> : null
-                }
+                {isLogged && city ? 
+                    <div>
+                        <p>{temperature && feelTemp ? `Temperature in ${city} is ${temperature}${unitsSign}  Real feel ${feelTemp}${unitsSign}.` : 'Loading...'}</p>
+                        <p>{message ? message : null}</p>
+                        <button onClick={() => {setUnits('imperial'); setUnitsSign('F') }} type="button">Imperial</button>
+                        <button onClick={() => {setUnits('metric'); setUnitsSign('C') }} type="button">Metric</button>
+                    </div> 
+                : null}
                 {plans ? <Plans plans={plans}  isLogged={isLogged} categoriezed={true}/> : <div>Loading...</div>}
-                
-                
             </div>
         </Fragment>
     )
