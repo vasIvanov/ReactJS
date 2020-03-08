@@ -1,0 +1,11 @@
+.clicked {
+    background-color: green !important;
+}
+
+.day {
+    flex: 0 0 50%;
+}
+
+textarea {
+    resize: none;
+}

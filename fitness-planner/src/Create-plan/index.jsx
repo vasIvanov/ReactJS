@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
 import {Form, Alert} from 'react-bootstrap';
-import WeekTable from './weekTable';
 import './index.css';
 import validate from './schema';
 import postService from '../services/plan-service';
-import widget from './cloudinaryWidget';
+// import widget from './cloudinaryWidget';
+import Test from '../DynamicInputField'
+import { useEffect } from 'react';
+import {planContext} from '../planContext';
 
 const CreatePlan = ({history, showChange}) => {
     const [planName, setPlanName] = useState('');
@@ -12,53 +14,65 @@ const CreatePlan = ({history, showChange}) => {
     const [level, setLevel] = useState('');
     const [goal, setgoal] = useState('');
     const [planDetails, setPlanDetails] = useState('');
-    const [monday1, setMonday1] = useState('');
-    const [monday2, setMonday2] = useState('');
-    const [monday3, setMonday3] = useState('');
-    const [monday4, setMonday4] = useState('');
-    const [monday5, setMonday5] = useState('');
-    const [monday6, setMonday6] = useState('');
-    const [tue1, setTue1] = useState('');
-    const [tue2, setTue2] = useState('');
-    const [tue3, setTue3] = useState('');
-    const [tue4, setTue4] = useState('');
-    const [tue5, setTue5] = useState('');
-    const [tue6, setTue6] = useState('');
-    const [thu1, setThu1] = useState('');
-    const [thu2, setThu2] = useState('');
-    const [thu3, setThu3] = useState('');
-    const [thu4, setThu4] = useState('');
-    const [thu5, setThu5] = useState('');
-    const [thu6, setThu6] = useState('');
-    const [fri1, setFri1] = useState('');
-    const [fri2, setFri2] = useState('');
-    const [fri3, setFri3] = useState('');
-    const [fri4, setFri4] = useState('');
-    const [fri5, setFri5] = useState('');
-    const [fri6, setFri6] = useState('');
     const [nameError, setNameError] = useState('');
     const [imageUrlError, setImageUrlError] = useState('');
     const [detailsError, setDetailsError] = useState('');
     const [serverError, setServerError] = useState('');
-    const myWidget = widget(setPlanImage);
+    const [days, setDays] = useState('');
+    const [day1, setDay1] = useState('');
+    const [day2, setDay2] = useState('');
+    const [day3, setDay3] = useState('');
+    const [day4, setDay4] = useState('');
+    const [day5, setDay5] = useState('');
+    const [day6, setDay6] = useState('');
+    const [day7, setDay7] = useState('');
+    const [buttonActive, setButtonActive] = useState(false);
+    const nullDays = () => { setDay1(''); setDay2(''); setDay3(''); setDay4(''); setDay5(''); setDay6(''); setDay7('');}
+
+    // const myWidget = widget(setPlanImage);
+    useEffect(() => {
+        if(days === '2') {
+            setButtonActive(day1 !== '' && day2 !== '')
+        } else if(days === '3') {
+            setButtonActive(day1 !== '' && day2 !== '' && day3 !=='') 
+        } else if(days === '4') {
+            setButtonActive(day1 !== '' && day2 !== '' && day3 !=='' && day4 !=='')
+        } else if(days === '5') {
+            setButtonActive(day1 !== '' && day2 !== '' && day3 !=='' && day4 !=='' && day5 !== '');
+        } else if(days === '6') {
+            setButtonActive(day1 !== '' && day2 !== '' && day3 !=='' && day4 !=='' && day5 !== '' && day6 !== '');
+        } else if(days === '7') {
+            setButtonActive(day1 !== '' && day2 !== '' && day3 !=='' && day4 !=='' && day5 !== '' && day6 !== '' && day7 !== '');
+        } 
+    }, [days, day1, day2, day3, day4, day5, day6, day7])
+
+    const handleSelect = (e) => {
+        nullDays()
+        setDays(e.target.value);
+    }
     
     const handleSubmit = () => {
+        const exercises= {
+            day1, day2, day3, day4,day5, day6, day7
+        };
+
+        for(let propName in exercises) {
+            if(exercises[propName] === '') {
+                delete(exercises[propName]);
+            }
+        }
+        
         setNameError('');
         setImageUrlError('');
         setDetailsError('');
         const data = {
             name: planName,
-            imageUrl: planImage,
             level,
             goal,
             details: planDetails,
-            exercices: {
-                day1:[monday1, monday2, monday3, monday4, monday5, monday6],
-                day2:[tue1, tue2, tue3, tue4, tue5, tue6],
-                day3: [thu1, thu2, thu3, thu4, thu5, thu6],
-                day4: [fri1, fri2, fri3, fri4, fri5, fri6]
-            }
-        }
+            exercises,
+            imageUrl: planImage
+        };
         validate(planName, planImage, planDetails)
             .then(() => {
                 postService.create(data).then((e) => {
@@ -96,11 +110,16 @@ const CreatePlan = ({history, showChange}) => {
                         {serverError ? <Alert variant={'danger'}>{serverError}</Alert> : null}
                     </Form.Group>
                     
-                    <Form.Group controlId="exampleForm.ControlInput2">
+                    {/* <Form.Group controlId="exampleForm.ControlInput2">
                         <Form.Label>Plan Image Url</Form.Label>
                         <div>
                             <button type='button' onClick={() => myWidget.open()} id="upload_widget" className="cloudinary-button">Upload files</button>
                         </div>
+                        {imageUrlError ? <Alert variant={'danger'}>{imageUrlError}</Alert> : null}
+                    </Form.Group> */}
+                    <Form.Group controlId="exampleForm.ControlInput2">
+                        <Form.Label>Plan Image Url</Form.Label>
+                        <Form.Control onChange={(e) => setPlanImage(e.target.value)} type="text" />
                         {imageUrlError ? <Alert variant={'danger'}>{imageUrlError}</Alert> : null}
                     </Form.Group>
 
@@ -113,6 +132,18 @@ const CreatePlan = ({history, showChange}) => {
                         </Form.Control>
                     </Form.Group>
                     <Form.Group controlId="exampleForm.ControlSelect4">
+                        <Form.Label>Select Plan Training Days</Form.Label>
+                        <Form.Control onChange={handleSelect} as="select" >
+                            <option>Select ...</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group controlId="exampleForm.ControlSelect5">
                         <Form.Label>Plan goal</Form.Label>
                         <Form.Control onChange={(e) => setgoal(e.target.value)} as="select">
                         <option>Select ...</option>
@@ -120,22 +151,65 @@ const CreatePlan = ({history, showChange}) => {
                         <option>Weight loss</option>
                         </Form.Control>
                     </Form.Group>
-                    <Form.Group controlId="exampleForm.ControlTextarea5">
+                    <Form.Group controlId="exampleForm.ControlTextarea6">
                         <Form.Label>Plan details</Form.Label>
                         <Form.Control onChange={(e) => setPlanDetails(e.target.value)} as="textarea" rows="3" />
                         {detailsError ? <Alert variant={'danger'}>{detailsError}</Alert> : null}
                     </Form.Group>
                 </Form>
-                <div className="days-table">
-                    <WeekTable setEx1={setMonday1}  setEx2={setMonday2} setEx3={setMonday3} setEx4={setMonday4}  setEx5={setMonday5} setEx6={setMonday6} day="Day 1"/>
-                    <WeekTable setEx1={setTue1}  setEx2={setTue2} setEx3={setTue3} setEx4={setTue4}  setEx5={setTue5} setEx6={setTue6}  day="Day 2"/>
+                <planContext.Provider value={{setButtonActive}}>
+                {days === '2' ? <div className="days-table">
+                    <Test day={'1'} setDay1={setDay1}/>
+                    <Test day={'2'} setDay2={setDay2}/>
+                </div> : null}
+                {days === '3' ? 
+                <div className="days-table"> 
+                    <Test day={'1'} setDay1={setDay1}/>
+                    <Test day={'2'} setDay2={setDay2}/>
+                    <Test day={'3'} setDay3={setDay3}/>
                 </div>
-                <div className="days-table">
-                    <WeekTable setEx1={setThu1}  setEx2={setThu2} setEx3={setThu3} setEx4={setThu4}  setEx5={setThu5} setEx6={setThu6} day="Day 4"/>
-                    <WeekTable setEx1={setFri1}  setEx2={setFri2} setEx3={setFri3} setEx4={setFri4}  setEx5={setFri5} setEx6={setFri6} day="Day 5"/>
+                : null}
+                {days === '4' ? 
+                <div className="days-table"> 
+                    <Test day={'1'} setDay1={setDay1}/>
+                    <Test day={'2'} setDay2={setDay2}/>
+                    <Test day={'3'} setDay3={setDay3}/>
+                    <Test day={'4'} setDay4={setDay4}/>
                 </div>
-
-                <button type="button" onClick={handleSubmit}>Create</button>
+                : null}
+                {days === '5' ? 
+                <div className="days-table"> 
+                    <Test day={'1'} setDay1={setDay1}/>
+                    <Test day={'2'} setDay2={setDay2}/>
+                    <Test day={'3'} setDay3={setDay3}/>
+                    <Test day={'4'} setDay4={setDay4}/>
+                    <Test day={'5'} setDay5={setDay5}/>
+                </div>
+                : null}
+                {days === '6' ? 
+                <div className="days-table"> 
+                    <Test day={'1'} setDay1={setDay1}/>
+                    <Test day={'2'} setDay2={setDay2}/>
+                    <Test day={'3'} setDay3={setDay3}/>
+                    <Test day={'4'} setDay4={setDay4}/>
+                    <Test day={'5'} setDa5={setDay5}/>
+                    <Test day={'6'} setDay6={setDay6}/>
+                </div>
+                : null}
+                {days === '7' ? 
+                <div className="days-table"> 
+                    <Test day={'1'} setDay1={setDay1}/>
+                    <Test day={'2'} setDay2={setDay2}/>
+                    <Test day={'3'} setDay3={setDay3}/>
+                    <Test day={'4'} setDay4={setDay4}/>
+                    <Test day={'5'} setDay5={setDay5}/>
+                    <Test day={'6'} setDay6={setDay6}/>
+                    <Test day={'7'} setDay7={setDay7}/>
+                </div>
+                : null}
+                </planContext.Provider >
+                
+                {buttonActive ? <button className='create-button' type="button" onClick={handleSubmit}>Create</button> : <button className='create-button' disabled type="button" onClick={handleSubmit}>Please Save The Changes</button>}
             </div>
         </React.Fragment>
     )

@@ -1,7 +1,8 @@
 .days-table {
     display: flex;
-    
+    flex-wrap: wrap;
 }
+
 
 textarea {
     width: 100%;
@@ -20,4 +21,25 @@ textarea {
 
 .plan-details {
     font-size: 1.2em;
+}
+
+.create-button {
+    border: none;
+    outline: none;
+    background-color: blue;
+    color: white;
+    padding: 0.5em 1em;
+    border-radius: 0.3em;
+    font-size: 1.05em;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    margin-top: 0.5em;
+}
+
+.create-button:disabled {
+    background-color: grey;
+}
+
+.create-button:disabled:hover {
+    cursor: not-allowed;
 }

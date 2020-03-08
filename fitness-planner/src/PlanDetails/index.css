@@ -4,10 +4,17 @@
     margin: 0 auto;
 }
 
-.media {
-}
-
 .media img  {
     width: 100%;
     height: auto;
+}
+
+.plan-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.plan-details {
+    flex: 0 0 45%;
+    margin: 0.5em;
 }

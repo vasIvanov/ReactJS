@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {Table} from 'react-bootstrap';
 import './index.css';
 import planService from '../services/plan-service'
 import userServices from '../services/user-service'
@@ -11,7 +10,6 @@ const PlanDetails = ({match, isLogged, history}) => {
     const userId = (userValue && userValue._id) || localStorage.getItem('_id');
     const planId = match.params.id;
     const [added, setAdded] = useState(false);
-
     useEffect(() => {
         planService.load(planId).then(plan => {
             setPlan(plan)
@@ -39,6 +37,22 @@ const PlanDetails = ({match, isLogged, history}) => {
         })
     }
 
+    const renderData = () => {
+        let header = Object.keys(plan.exercises)
+        return header.map((key, index) => {
+           return (
+            <div className='plan-details' key={index}>
+                <h5>Day {key.toUpperCase().split('DAY')[1]}</h5>
+                {plan.exercises[key].map((e, i) => {
+                    return (
+                        <p key={i}>{e}</p>
+                    )
+                })}
+            </div>
+           )
+        })
+     }
+
     return plan ? (
         <React.Fragment>
             <div className="details">
@@ -51,62 +65,11 @@ const PlanDetails = ({match, isLogged, history}) => {
                     <p className="plan-details">{plan.details}</p>
                 </div>
                 <div>
-                <Table responsive>
-                    <thead>
-                        <tr>
-                        <th>#</th>
-                        <th>Day 1</th>
-                        <th>Day 2</th>
-                        <th>Day 4</th>
-                        <th>Day 5</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                        <td>1</td>
-                        <td>{plan.exercices.day1[0]}</td>
-                        <td>{plan.exercices.day2[0]}</td>
-                        <td>{plan.exercices.day3[0]}</td>
-                        <td>{plan.exercices.day4[0]}</td>
-                        </tr>
-                        <tr>
-                        <td>2</td>
-                        <td>{plan.exercices.day1[1]}</td>
-                        <td>{plan.exercices.day2[1]}</td>
-                        <td>{plan.exercices.day3[1]}</td>
-                        <td>{plan.exercices.day4[1]}</td>
-                        </tr>
-                        <tr>
-                        <td>3</td>
-                        <td>{plan.exercices.day1[2]}</td>
-                        <td>{plan.exercices.day2[2]}</td>
-                        <td>{plan.exercices.day3[2]}</td>
-                        <td>{plan.exercices.day4[2]}</td>
-                        </tr>
-                        <tr>
-                        <td>4</td>
-                        <td>{plan.exercices.day1[3]}</td>
-                        <td>{plan.exercices.day2[3]}</td>
-                        <td>{plan.exercices.day3[3]}</td>
-                        <td>{plan.exercices.day4[3]}</td>
-                        </tr>
-                        <tr>
-                        <td>5</td>
-                        <td>{plan.exercices.day1[4]}</td>
-                        <td>{plan.exercices.day2[4]}</td>
-                        <td>{plan.exercices.day3[4]}</td>
-                        <td>{plan.exercices.day4[4]}</td>
-                        </tr>
-                        <tr>
-                        <td>6</td>
-                        <td>{plan.exercices.day1[5]}</td>
-                        <td>{plan.exercices.day2[5]}</td>
-                        <td>{plan.exercices.day3[5]}</td>
-                        <td>{plan.exercices.day4[5]}</td>
-                        </tr>
-                    </tbody>
 
-                </Table>
+                <div className='plan-wrapper'>
+                    {renderData()}
+                </div>
+                
                 {added ? (<button onClick={handleRemoveClick} type='button'>Remove from Favorites </button>) : <button onClick={handleAddClick} type='button'>Add to Favorites </button>}
                 </div>
             </div>

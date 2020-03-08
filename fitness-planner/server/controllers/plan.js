@@ -46,17 +46,16 @@ module.exports = {
           goal,
           level,
           details,
-          exercices
+          exercises
         } = req.body;
       const { _id } = req.user;
-  
       models.Plan.create({  
             name, 
             imageUrl,
             goal,
             level,
             details,
-            exercices
+            exercises
          })
         .then((createdPlan) => {
           return Promise.all([ models.Plan.findOne({ _id: createdPlan._id })]);
@@ -78,13 +77,13 @@ module.exports = {
         goal,
         level,
         details,
-        exercices } = req.body;
+        exercises } = req.body;
       models.Plan.updateOne({ _id: id }, { name, 
         imageUrl,
         goal,
         level,
         details,
-        exercices })
+        exercises })
         .then((updatedPlan) => res.send(updatedPlan))
         .catch(next)
     },

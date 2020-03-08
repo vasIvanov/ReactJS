@@ -29,20 +29,7 @@ const planSchema = new Schema({
         type: String
     },
 
-    exercices: {
-        day1: {
-            type: [String]
-        },
-        day2: {
-            type: [String]
-        },
-        day3: {
-            type: [String]
-        },
-        day4: {
-            type: [String]
-        },
-    }
+    exercises: {}
 });
 
 
