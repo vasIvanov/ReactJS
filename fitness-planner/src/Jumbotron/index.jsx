@@ -11,7 +11,7 @@ const JumbotronFunc = ({isLogged}) => {
     return (
         <div className='jumbotron-comp' >
             <Container>
-                {isLogged && <div>
+                {isLogged && <div className='info'>
                     <h1>Browse our Plans {userValue && userValue.username ? userValue.username : localStorage.getItem('username')}!</h1>
                     <p>
                     This is a simple hero unit, a simple jumbotron-style component for calling
@@ -20,7 +20,7 @@ const JumbotronFunc = ({isLogged}) => {
                     </div> 
                 }
                 {!isLogged && 
-                    <div>
+                    <div className='info'>
                         <h1>Begin your training today!</h1>
                         <p>
                             This is a simple hero unit, a simple jumbotron-style component for calling

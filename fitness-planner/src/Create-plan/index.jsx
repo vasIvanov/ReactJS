@@ -4,9 +4,10 @@ import './index.css';
 import validate from './schema';
 import postService from '../services/plan-service';
 // import widget from './cloudinaryWidget';
-import Test from '../DynamicInputField'
+import DynamicInputField from '../DynamicInputField'
 import { useEffect } from 'react';
 import {planContext} from '../planContext';
+import Modal from './Modal';
 
 const CreatePlan = ({history, showChange}) => {
     const [planName, setPlanName] = useState('');
@@ -26,25 +27,36 @@ const CreatePlan = ({history, showChange}) => {
     const [day5, setDay5] = useState('');
     const [day6, setDay6] = useState('');
     const [day7, setDay7] = useState('');
+    const [urlStatus, setUrlStatus] = useState(false);
     const [buttonActive, setButtonActive] = useState(false);
     const nullDays = () => { setDay1(''); setDay2(''); setDay3(''); setDay4(''); setDay5(''); setDay6(''); setDay7('');}
 
+    const hanleUrlChange = (e) => {setPlanImage(e.target.value);  setUrlStatus(false); setButtonActive(false)} 
+    const handleCheckClick = (e) => {
+        setImageUrlError('')
+        e.preventDefault();
+        var img = new Image();
+        img.onload = () => setUrlStatus(true); 
+        img.onerror = () => setImageUrlError('Invalid URL!');
+        img.src = planImage;
+    }
+
     // const myWidget = widget(setPlanImage);
     useEffect(() => {
-        if(days === '2') {
-            setButtonActive(day1 !== '' && day2 !== '')
+        if(days === '2' && urlStatus) {
+            setButtonActive(day1 !== '' && day2 !== '' && urlStatus)
         } else if(days === '3') {
-            setButtonActive(day1 !== '' && day2 !== '' && day3 !=='') 
+            setButtonActive(day1 !== '' && day2 !== '' && day3 !=='' && urlStatus) 
         } else if(days === '4') {
-            setButtonActive(day1 !== '' && day2 !== '' && day3 !=='' && day4 !=='')
+            setButtonActive(day1 !== '' && day2 !== '' && day3 !=='' && day4 !=='' && urlStatus)
         } else if(days === '5') {
-            setButtonActive(day1 !== '' && day2 !== '' && day3 !=='' && day4 !=='' && day5 !== '');
+            setButtonActive(day1 !== '' && day2 !== '' && day3 !=='' && day4 !=='' && day5 !== '' && urlStatus);
         } else if(days === '6') {
-            setButtonActive(day1 !== '' && day2 !== '' && day3 !=='' && day4 !=='' && day5 !== '' && day6 !== '');
+            setButtonActive(day1 !== '' && day2 !== '' && day3 !=='' && day4 !=='' && day5 !== '' && day6 !== '' && urlStatus);
         } else if(days === '7') {
-            setButtonActive(day1 !== '' && day2 !== '' && day3 !=='' && day4 !=='' && day5 !== '' && day6 !== '' && day7 !== '');
+            setButtonActive(day1 !== '' && day2 !== '' && day3 !=='' && day4 !=='' && day5 !== '' && day6 !== '' && day7 !== '' && urlStatus);
         } 
-    }, [days, day1, day2, day3, day4, day5, day6, day7])
+    }, [days, day1, day2, day3, day4, day5, day6, day7, urlStatus])
 
     const handleSelect = (e) => {
         nullDays()
@@ -86,6 +98,8 @@ const CreatePlan = ({history, showChange}) => {
                 })
             })
             .catch(err => {
+                console.log(err);
+                
                 err.inner.forEach(error => {
                 if(error.path === 'planName') {
                     setNameError(error.message);
@@ -101,6 +115,7 @@ const CreatePlan = ({history, showChange}) => {
 
     return (
         <React.Fragment>
+            
             <div className="wrapper">
                 <Form>
                     <Form.Group controlId="exampleForm.ControlInput1">
@@ -109,7 +124,6 @@ const CreatePlan = ({history, showChange}) => {
                         {nameError ? <Alert variant={'danger'}>{nameError}</Alert> : null}
                         {serverError ? <Alert variant={'danger'}>{serverError}</Alert> : null}
                     </Form.Group>
-                    
                     {/* <Form.Group controlId="exampleForm.ControlInput2">
                         <Form.Label>Plan Image Url</Form.Label>
                         <div>
@@ -119,7 +133,8 @@ const CreatePlan = ({history, showChange}) => {
                     </Form.Group> */}
                     <Form.Group controlId="exampleForm.ControlInput2">
                         <Form.Label>Plan Image Url</Form.Label>
-                        <Form.Control onChange={(e) => setPlanImage(e.target.value)} type="text" />
+                        <Form.Control onChange={hanleUrlChange} type="text" />
+                        {urlStatus ? <Modal planImage={planImage}/> : <button onClick={handleCheckClick} type='button'>Check URL</button>}
                         {imageUrlError ? <Alert variant={'danger'}>{imageUrlError}</Alert> : null}
                     </Form.Group>
 
@@ -159,52 +174,52 @@ const CreatePlan = ({history, showChange}) => {
                 </Form>
                 <planContext.Provider value={{setButtonActive}}>
                 {days === '2' ? <div className="days-table">
-                    <Test day={'1'} setDay1={setDay1}/>
-                    <Test day={'2'} setDay2={setDay2}/>
+                    <DynamicInputField day={'1'} setDay1={setDay1}/>
+                    <DynamicInputField day={'2'} setDay2={setDay2}/>
                 </div> : null}
                 {days === '3' ? 
                 <div className="days-table"> 
-                    <Test day={'1'} setDay1={setDay1}/>
-                    <Test day={'2'} setDay2={setDay2}/>
-                    <Test day={'3'} setDay3={setDay3}/>
+                    <DynamicInputField day={'1'} setDay1={setDay1}/>
+                    <DynamicInputField day={'2'} setDay2={setDay2}/>
+                    <DynamicInputField day={'3'} setDay3={setDay3}/>
                 </div>
                 : null}
                 {days === '4' ? 
                 <div className="days-table"> 
-                    <Test day={'1'} setDay1={setDay1}/>
-                    <Test day={'2'} setDay2={setDay2}/>
-                    <Test day={'3'} setDay3={setDay3}/>
-                    <Test day={'4'} setDay4={setDay4}/>
+                    <DynamicInputField day={'1'} setDay1={setDay1}/>
+                    <DynamicInputField day={'2'} setDay2={setDay2}/>
+                    <DynamicInputField day={'3'} setDay3={setDay3}/>
+                    <DynamicInputField day={'4'} setDay4={setDay4}/>
                 </div>
                 : null}
                 {days === '5' ? 
                 <div className="days-table"> 
-                    <Test day={'1'} setDay1={setDay1}/>
-                    <Test day={'2'} setDay2={setDay2}/>
-                    <Test day={'3'} setDay3={setDay3}/>
-                    <Test day={'4'} setDay4={setDay4}/>
-                    <Test day={'5'} setDay5={setDay5}/>
+                    <DynamicInputField day={'1'} setDay1={setDay1}/>
+                    <DynamicInputField day={'2'} setDay2={setDay2}/>
+                    <DynamicInputField day={'3'} setDay3={setDay3}/>
+                    <DynamicInputField day={'4'} setDay4={setDay4}/>
+                    <DynamicInputField day={'5'} setDay5={setDay5}/>
                 </div>
                 : null}
                 {days === '6' ? 
                 <div className="days-table"> 
-                    <Test day={'1'} setDay1={setDay1}/>
-                    <Test day={'2'} setDay2={setDay2}/>
-                    <Test day={'3'} setDay3={setDay3}/>
-                    <Test day={'4'} setDay4={setDay4}/>
-                    <Test day={'5'} setDa5={setDay5}/>
-                    <Test day={'6'} setDay6={setDay6}/>
+                    <DynamicInputField day={'1'} setDay1={setDay1}/>
+                    <DynamicInputField day={'2'} setDay2={setDay2}/>
+                    <DynamicInputField day={'3'} setDay3={setDay3}/>
+                    <DynamicInputField day={'4'} setDay4={setDay4}/>
+                    <DynamicInputField day={'5'} setDa5={setDay5}/>
+                    <DynamicInputField day={'6'} setDay6={setDay6}/>
                 </div>
                 : null}
                 {days === '7' ? 
                 <div className="days-table"> 
-                    <Test day={'1'} setDay1={setDay1}/>
-                    <Test day={'2'} setDay2={setDay2}/>
-                    <Test day={'3'} setDay3={setDay3}/>
-                    <Test day={'4'} setDay4={setDay4}/>
-                    <Test day={'5'} setDay5={setDay5}/>
-                    <Test day={'6'} setDay6={setDay6}/>
-                    <Test day={'7'} setDay7={setDay7}/>
+                    <DynamicInputField day={'1'} setDay1={setDay1}/>
+                    <DynamicInputField day={'2'} setDay2={setDay2}/>
+                    <DynamicInputField day={'3'} setDay3={setDay3}/>
+                    <DynamicInputField day={'4'} setDay4={setDay4}/>
+                    <DynamicInputField day={'5'} setDay5={setDay5}/>
+                    <DynamicInputField day={'6'} setDay6={setDay6}/>
+                    <DynamicInputField day={'7'} setDay7={setDay7}/>
                 </div>
                 : null}
                 </planContext.Provider >

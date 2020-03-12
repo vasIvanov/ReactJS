@@ -8,7 +8,18 @@
     padding: 0.5em;
 }
 
-.plans-tabs {
-    max-width: 80em;
-    margin: 0 auto;
+.custom {
+    background: rgb(43, 42, 42);
+}
+
+.custom * {
+    color: white;
+    font-weight: 600;
+    font-size: 1.2em;
+    border-right: 1px solid white !important;
+}
+
+.custom *:hover {
+    background-color: white;
+    color: black;
 }

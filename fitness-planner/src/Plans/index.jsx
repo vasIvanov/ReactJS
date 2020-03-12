@@ -18,8 +18,8 @@ const Plans = ({isLogged, plans, categoriezed}) => {
     
     return categoriezed && plans ? (
         <div className="plans-tabs">
-            <Tabs  defaultActiveKey="profile" id="uncontrolled-tab-example">
-                <Tab  eventKey="muscle-gain" title="Muscle Gain">
+            <Tabs className='custom' defaultActiveKey="profile" id="uncontrolled-tab-example">
+                <Tab eventKey="muscle-gain" title="Muscle Gain">
                     <div className="plans">
                         {muscleGainPlans.map((plan, i) => (<Plan key={i} plan={plan} isLogged={isLogged}/>))}
                     </div>

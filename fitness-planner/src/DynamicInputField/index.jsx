@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import './index.css'
 import {planContext} from '../planContext';
 
-const Test = ({day, setDay1, setDay2, setDay3, setDay4,setDay5, setDay6, setDay7, className}) => {
+const DynamicInputField = ({day, setDay1, setDay2, setDay3, setDay4,setDay5, setDay6, setDay7, className}) => {
   const [inputFields, setInputFields] = useState(['']);
   const [clicked, setClicked] = useState(false);
   const planValue = useContext(planContext);
@@ -72,21 +72,23 @@ const Test = ({day, setDay1, setDay2, setDay3, setDay4,setDay5, setDay6, setDay7
               </div>
               <div className="form-group col-sm-2">
 
+                
+
+                
+                {index === 0 ? <button
+                  className="custom-add"
+                  type="button"
+                  onClick={() => handleAddFields()}
+                >
+                  +
+                </button> : null}
                 {index > 0 ? <button
-                  className="btn btn-link"
+                  className="custom-remove"
                   type="button"
                   onClick={() => handleRemoveFields(index)}
                 >
                   -
                 </button> : null}
-
-                <button
-                  className="btn btn-link"
-                  type="button"
-                  onClick={() => handleAddFields()}
-                >
-                  +
-                </button>
               </div>
             </Fragment>
           ))}
@@ -115,4 +117,4 @@ const Test = ({day, setDay1, setDay2, setDay3, setDay4,setDay5, setDay6, setDay7
   );
 };
 
-export default Test;
+export default DynamicInputField;

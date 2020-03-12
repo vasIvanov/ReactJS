@@ -7,6 +7,7 @@ const schema = yup.object({
 });
 
 function validate(planName, planImage, planDetails) {
+    
     return schema
         .validate({planName, planImage, planDetails}, {abortEarly: false})
         

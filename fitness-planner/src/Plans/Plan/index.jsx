@@ -4,7 +4,9 @@ import {
     Link
   } from 'react-router-dom'
 const Plan = ({isLogged, plan}) => {
-    let detailUrl = `/details/${plan._id}`
+    let details = plan.details.split(' ').length > 20 ? plan.details.split(' ').slice(0, 20).join(' ').trim().concat(' .....') : plan.details;
+    let detailUrl = `/details/${plan._id}`;
+    
     return (
         <div className="plan">
             <Card>
@@ -12,7 +14,7 @@ const Plan = ({isLogged, plan}) => {
                 <Card.Body>
                     <Card.Title>{plan.name}</Card.Title>
                     <Card.Text>
-                        {plan.details}
+                        {details}
                     </Card.Text>
                     {isLogged && <Link className='link' to={detailUrl}>Details</Link>}
                 </Card.Body>
