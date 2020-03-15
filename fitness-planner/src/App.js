@@ -45,7 +45,6 @@ const App = () => {
       <React.Fragment>
         <Router>
           <userContext.Provider value={userData}>
-            <Header isLogged={isLogged}/>
             <div aria-live="polite" aria-atomic="true" className='toast-outer' >
               <div className='toast-inner' >
                 <Toast  onClose={() => setShow(false)} show={show} delay={3000} autohide>

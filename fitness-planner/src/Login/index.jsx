@@ -3,6 +3,7 @@ import './index.css';
 import { Button, Form, Alert } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import validate from './schema';
+import Header from '../Header';
 
 const Login = ({history, login}) => {
     const [username, setUsername] = useState('');
@@ -36,6 +37,8 @@ const Login = ({history, login}) => {
     }
       
     return (
+      <React.Fragment>
+        <Header isLogged={false}  bgColor='dark'/>
         <div className="form">
         <Form>
           <Form.Group controlId="formBasicUsername">
@@ -60,6 +63,7 @@ const Login = ({history, login}) => {
             </Button>
           </Form>
         </div>
+      </React.Fragment>
     )
 }
 

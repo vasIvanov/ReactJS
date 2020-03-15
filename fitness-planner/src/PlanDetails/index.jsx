@@ -3,6 +3,7 @@ import './index.css';
 import planService from '../services/plan-service'
 import userServices from '../services/user-service'
 import {userContext} from '../userContext';
+import Header from '../Header';
 
 const PlanDetails = ({match, isLogged, history}) => {
     const [plan, setPlan] = useState('');
@@ -55,6 +56,7 @@ const PlanDetails = ({match, isLogged, history}) => {
 
     return plan ? (
         <React.Fragment>
+            <Header isLogged={isLogged}  bgColor='dark'/>
             <div className="details">
                 <div className="media">
                     <img src={plan.imageUrl} alt=""/>
@@ -74,7 +76,10 @@ const PlanDetails = ({match, isLogged, history}) => {
                 </div>
             </div>
         </React.Fragment>
-    ) : <div>Loading ...</div>
+    ) : <div>
+            <Header isLogged={isLogged}  bgColor='dark'/>
+            Loading ...
+        </div>
 }
 
 export default PlanDetails;

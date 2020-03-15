@@ -43,3 +43,11 @@ textarea {
 .create-button:disabled:hover {
     cursor: not-allowed;
 }
+
+.custom-input {
+    margin-bottom: 0.5em;
+}
+
+.custom-alert {
+    margin-top: 0.5em;
+}

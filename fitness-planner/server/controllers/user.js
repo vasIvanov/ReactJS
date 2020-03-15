@@ -9,6 +9,12 @@ module.exports = {
       .catch(next)
   },
 
+  getInstructors:(req, res, next) => {
+    models.User.find({instructor: true})
+      .then(instructors => res.send(instructors))
+      .catch(next)
+  },
+
   post: {
     register: (req, res, next) => {
       const { username, password, city, instructor } = req.body;

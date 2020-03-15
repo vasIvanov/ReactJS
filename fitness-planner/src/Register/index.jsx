@@ -4,6 +4,7 @@ import { Button, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import userService from '../services/user-service';
 import validate from './schema';
+import Header from '../Header';
 
 const Register = ({history, showChange}) => {
     const [username, emailChange] = useState('');
@@ -50,6 +51,7 @@ const Register = ({history, showChange}) => {
 
     return (
       <Fragment>
+        <Header isLogged={false}  bgColor='dark'/>
         <div className="form">
           <Form>
             <Form.Group controlId="formBasicUsername">

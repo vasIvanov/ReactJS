@@ -1,9 +1,12 @@
 import React, { useState, Fragment, useEffect, useContext } from 'react';
 import './index.css';
-import Jumbotron from '../Jumbotron';
+import Jumbotron from './Jumbotron';
 import Plans from '../Plans';
 import planService from '../services/plan-service';
 import {userContext} from '../userContext';
+import InfoSection from './InfoSection';
+import Header from '../Header'
+import InstructorsSection from './InstructorsSection';
 
 const Home = ({isLogged}) => {
     const [temperature, setTemperature] = useState('');
@@ -39,21 +42,24 @@ const Home = ({isLogged}) => {
 
     return (
         <Fragment>
+            <Header isLogged={isLogged} fixed='top'/>
             <div className='home-content'>
                 <Jumbotron isLogged={isLogged}/>
-                {isLogged && city ? 
+                <InfoSection />
+                <InstructorsSection />
+                {/* {isLogged && city ? 
                     <div>
                         <p>{temperature && feelTemp ? `Temperature in ${city} is ${temperature}${unitsSign}  Real feel ${feelTemp}${unitsSign}.` : 'Loading...'}</p>
                         <p>{message ? message : null}</p>
                         <button onClick={() => {setUnits('imperial'); setUnitsSign('F') }} type="button">Imperial</button>
                         <button onClick={() => {setUnits('metric'); setUnitsSign('C') }} type="button">Metric</button>
                     </div> 
-                : null}
-                {plans ? <Plans plans={plans}  isLogged={isLogged} categoriezed={true}/> : <div>Loading...</div>}
+                : null} */}
+                {/* {plans ? <Plans plans={plans}  isLogged={isLogged} categoriezed={true}/> : <div>Loading...</div>} */}
             </div>
         </Fragment>
     )
 }
 
-export default Home
+export default Home;
 

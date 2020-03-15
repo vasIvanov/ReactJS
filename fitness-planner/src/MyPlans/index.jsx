@@ -3,6 +3,7 @@ import './index.css'
 import Plans from '../Plans';
 import userServices from '../services/user-service'
 import {userContext} from '../userContext';
+import Header from '../Header';
 
 const MyPlans = ({isLogged}) => {
     const userValue = useContext(userContext);
@@ -17,7 +18,11 @@ const MyPlans = ({isLogged}) => {
     }, [userId])
 
     return (
-        <Plans plans={plans} isLogged={isLogged} categoriezed={false} />
+        <React.Fragment>
+            <Header isLogged={isLogged}  bgColor='dark'/>
+            <Plans plans={plans} isLogged={isLogged} categoriezed={false} />
+
+        </React.Fragment>
     )
 }
 

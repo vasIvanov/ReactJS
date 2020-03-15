@@ -8,9 +8,11 @@ import {
 import { useEffect, useContext } from 'react';
 import {userContext} from '../userContext';
 
-const Header = ({isLogged}) => {
+const Header = ({isLogged, fixed, bgColor}) => {
   const [search, setSearch] = useState('');
   const [url, setUrl] = useState('/search?');
+  const [headerBgrd, setIsHeaderBgrd] = useState('');
+  const color = bgColor ? bgColor : headerBgrd
   const userValue = useContext(userContext);
   let instructor = false;
   if(isLogged) {
@@ -22,11 +24,22 @@ const Header = ({isLogged}) => {
   }
 
   useEffect(() => {
+    document.addEventListener('scroll', () => {
+      const isTop = window.scrollY < 100;
+      if (!isTop) {
+        setIsHeaderBgrd('dark')
+      } else {
+        setIsHeaderBgrd('')
+      }
+    });
+  })
+
+  useEffect(() => {
     setUrl(`/search/${search}`)
   }, [search])
 
     return (
-      <Navbar bg="light" expand="lg">
+      <Navbar bg={color}  fixed={fixed} expand="lg">
         <Navbar.Brand ><Link className='brand' to="/">Fitness Planner</Link></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
@@ -44,7 +57,7 @@ const Header = ({isLogged}) => {
             </Form>
           </Navbar.Collapse>
       </Navbar>
-    )
+    ) 
 }
 
 export default Header;

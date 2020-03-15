@@ -1,8 +1,7 @@
 import React, {useContext} from 'react';
 import { Container } from 'react-bootstrap';
 import {Link} from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import {userContext} from '../userContext';
+import {userContext} from '../../userContext';
 import './index.css'
 
 const JumbotronFunc = ({isLogged}) => {

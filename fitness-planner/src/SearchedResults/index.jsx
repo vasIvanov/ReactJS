@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import planService from '../services/plan-service';
 import { useEffect } from 'react';
 import Plans from '../Plans';
+import Header from '../Header';
 
 const SearchedResults = ({match, isLogged}) => {
     const query = match.params.query;
@@ -17,9 +18,13 @@ const SearchedResults = ({match, isLogged}) => {
 
     
     return plans ? (
-        <Plans isLogged={isLogged} plans={plans} categoriezed={false}/> 
+        <React.Fragment>
+            <Header isLogged={false}  bgColor='dark'/>
+            <Plans isLogged={isLogged} plans={plans} categoriezed={false}/> 
+        </React.Fragment>
     ) : 
     (<div>
+        <Header isLogged={false}  bgColor='dark'/>
         Loading...
     </div>)
 }

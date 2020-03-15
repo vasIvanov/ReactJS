@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {Form, Alert} from 'react-bootstrap';
 import './index.css';
 import validate from './schema';
@@ -8,6 +8,7 @@ import DynamicInputField from '../DynamicInputField'
 import { useEffect } from 'react';
 import {planContext} from '../planContext';
 import Modal from './Modal';
+import Header from '../Header';
 
 const CreatePlan = ({history, showChange}) => {
     const [planName, setPlanName] = useState('');
@@ -31,18 +32,31 @@ const CreatePlan = ({history, showChange}) => {
     const [buttonActive, setButtonActive] = useState(false);
     const nullDays = () => { setDay1(''); setDay2(''); setDay3(''); setDay4(''); setDay5(''); setDay6(''); setDay7('');}
 
-    const hanleUrlChange = (e) => {setPlanImage(e.target.value);  setUrlStatus(false); setButtonActive(false)} 
-    const handleCheckClick = (e) => {
+    const hanleUrlChange = (e) => {
+        let value = e.target.value
+        setPlanImage(value);
+        setUrlStatus(false); 
+        setButtonActive(false);
+    } 
+
+    const setError = useCallback(() => {
+        setImageUrlError('Invalid URL!')
+    }, [])
+
+    const setSuccess = () => {
         setImageUrlError('')
-        e.preventDefault();
-        var img = new Image();
-        img.onload = () => setUrlStatus(true); 
-        img.onerror = () => setImageUrlError('Invalid URL!');
-        img.src = planImage;
+        setUrlStatus(true);
     }
 
     // const myWidget = widget(setPlanImage);
     useEffect(() => {
+        if(planImage) {
+            const img = new Image();
+            img.onload = setSuccess ;
+            img.onerror = setError ;
+            img.src = planImage;
+        }
+
         if(days === '2' && urlStatus) {
             setButtonActive(day1 !== '' && day2 !== '' && urlStatus)
         } else if(days === '3') {
@@ -56,7 +70,7 @@ const CreatePlan = ({history, showChange}) => {
         } else if(days === '7') {
             setButtonActive(day1 !== '' && day2 !== '' && day3 !=='' && day4 !=='' && day5 !== '' && day6 !== '' && day7 !== '' && urlStatus);
         } 
-    }, [days, day1, day2, day3, day4, day5, day6, day7, urlStatus])
+    }, [days, day1, day2, day3, day4, day5, day6, day7, urlStatus, planImage, setError])
 
     const handleSelect = (e) => {
         nullDays()
@@ -98,8 +112,6 @@ const CreatePlan = ({history, showChange}) => {
                 })
             })
             .catch(err => {
-                console.log(err);
-                
                 err.inner.forEach(error => {
                 if(error.path === 'planName') {
                     setNameError(error.message);
@@ -115,7 +127,7 @@ const CreatePlan = ({history, showChange}) => {
 
     return (
         <React.Fragment>
-            
+            <Header isLogged={true}  bgColor='dark'/>
             <div className="wrapper">
                 <Form>
                     <Form.Group controlId="exampleForm.ControlInput1">
@@ -133,9 +145,9 @@ const CreatePlan = ({history, showChange}) => {
                     </Form.Group> */}
                     <Form.Group controlId="exampleForm.ControlInput2">
                         <Form.Label>Plan Image Url</Form.Label>
-                        <Form.Control onChange={hanleUrlChange} type="text" />
-                        {urlStatus ? <Modal planImage={planImage}/> : <button onClick={handleCheckClick} type='button'>Check URL</button>}
-                        {imageUrlError ? <Alert variant={'danger'}>{imageUrlError}</Alert> : null}
+                        <Form.Control autoComplete="off" value={planImage} className='custom-input' onChange={hanleUrlChange} type="text" />
+                        {urlStatus ? <Modal planImage={planImage}/> : null}
+                        {imageUrlError ? <Alert className='custom-alert' variant={'danger'}>{imageUrlError}</Alert> : null}
                     </Form.Group>
 
                     <Form.Group controlId="exampleForm.ControlSelect3">
