@@ -4,22 +4,26 @@
 }
 
 .plan {
-    flex: 50% 0 0;
+    flex: 25% 0 0;
     padding: 0.5em;
 }
 
 .custom {
-    background: rgb(43, 42, 42);
+    display: flex;
+    justify-content: center;
 }
 
 .custom * {
-    color: white;
+    color: black;
     font-weight: 600;
-    font-size: 1.2em;
     border-right: 1px solid white !important;
 }
 
 .custom *:hover {
-    background-color: white;
-    color: black;
+  color: green;
+}
+
+.custom .active {
+    font-weight: 900;
+    border-bottom: 2px solid green !important;
 }

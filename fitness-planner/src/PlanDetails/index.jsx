@@ -3,6 +3,7 @@ import './index.css';
 import planService from '../services/plan-service'
 import userServices from '../services/user-service'
 import {userContext} from '../userContext';
+import {Button} from 'react-bootstrap';
 import Header from '../Header';
 
 const PlanDetails = ({match, isLogged, history}) => {
@@ -72,7 +73,7 @@ const PlanDetails = ({match, isLogged, history}) => {
                     {renderData()}
                 </div>
                 
-                {added ? (<button onClick={handleRemoveClick} type='button'>Remove from Favorites </button>) : <button onClick={handleAddClick} type='button'>Add to Favorites </button>}
+                {added ? (<Button variant='danger' className='details-button' onClick={handleRemoveClick} type='button'>Remove from Favorites </Button>) : <Button variant='primary' className='details-button' onClick={handleAddClick} type='button'>Add to Favorites </Button>}
                 </div>
             </div>
         </React.Fragment>

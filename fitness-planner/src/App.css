@@ -7,20 +7,20 @@
 html {
     box-sizing: border-box;
     font: 18px/1.5 'Courgette', cursive;
+    position: relative;
+
 }
 
-body {
-    background: #F5F5F5;
-}
 
 .toast-outer {
     position: relative;
-     min-height: 0px;
+    min-height: 0px;
 }
 
 .toast-inner {
+    z-index: 100;
     position: absolute;
-    top: 0;
+    top: 4em;
     left: 0;
 }
 

@@ -3,7 +3,7 @@ import userServices from '../../services/user-service';
 import planServices from '../../services/plan-service';
 import './index.css';
 
-const InstructorsSection = () => {
+const StatisticsSection = () => {
     const [instructors, setInstructors] = useState('');
     const [plans, setPlans] = useState('');
     const [users, setUsers] = useState('');
@@ -30,4 +30,4 @@ const InstructorsSection = () => {
     )
 }   
 
-export default InstructorsSection;
+export default StatisticsSection;

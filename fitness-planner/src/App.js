@@ -11,7 +11,6 @@ import Home from './Home';
 import CreatePlan from './Create-plan';
 import PlanDetails from './PlanDetails';
 import MyPlans from './MyPlans';
-import Header from './Header';
 import Logout from './Logout';
 import NotFound from './NotFound';
 import SearchedResults from './SearchedResults';
@@ -20,6 +19,8 @@ import { Toast } from 'react-bootstrap';
 import render from './utils/render';
 import parseCookies from './utils/parseCookies';
 import {loginFunc, logoutFunc} from './utils/user';
+import Plans from './Plans/index';
+import Footer from './Footer';
 
 const App = () => {
   const cookies = parseCookies();
@@ -55,18 +56,21 @@ const App = () => {
             </div>
           </div>
             <Switch>
-              <Route exact path="/" render={render(Home, {isLogged})} />
+              {!isLogged && <Route exact path="/" render={render(Home, {isLogged})} />}
+              {isLogged && <Route exact path="/" render={render(MyPlans, {isLogged})} />}
               {!isLogged && <Route path="/login" render={render(Login, {isLogged, login: loginFunc(setIsLogged, setUserData, setShow, setMessage)})}/>}
               {!isLogged && <Route path="/register" render={render(Register, {isLogged, showChange: () => {setShow(true); setMessage('Registration Successful')}})}/>}
               {isLogged && <Route path="/logout" render={render(Logout, { isLogged, logout: logoutFunc(setIsLogged, setUserData, setShow, setMessage) })} />}
 
               {isLogged && ((userData && userData.instructor) || localStorage.getItem('instructor')) ? <Route path='/create-plan'  render={render(CreatePlan, {isLogged, showChange: () => {setShow(true); setMessage('Plan Created')}})}  /> : null}
               <Route path='/details/:id'  render={render(PlanDetails, {isLogged})} />
+              <Route path='/plans'  render={render(Plans, {isLogged, categorized: true} )} />
               <Route path='/search/:query?' render={render(SearchedResults, {isLogged})} />
               {isLogged && <Route path="/my-plans" render={render(MyPlans, { isLogged })} />}
 
               <Route component={NotFound}  />
             </Switch>
+            <Footer />
           </userContext.Provider>
         </Router>
       </React.Fragment>

@@ -44,12 +44,12 @@ const Header = ({isLogged, fixed, bgColor}) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              <Link className='link' to="/">Home</Link>
+              {!isLogged ? <Link className='link' to="/">Home</Link> : <Link className='link' to="/">My Plans</Link>}
               {!isLogged && <Link className='link' to="/login">Login</Link>}
               {!isLogged && <Link className='link' to="/register">Register</Link>}
+              {<Link className='link' to="/plans">Plans</Link>}
               {isLogged && instructor ? <Link className='link' to="/create-plan">Create Plan</Link> : null}
               {isLogged && <Link className='link' to="/logout">Logout</Link>}
-              {isLogged && <Link className='link' to="/my-plans">My Plans</Link>}
             </Nav>
             <Form inline>
               <FormControl onChange={handleSearchChange} type="text" placeholder="Search" className="mr-sm-2" />

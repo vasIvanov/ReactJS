@@ -1,0 +1,9 @@
+.details-link {
+    color: green;
+    padding: 0.3em 0.6em;
+    border-radius: 0.2em;
+}
+
+.plan:last-child {
+    margin-bottom: 3em;
+}

@@ -1,0 +1,14 @@
+.footer {
+    background-color: #343A40;
+    color: white;
+    padding: 0.3em;
+    text-align: center;
+    font-size: 1.2em;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer span {
+    color: yellowgreen;
+}
