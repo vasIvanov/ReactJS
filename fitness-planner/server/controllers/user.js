@@ -37,8 +37,7 @@ module.exports = {
 
     login: (req, res, next) => {
       const { username, password } = req.body;
-      
-      models.User.findOne({ username })
+      models.User.findOne({ username }).populate('plans')
         .then((user) => !!user ?  Promise.all([user, user.matchPassword(password)]) : [null, false])
         .then(([user, match]) => {
           if (!match || !user) {

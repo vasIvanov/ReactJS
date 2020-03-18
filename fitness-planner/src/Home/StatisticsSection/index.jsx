@@ -15,10 +15,10 @@ const StatisticsSection = () => {
     }, [])
     
     return (
-        <article class="content">
-        <section class="media">
+        <article className="content">
+        <section className="media">
         </section>
-        <section class="product-details">
+        <section className="product-details">
             <ul>
                 <li>We have {instructors.length} Instructors</li>
                 <li>{plans.length} Plans to choose from</li>

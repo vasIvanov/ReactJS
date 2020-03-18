@@ -6,12 +6,14 @@ import {userContext} from '../userContext';
 import {Button} from 'react-bootstrap';
 import Header from '../Header';
 
-const PlanDetails = ({match, isLogged, history}) => {
+const PlanDetails = ({match, isLogged, history, setUserData}) => {
     const [plan, setPlan] = useState('');
     const userValue = useContext(userContext)
     const userId = (userValue && userValue._id) || localStorage.getItem('_id');
     const planId = match.params.id;
     const [added, setAdded] = useState(false);
+    const plans = (userValue && userValue.plans) || JSON.parse(localStorage.getItem('plans'));
+    
     useEffect(() => {
         planService.load(planId).then(plan => {
             setPlan(plan)
@@ -26,15 +28,37 @@ const PlanDetails = ({match, isLogged, history}) => {
             })
         })
     }, [planId, userId])
-
+    
     const handleAddClick = () => {
         userServices.update({_id: userId, planId, add: true}).then(() => {
+            if(userValue) {
+                plans.push(plan)
+                setUserData({
+                    ...userValue,
+                    plans
+                })
+            }
+            if(localStorage.getItem('plans')) {
+                plans.push(plan);
+                localStorage.setItem('plans', JSON.stringify(plans));
+            }
             history.push('/')
         })
     }
 
     const handleRemoveClick = () => {
         userServices.update({_id: userId, planId, add: false}).then(() => {
+            if(userValue) {
+                const filteredPlans = plans.filter(p => p._id !== planId);
+                setUserData({
+                    ...userValue,
+                    plans: filteredPlans
+                })
+            }
+            if(localStorage.getItem('plans')) {
+                let newPlans = plans.filter(p => p._id !== planId);
+                localStorage.setItem('plans', JSON.stringify(newPlans));
+            }
             history.push('/')
         })
     }

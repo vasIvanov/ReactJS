@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import './index.css';
 import { Button, Form, Alert } from 'react-bootstrap';
+import {
+  Link
+} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import validate from './schema';
 import Header from '../Header';
@@ -61,7 +64,9 @@ const Login = ({history, login}) => {
             <Button onClick={handleSubmit} variant="primary" type="button">
               Submit
             </Button>
+            <Link className='custom-register-button' to='/register'>Dont have account?</Link>
           </Form>
+          
         </div>
       </React.Fragment>
     )

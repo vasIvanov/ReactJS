@@ -1,21 +1,20 @@
 import React, {useState, useEffect, useContext} from 'react';
 import './index.css'
 import Plan from '../Plans/Plan';
-import userServices from '../services/user-service'
 import {userContext} from '../userContext';
 import Header from '../Header'
 import {Button} from 'react-bootstrap';
 
 const MyPlans = ({isLogged}) => {
     const userValue = useContext(userContext);
-    const userId = (userValue && userValue._id) || localStorage.getItem('_id');
-    const [plans, setPlans] = useState('');
     const [temperature, setTemperature] = useState('');
     const [feelTemp, setFeelTemp] = useState('');
     const [units, setUnits] = useState('metric');
     const [unitsSign, setUnitsSign] = useState('C');
+    const userPlans =  (userValue && userValue.plans) || JSON.parse(localStorage.getItem('plans')) || '';
     let message = '';
     let city = '';
+
     if(isLogged) {
         city = (userValue && userValue.city) || localStorage.getItem('city') || false;
     }
@@ -33,27 +32,22 @@ const MyPlans = ({isLogged}) => {
         }
     }, [units, unitsSign, isLogged, city])
 
-    useEffect(() => {
-        userServices.getUsers().then(r => {
-            const user = r.filter(u => u._id === userId)[0];
-            setPlans(user.plans);
-        })
-    }, [userId])
-
     return (
         <React.Fragment>
             <Header isLogged={isLogged}  bgColor='dark'/>
             {isLogged && city ? 
-                    <div>
-                        <p>{temperature && feelTemp ? `Temperature in ${city} is ${temperature}${unitsSign}  Real feel ${feelTemp}${unitsSign}.` : 'Loading...'}</p>
+                    <div className='weather-section'>
+                        <p>{`Weather in ${city}`}</p>
+                        {temperature && feelTemp && units === 'metric' ?  <p>{temperature}<span className='units'>&#8451;</span>  {`Real feel ${feelTemp}`}&#8451;</p> : null}
+                        {temperature && feelTemp  && units === 'imperial' ?  <p>{temperature}&#8457;  {`Real feel ${feelTemp}`}&#8457;</p> : null}
                         <p>{message ? message : null}</p>
-                        <Button variant='light' onClick={() => {setUnits('imperial'); setUnitsSign('F') }} type="button">Imperial</Button>
-                        <Button variant='light' onClick={() => {setUnits('metric'); setUnitsSign('C') }} type="button">Metric</Button>
+                        {units === 'metric' && <Button className='custom-units-button'  onClick={() => {setUnits('imperial'); setUnitsSign('F') }} type="button">Switch to Imperial units</Button>}
+                        {units === 'imperial' && <Button className='custom-units-button'  onClick={() => {setUnits('metric'); setUnitsSign('C') }} type="button">Switch to Metric units</Button>}
                     </div> 
             : null}
-            {plans ? <div className="plans-tabs">
+            {userPlans ? <div className="plans-tabs">
                 <div className="plans">
-                    {plans.map((plan, i) => (<Plan key={i} plan={plan} isLogged={isLogged}/>))}
+                    {userPlans.map((plan, i) => (<Plan key={i} plan={plan} isLogged={isLogged}/>))}
                 </div>
             </div> : 'Loading ...'}
             

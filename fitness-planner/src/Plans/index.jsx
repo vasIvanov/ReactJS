@@ -19,6 +19,11 @@ const Plans = ({isLogged, categorized}) => {
             <Header isLogged={isLogged}  bgColor='dark'/>
             <div className="plans-tabs">
                 <Tabs className='custom' defaultActiveKey="all" id="controlled-tab-example">
+                    <Tab eventKey='all'   title="All Plans">
+                        <div className="plans">
+                            {plans.map((plan, i) => (<Plan key={i} plan={plan} isLogged={isLogged}/>))}
+                        </div>
+                    </Tab>
                     <Tab   eventKey="muscle-gain" title="Muscle Gain">
                         <div className="plans">
                             {plans.map((plan, i) => { 
@@ -39,11 +44,7 @@ const Plans = ({isLogged, categorized}) => {
                             })}
                         </div>
                     </Tab>
-                    <Tab eventKey='all'   title="All Plans">
-                        <div className="plans">
-                            {plans.map((plan, i) => (<Plan key={i} plan={plan} isLogged={isLogged}/>))}
-                        </div>
-                    </Tab> 
+                     
                 </Tabs>
             </div>
             

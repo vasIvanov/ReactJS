@@ -44,7 +44,7 @@ const Header = ({isLogged, fixed, bgColor}) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              {!isLogged ? <Link className='link' to="/">Home</Link> : <Link className='link' to="/">My Plans</Link>}
+              {!isLogged ? <Link className='link' to="/">Home</Link> : <Link className='link' to="/my-plans">My Plans</Link>}
               {!isLogged && <Link className='link' to="/login">Login</Link>}
               {!isLogged && <Link className='link' to="/register">Register</Link>}
               {<Link className='link' to="/plans">Plans</Link>}

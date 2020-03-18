@@ -1,4 +1,13 @@
 .form {
-    max-width: 50em;
-    margin: 1em auto;
-  }
+  max-width: 50em;
+  margin: 1em auto;
+}
+
+.custom-register-button {
+  margin-left: 2em;
+}
+
+.custom-register-button:hover {
+  text-decoration: none;
+  color: red;
+}

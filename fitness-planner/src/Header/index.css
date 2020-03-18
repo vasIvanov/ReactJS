@@ -22,3 +22,8 @@
     text-decoration: none;
     color: green;
 }
+
+.navbar-toggler-icon {
+    border-radius: 5px;
+    background-color: white !important;
+}

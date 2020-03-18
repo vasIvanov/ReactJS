@@ -11,3 +11,15 @@
     max-width: 80em;
     margin: 0 auto;
 }
+
+.weather-section {
+    text-align: center;
+    margin: 1em 0;
+}
+
+.custom-units-button {
+    background-color: honeydew;
+    color: black;
+    border: none;
+    font-size: 0.9em;
+}

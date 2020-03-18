@@ -17,6 +17,9 @@ export function logoutFunc(setIsLogged, setUserData, setShow, setMessage) {
           if(localStorage.getItem('city')) {
             localStorage.removeItem('city');
           }
+          if(localStorage.getItem('plans')) {
+            localStorage.removeItem('plans');
+          }
           localStorage.removeItem('_id');
           localStorage.removeItem('instructor');
           history.push('/');

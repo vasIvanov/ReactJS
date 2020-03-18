@@ -18,7 +18,7 @@ const Plan = ({isLogged, plan}) => {
                     <Card.Text>
                         {plan.level} | {plan.goal}
                     </Card.Text>
-                    {isLogged && <Link className='link details-link' to={detailUrl}>Details</Link>}
+                    {isLogged ? <Link className='link details-link' to={detailUrl}>Details</Link> : <Link className='link details-link' to='/login'>Log in to see details</Link>}
                 </Card.Body>
             </Card>
         </div>
