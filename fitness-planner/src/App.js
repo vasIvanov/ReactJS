@@ -10,7 +10,7 @@ import Register from './Register';
 import Home from './Home';
 import CreatePlan from './Create-plan';
 import PlanDetails from './PlanDetails';
-import MyPlans from './MyPlans';
+import FavoritePlans from './FavoritePlans';
 import Logout from './Logout';
 import NotFound from './NotFound';
 import SearchedResults from './SearchedResults';
@@ -21,6 +21,8 @@ import parseCookies from './utils/parseCookies';
 import {loginFunc, logoutFunc} from './utils/user';
 import Plans from './Plans/index';
 import Footer from './Footer';
+import MyPlans from './MyPlans';
+import EditPlan from './EditPlan'
 
 const App = () => {
   const cookies = parseCookies();
@@ -59,16 +61,18 @@ const App = () => {
           </div>
             <Switch>
               {!isLogged && <Route exact path="/" render={render(Home, {isLogged})} />}
-              {(isLogged && userPlans && userPlans.length > 0 ) ? <Route exact path="/" render={render(MyPlans, {isLogged})} /> : <Route exact path="/" render={render(Plans, {isLogged, categorized: true})} />}
+              {(isLogged && userPlans && userPlans.length > 0 ) ? <Route exact path="/" render={render(FavoritePlans, {isLogged})} /> : <Route exact path="/" render={render(Plans, {isLogged, categorized: true})} />}
               {!isLogged && <Route path="/login" render={render(Login, {isLogged, login: loginFunc(setIsLogged, setUserData, setShow, setMessage)})}/>}
               {!isLogged && <Route path="/register" render={render(Register, {isLogged, showChange: () => {setShow(true); setMessage('Registration Successful')}})}/>}
               {isLogged && <Route path="/logout" render={render(Logout, { isLogged, logout: logoutFunc(setIsLogged, setUserData, setShow, setMessage) })} />}
 
               {isLogged && ((userData && userData.instructor) || localStorage.getItem('instructor')) ? <Route path='/create-plan'  render={render(CreatePlan, {isLogged, showChange: () => {setShow(true); setMessage('Plan Created')}})}  /> : null}
+              {isLogged && ((userData && userData.instructor) || localStorage.getItem('instructor')) ? <Route path='/my-plans' render={render(MyPlans, {isLogged})} /> : null}
               <Route path='/details/:id'  render={render(PlanDetails, {isLogged, setUserData})} />
+              <Route path='/edit/:id'  render={render(EditPlan, {isLogged, setUserData, showChange: () => {setShow(true); setMessage('Plan Updated')}})} />
               <Route path='/plans'  render={render(Plans, {isLogged, categorized: true} )} />
               <Route path='/search/:query?' render={render(SearchedResults, {isLogged})} />
-              {isLogged && <Route path="/my-plans" render={render(MyPlans, { isLogged })} />}
+              {isLogged && <Route path="/favorite-plans" render={render(FavoritePlans, { isLogged })} />}
 
               <Route component={NotFound}  />
             </Switch>

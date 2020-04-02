@@ -29,6 +29,8 @@ const planSchema = new Schema({
         type: String
     },
 
+    author: { type: ObjectId, ref: "User" },
+
     exercises: {}
 });
 

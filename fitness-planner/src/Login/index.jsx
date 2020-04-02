@@ -14,7 +14,8 @@ const Login = ({history, login}) => {
     const [error, setError] = useState('');
     
   
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+      e.preventDefault();
       setError('');
       const data = {
         username,
@@ -61,7 +62,7 @@ const Login = ({history, login}) => {
             {error ? <Alert variant={'danger'}>
               {error}
             </Alert> : null}
-            <Button onClick={handleSubmit} variant="primary" type="button">
+            <Button onClick={handleSubmit} variant="primary" type="submit">
               Submit
             </Button>
             <Link className='custom-register-button' to='/register'>Dont have account?</Link>

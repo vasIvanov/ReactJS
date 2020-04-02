@@ -5,7 +5,7 @@ import Plan from './Plan';
 import planService from '../services/plan-service';
 import Header from '../Header';
 
-const Plans = ({isLogged, categorized}) => {
+const Plans = ({isLogged, history}) => {
     const [plans, setPlans] = useState('');
     useEffect(() => {
         planService.load().then(r => {
@@ -14,21 +14,21 @@ const Plans = ({isLogged, categorized}) => {
         })
     }, [])
     
-    return categorized && plans ? (
+    return  plans ? (
         <React.Fragment> 
             <Header isLogged={isLogged}  bgColor='dark'/>
             <div className="plans-tabs">
                 <Tabs className='custom' defaultActiveKey="all" id="controlled-tab-example">
                     <Tab eventKey='all'   title="All Plans">
                         <div className="plans">
-                            {plans.map((plan, i) => (<Plan key={i} plan={plan} isLogged={isLogged}/>))}
+                            {plans.map((plan, i) => (<Plan history={history} key={i} plan={plan} isLogged={isLogged}/>))}
                         </div>
                     </Tab>
                     <Tab   eventKey="muscle-gain" title="Muscle Gain">
                         <div className="plans">
                             {plans.map((plan, i) => { 
                                 if(plan.goal.toLowerCase() === 'muscle gain') {
-                                    return (<Plan key={i} plan={plan} isLogged={isLogged}/>)
+                                    return (<Plan history={history} key={i} plan={plan} isLogged={isLogged}/>)
                                 } 
                                 return null;
                             })}
@@ -38,7 +38,7 @@ const Plans = ({isLogged, categorized}) => {
                         <div className="plans">
                             {plans.map((plan, i) => { 
                                 if(plan.goal.toLowerCase() === 'weight loss') {
-                                    return (<Plan key={i} plan={plan} isLogged={isLogged}/>)
+                                    return (<Plan history={history}  key={i} plan={plan} isLogged={isLogged}/>)
                                 } 
                                 return null;
                             })}

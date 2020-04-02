@@ -1,13 +1,26 @@
-import React from 'react';
+import React, { useState} from 'react';
 import {Card} from 'react-bootstrap';
 import {
     Link
   } from 'react-router-dom'
 import './index.css'
+import userService from '../../services/user-service';
+import { useEffect } from 'react';
 
 const Plan = ({isLogged, plan}) => {
-    // let details = plan.details.split(' ').length > 20 ? plan.details.split(' ').slice(0, 20).join(' ').trim().concat(' .....') : plan.details;
-    let detailUrl = `/details/${plan._id}`;
+    const [authorName, setAuthorName] = useState('');
+    
+    useEffect(() => {
+        if(plan.author) {
+            userService.getUsers().then(users => {
+                
+                const filteredUser = users.filter(u => u._id === plan.author)[0]
+                setAuthorName(filteredUser.username)
+            })
+        }
+    }, [plan.author])
+
+   
     
     return (
         <div className="plan">
@@ -17,8 +30,11 @@ const Plan = ({isLogged, plan}) => {
                     <Card.Title>{plan.name}</Card.Title>
                     <Card.Text>
                         {plan.level} | {plan.goal}
+                        <br/>
+                        {plan.author ?<i>created by: {authorName}</i> : null }
                     </Card.Text>
-                    {isLogged ? <Link className='link details-link' to={detailUrl}>Details</Link> : <Link className='link details-link' to='/login'>Log in to see details</Link>}
+                    {isLogged ? <Link className='link details-link' to={`/details/${plan._id}`}>Details</Link> 
+                    : <Link className='link details-link' to='/login'>Log in to see details</Link>}
                 </Card.Body>
             </Card>
         </div>

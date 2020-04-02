@@ -16,17 +16,18 @@ module.exports = {
       if(query) {
         models.Plan.find()
           .then(plans => {
-            const filteredPlans = plans.filter(plan => {console.log(plan.name.toLowerCase().includes(query));  return plan.name.toLowerCase().includes(query)});
+            const filteredPlans = plans.filter(plan => plan.name.toLowerCase().includes(query));
             res.send(filteredPlans);
           }).catch(next)
         return;
       }
-    //   if(userId) {
-    //     models.Plan.find({author: userId}).populate('author').sort({ _id: -1 })
-    //       .then((origamies) => res.send(origamies))
-    //       .catch(next);
-    //     return;
-    //   }
+
+      if(userId) {
+        models.Plan.find({author: userId}).sort({ _id: -1 })
+          .then((plans) => res.send(plans))
+          .catch(next);
+        return;
+      }
       models.Plan.find().sort({ _id: -1 })
         .then((plan) => res.send(plan))
         .catch(next);
@@ -43,6 +44,7 @@ module.exports = {
         const { 
           name, 
           imageUrl,
+          author,
           goal,
           level,
           details,
@@ -52,6 +54,7 @@ module.exports = {
       models.Plan.create({  
             name, 
             imageUrl,
+            author,
             goal,
             level,
             details,
@@ -85,7 +88,13 @@ module.exports = {
         details,
         exercises })
         .then((updatedPlan) => res.send(updatedPlan))
-        .catch(next)
+        .catch(err => {
+          console.log('dqwdqwdqw');
+          
+          if(err.errmsg.includes('duplicate key')){
+             res.send({errMsg: 'Plan name already in use!'})
+          }
+        });
     },
   
     delete: (req, res, next) => {

@@ -3,8 +3,11 @@ import './index.css';
 import planService from '../services/plan-service'
 import userServices from '../services/user-service'
 import {userContext} from '../userContext';
-import {Button} from 'react-bootstrap';
+import {Button, Modal} from 'react-bootstrap';
 import Header from '../Header';
+import {
+    Link
+  } from 'react-router-dom'
 
 const PlanDetails = ({match, isLogged, history, setUserData}) => {
     const [plan, setPlan] = useState('');
@@ -13,6 +16,11 @@ const PlanDetails = ({match, isLogged, history, setUserData}) => {
     const planId = match.params.id;
     const [added, setAdded] = useState(false);
     const plans = (userValue && userValue.plans) || JSON.parse(localStorage.getItem('plans'));
+    let isAuthor = false;
+    if(plan) {
+        isAuthor = userId === plan.author;
+    }
+    
     
     useEffect(() => {
         planService.load(planId).then(plan => {
@@ -79,6 +87,17 @@ const PlanDetails = ({match, isLogged, history, setUserData}) => {
         })
      }
 
+
+     const [show, setShow] = useState(false);
+     const handleShow = () => setShow(true);
+     const handleDelete = () => {
+         setShow(false);
+         planService.deletePlan(plan._id).then(() => {
+             history.push('/my-plans')
+             
+         })
+     }
+
     return plan ? (
         <React.Fragment>
             <Header isLogged={isLogged}  bgColor='dark'/>
@@ -96,13 +115,37 @@ const PlanDetails = ({match, isLogged, history, setUserData}) => {
                 <div className='plan-wrapper'>
                     {renderData()}
                 </div>
+
+                {isAuthor ? <div className='author-panel'>
+                            <Link className='edit-link' to={`/edit/${plan._id}`}>Edit</Link>
+
+                            <Button variant='danger' onClick={handleShow} >Delete</Button>
+                            <Modal show={show} onHide={() => setShow(false)}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title className='custom-modal-title'>Are you sure you want to delete this plan?</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Footer className='custom-modal-footer'>
+                                <Button variant="primary" onClick={handleDelete}>
+                                    Yes, Delete!
+                                </Button>
+                                <Button variant="secondary" onClick={() => setShow(false)}>
+                                    No
+                                </Button>
+                                </Modal.Footer>
+                            </Modal>
+                </div>
+
+                : added ? (
+                    <Button variant='danger' className='details-button' onClick={handleRemoveClick} type='button'>Remove from Favorites </Button>) 
+                : 
+                    <Button variant='primary' className='details-button' onClick={handleAddClick} type='button'>Add to Favorites </Button>
+                }
                 
-                {added ? (<Button variant='danger' className='details-button' onClick={handleRemoveClick} type='button'>Remove from Favorites </Button>) : <Button variant='primary' className='details-button' onClick={handleAddClick} type='button'>Add to Favorites </Button>}
+                
                 </div>
             </div>
         </React.Fragment>
     ) : <div>
-            <Header isLogged={isLogged}  bgColor='dark'/>
             Loading ...
         </div>
 }

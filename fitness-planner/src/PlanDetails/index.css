@@ -1,7 +1,8 @@
 .details {
     padding: 0 1em;
     max-width: 80em;
-    margin: 0 auto;
+    margin: 1em auto;
+
 }
 
 .media img  {
@@ -20,5 +21,48 @@
 }
 
 .details-button {
+    margin-right: 0.5em;
     margin-bottom: 4em;
 }
+
+.author-panel {
+    margin-bottom: 4em;
+}
+
+
+.edit-link {
+    color: white;
+    background-color: blue;
+    padding: 0.3em 0.7em;
+    border-radius: 0.3em;
+    margin-right: 0.5em;
+
+}
+
+.edit-link:hover {
+    text-decoration: none;
+    color: blue;
+    background-color: white;
+}
+
+.custom-modal-footer {
+    justify-content: center;
+}
+
+.custom-modal-title {
+    text-align: center;
+}
+
+
+/* .delete-link {
+    color: red;
+    padding: 0.3em 0.6em;
+    border-radius: 0.2em;
+    background-color: white;
+    border: none;
+}
+
+.delete-link:hover {
+    background-color: red;
+    color: white;
+} */

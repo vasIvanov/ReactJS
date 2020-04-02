@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom'
 import { useEffect, useContext } from 'react';
 import {userContext} from '../userContext';
+import Dropdown from './Dropdown';
 
 const Header = ({isLogged, fixed, bgColor}) => {
   const [search, setSearch] = useState('');
@@ -23,16 +24,25 @@ const Header = ({isLogged, fixed, bgColor}) => {
     setSearch(e.target.value);
   }
 
-  useEffect(() => {
-    document.addEventListener('scroll', () => {
-      const isTop = window.scrollY < 100;
-      if (!isTop) {
-        setIsHeaderBgrd('dark')
-      } else {
-        setIsHeaderBgrd('')
-      }
-    });
-  })
+    if(fixed) {
+      document.addEventListener('scroll', () => {
+        const isTop = window.scrollY < 100;
+        if (!isTop) {
+          setIsHeaderBgrd('dark')
+        } else {
+          setIsHeaderBgrd('')
+        }
+      });
+    } else {
+      document.removeEventListener('scroll', () => {
+        const isTop = window.scrollY < 100;
+        if (!isTop) {
+          setIsHeaderBgrd('dark')
+        } else {
+          setIsHeaderBgrd('')
+        }
+      });
+    }
 
   useEffect(() => {
     setUrl(`/search/${search}`)
@@ -44,11 +54,13 @@ const Header = ({isLogged, fixed, bgColor}) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              {!isLogged ? <Link className='link' to="/">Home</Link> : <Link className='link' to="/my-plans">My Plans</Link>}
+              {!isLogged ? <Link className='link' to="/">Home</Link> : <Link className='link' to="/favorite-plans">Favorites</Link>}
               {!isLogged && <Link className='link' to="/login">Login</Link>}
               {!isLogged && <Link className='link' to="/register">Register</Link>}
-              {<Link className='link' to="/plans">Plans</Link>}
-              {isLogged && instructor ? <Link className='link' to="/create-plan">Create Plan</Link> : null}
+              {<Link className='link' to="/plans">Browse</Link>}
+              {isLogged && instructor ? <Dropdown/> : null}
+              {/* {isLogged && instructor ? <Link className='link' to="/create-plan">Create Plan</Link> : null}
+              {isLogged && instructor ? <Link className='link' to="/my-plans">Created Plans</Link> : null} */}
               {isLogged && <Link className='link' to="/logout">Logout</Link>}
             </Nav>
             <Form inline>

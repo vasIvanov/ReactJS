@@ -4,9 +4,10 @@
 
 }
 
-.link:hover, .brand:hover {
+
+.link:hover, .brand:hover, .link button:hover {
     text-decoration: none;
-    color: red;
+    color: rgb(87, 133, 192);
 }
 
 .brand {
@@ -26,4 +27,21 @@
 .navbar-toggler-icon {
     border-radius: 5px;
     background-color: white !important;
+}
+
+.link button {
+    outline: none !important;
+    background-color: transparent !important;
+    padding: 0;
+    border: none;
+    color: white;
+}
+
+.dropdown-menu {
+    background-color: #343A40 !important;
+}
+
+.dropdown-link {
+    color: white;
+    display: block;
 }
