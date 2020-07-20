@@ -232,40 +232,40 @@ const CreatePlan = ({history, showChange, editPlan}) => {
                 : null}
                 {days === '4' ? 
                 <div className="days-table"> 
-                    <DynamicInputField dayValue={editPlan.exercises.day1} day={'1'} setDay1={setDay1}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day2} day={'2'} setDay2={setDay2}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day3} day={'3'} setDay3={setDay3}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day4} day={'4'} setDay4={setDay4}/>
+                    <DynamicInputField dayValue={(editPlan && editPlan.exercises && editPlan.exercises.day1)} day={'1'} setDay1={setDay1}/>
+                    <DynamicInputField dayValue={(editPlan && editPlan.exercises && editPlan.exercises.day2)} day={'2'} setDay2={setDay2}/>
+                    <DynamicInputField dayValue={(editPlan && editPlan.exercises && editPlan.exercises.day3)} day={'3'} setDay3={setDay3}/>
+                    <DynamicInputField dayValue={(editPlan && editPlan.exercises && editPlan.exercises.day4)} day={'4'} setDay4={setDay4}/>
                 </div>
                 : null}
                 {days === '5' ? 
                 <div className="days-table"> 
-                    <DynamicInputField dayValue={editPlan.exercises.day1} day={'1'} setDay1={setDay1}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day2} day={'2'} setDay2={setDay2}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day3} day={'3'} setDay3={setDay3}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day4} day={'4'} setDay4={setDay4}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day5} day={'5'} setDay5={setDay5}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day1} day={'1'} setDay1={setDay1}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day2} day={'2'} setDay2={setDay2}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day3} day={'3'} setDay3={setDay3}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day4} day={'4'} setDay4={setDay4}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day5} day={'5'} setDay5={setDay5}/>
                 </div>
                 : null}
                 {days === '6' ? 
                 <div className="days-table"> 
-                    <DynamicInputField dayValue={editPlan.exercises.day1} day={'1'} setDay1={setDay1}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day2} day={'2'} setDay2={setDay2}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day3} day={'3'} setDay3={setDay3}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day4} day={'4'} setDay4={setDay4}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day5} day={'5'} setDa5={setDay5}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day6} day={'6'} setDay6={setDay6}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day1} day={'1'} setDay1={setDay1}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day2} day={'2'} setDay2={setDay2}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day3} day={'3'} setDay3={setDay3}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day4} day={'4'} setDay4={setDay4}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day5} day={'5'} setDa5={setDay5}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day6} day={'6'} setDay6={setDay6}/>
                 </div>
                 : null}
                 {days === '7' ? 
                 <div className="days-table"> 
-                    <DynamicInputField dayValue={editPlan.exercises.day1} day={'1'} setDay1={setDay1}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day2} day={'2'} setDay2={setDay2}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day3} day={'3'} setDay3={setDay3}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day4} day={'4'} setDay4={setDay4}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day5} day={'5'} setDay5={setDay5}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day6} day={'6'} setDay6={setDay6}/>
-                    <DynamicInputField dayValue={editPlan.exercises.day7} day={'7'} setDay7={setDay7}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day1} day={'1'} setDay1={setDay1}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day2} day={'2'} setDay2={setDay2}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day3} day={'3'} setDay3={setDay3}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day4} day={'4'} setDay4={setDay4}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day5} day={'5'} setDay5={setDay5}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day6} day={'6'} setDay6={setDay6}/>
+                    <DynamicInputField dayValue={editPlan && editPlan.exercises && editPlan.exercises.day7} day={'7'} setDay7={setDay7}/>
                 </div>
                 : null}
                 {editPlan ? <button className='create-button' type="button" onClick={handleSubmit}>Edit</button>

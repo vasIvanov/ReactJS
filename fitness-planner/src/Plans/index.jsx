@@ -51,7 +51,10 @@ const Plans = ({isLogged, history}) => {
         </React.Fragment>
     ) 
     : 
-    'Loading ...'
+    <React.Fragment>
+        <Header isLogged={isLogged}  bgColor='dark'/>
+        Loading ...
+    </React.Fragment>
 }
 
 export default Plans;
