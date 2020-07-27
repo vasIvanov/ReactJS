@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from 'react';
 import './index.css';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import userService from '../services/user-service';
 import validate from './schema';
@@ -18,6 +18,10 @@ const Register = ({history, showChange}) => {
     const [userError, setUserError] = useState('');
    
     const submitHandler = () => {
+      setUsernameError('');
+      setPasswordError('');
+      setRePasswordError('');
+      setUserError('');
       const data = {
         username,
         password,
@@ -57,25 +61,35 @@ const Register = ({history, showChange}) => {
             <Form.Group controlId="formBasicUsername">
               <Form.Label>Username</Form.Label>
               <Form.Control value={username} onChange={(e) => emailChange(e.target.value)} type="text" placeholder="Enter username" />
-              {usernameError ? <div>{usernameError}</div> : null}
-              {userError ? <div>{userError}</div> : null}
+
+              {usernameError ? <Alert variant={'danger'}>
+                {usernameError}
+              </Alert> : null}
+
+              {userError ? <Alert variant={'danger'}>
+                {userError}
+              </Alert> : null}
             </Form.Group>
 
             <Form.Group controlId="formBasicCity">
-              <Form.Label>City</Form.Label>
+              <Form.Label>City (optional)</Form.Label>
               <Form.Control value={city} onChange={(e) => setCity(e.target.value)} type="text" placeholder="City" />
             </Form.Group>
 
             <Form.Group controlId="formBasicPassword">
               <Form.Label>Password</Form.Label>
               <Form.Control value={password} onChange={(e) => passwordChange(e.target.value)} type="password" placeholder="Password" />
-              {passwordError ? <div>{passwordError}</div> : null}
+              {passwordError ? <Alert variant={'danger'}>
+                {passwordError}
+              </Alert> : null}
             </Form.Group>
 
             <Form.Group controlId="formBasicPassword">
               <Form.Label>Repeat Password</Form.Label>
               <Form.Control value={rePassword} onChange={(e) => rePasswordChange(e.target.value)} type="password" placeholder="Repeat Password" />
-              {rePasswordError ? <div>{rePasswordError}</div> : null}
+              {rePasswordError ? <Alert variant={'danger'}>
+                {rePasswordError}
+              </Alert> : null}
             </Form.Group>
 
             <Form.Group controlId="formBasicCheckbox">
