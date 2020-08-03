@@ -27,7 +27,8 @@ const userSchema = new Schema({
 
     instructor: {
         type: Boolean
-    }
+    },
+
 
 });
 

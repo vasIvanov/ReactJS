@@ -13,8 +13,7 @@ const JumbotronFunc = ({isLogged}) => {
                 {isLogged && <div className='info'>
                     <h1>Browse our Plans {userValue && userValue.username ? userValue.username : localStorage.getItem('username')}!</h1>
                     <p>
-                    This is a simple hero unit, a simple jumbotron-style component for calling
-                        extra attention to featured content or information
+                        Register and find the fitness plan that suits you the most. It's time to become the person you always wanted
                     </p>
                     </div> 
                 }
@@ -22,8 +21,7 @@ const JumbotronFunc = ({isLogged}) => {
                     <div className='info'>
                         <h1>Begin your training today!</h1>
                         <p>
-                            This is a simple hero unit, a simple jumbotron-style component for calling
-                            extra attention to featured content or information
+                            Register and find the fitness plan that suits you the most. It's time to become the person you always wanted
                         </p> 
                         <Link className='jumbo-link' to="/register">Register</Link>
                     </div>

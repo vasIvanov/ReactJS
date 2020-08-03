@@ -33,6 +33,22 @@ module.exports = {
         .catch(next);
     },
 
+    getComments:(req, res) => {
+      const id = req.params.id;
+      models.Plan.findOne({_id: id}).then(r => {
+        res.send(r.comments);
+      })
+    },
+
+    postComment: (req, res, next) => {
+      const id = req.params.id;
+      const comment = req.body.comment;
+      const user = req.body.user;
+      models.Plan.updateOne({ _id: id },  { $push: { comments: {user, comment} }})
+        .then((updatedPlan) => res.send(updatedPlan))
+        .catch(next)
+    },
+
     getOne: (req, res) => {
         const id = req.params.id;
         models.Plan.findOne({_id: id}).then(r => {

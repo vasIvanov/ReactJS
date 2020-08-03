@@ -22,7 +22,7 @@ import {loginFunc, logoutFunc} from './utils/user';
 import Plans from './Plans/index';
 import Footer from './Footer';
 import MyPlans from './MyPlans';
-import EditPlan from './EditPlan'
+import EditPlan from './EditPlan';
 
 const App = () => {
   const cookies = parseCookies();
@@ -65,7 +65,7 @@ const App = () => {
               {!isLogged && <Route path="/login" render={render(Login, {isLogged, login: loginFunc(setIsLogged, setUserData, setShow, setMessage)})}/>}
               {!isLogged && <Route path="/register" render={render(Register, {isLogged, showChange: () => {setShow(true); setMessage('Registration Successful')}})}/>}
               {isLogged && <Route path="/logout" render={render(Logout, { isLogged, logout: logoutFunc(setIsLogged, setUserData, setShow, setMessage) })} />}
-
+              
               {isLogged && ((userData && userData.instructor) || localStorage.getItem('instructor')) ? <Route path='/create-plan'  render={render(CreatePlan, {isLogged, showChange: () => {setShow(true); setMessage('Plan Created')}})}  /> : null}
               {isLogged && ((userData && userData.instructor) || localStorage.getItem('instructor')) ? <Route path='/my-plans' render={render(MyPlans, {isLogged})} /> : null}
               <Route path='/details/:id'  render={render(PlanDetails, {isLogged, setUserData})} />

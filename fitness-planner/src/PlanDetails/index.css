@@ -66,3 +66,21 @@
     background-color: red;
     color: white;
 } */
+
+.comment-section {
+    max-width: 40em;
+    margin: 0 auto;
+    margin-bottom: 4em;
+}
+
+.comment {
+    border: 1px solid black;
+    margin-bottom: 1em;
+    padding: 0.5em;
+}
+
+.username {
+    border: 1px solid black;
+    display: inline-block;
+    padding: 0.1em;
+}

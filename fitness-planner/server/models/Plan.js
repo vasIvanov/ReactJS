@@ -31,7 +31,9 @@ const planSchema = new Schema({
 
     author: { type: ObjectId, ref: "User" },
 
-    exercises: {}
+    exercises: {},
+
+    comments: [{user:{type: String}, comment: {type: String}}]
 });
 
 

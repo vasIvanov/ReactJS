@@ -7,7 +7,7 @@ import {Button, Modal} from 'react-bootstrap';
 import Header from '../Header';
 import {
     Link
-  } from 'react-router-dom'
+  } from 'react-router-dom';
 
 const PlanDetails = ({match, isLogged, history, setUserData}) => {
     const [plan, setPlan] = useState('');
@@ -16,6 +16,19 @@ const PlanDetails = ({match, isLogged, history, setUserData}) => {
     const planId = match.params.id;
     const [added, setAdded] = useState(false);
     const plans = (userValue && userValue.plans) || JSON.parse(localStorage.getItem('plans'));
+    const [writeComment, setWriteComment] = useState('');
+    const [commentsArray, setComments] = useState('');
+
+    const submitCommentHandler = () => {
+        planService.postComment({comment: writeComment, user: userValue.username}, plan._id).then(r => {
+            planService.getComments(plan._id).then(comments => {
+                console.log(comments);
+                setComments(comments)
+            })
+        })
+        document.getElementById("write-comment").value = "";
+    }
+
     let isAuthor = false;
     if(plan) {
         isAuthor = userId === plan.author;
@@ -25,6 +38,7 @@ const PlanDetails = ({match, isLogged, history, setUserData}) => {
     useEffect(() => {
         planService.load(planId).then(plan => {
             setPlan(plan)
+            setComments(plan.comments)
             userServices.getUsers().then(r => {
                 const user = r.filter(u => u._id === userId)[0];
                 user.plans.forEach(p => {
@@ -120,6 +134,14 @@ const PlanDetails = ({match, isLogged, history, setUserData}) => {
                             <Link className='edit-link' to={`/edit/${plan._id}`}>Edit</Link>
 
                             <Button variant='danger' onClick={handleShow} >Delete</Button>
+                            <div className='comment-section'>
+                            {commentsArray ? commentsArray.map(c => <div key={c._id} className='comment'>
+                                <h6 className='username'>{c.user}</h6>
+                                <p>{c.comment}</p>
+                                </div>) : null}
+                            <textarea onChange={(e) => setWriteComment(e.target.value)} name="write-comment" id="write-comment" cols="5" rows="5"/>
+                            <button onClick={submitCommentHandler}>submit</button>
+                        </div>
                             <Modal show={show} onHide={() => setShow(false)}>
                                 <Modal.Header closeButton>
                                     <Modal.Title className='custom-modal-title'>Are you sure you want to delete this plan?</Modal.Title>
@@ -136,12 +158,39 @@ const PlanDetails = ({match, isLogged, history, setUserData}) => {
                 </div>
 
                 : added ? (
-                    <Button variant='danger' className='details-button' onClick={handleRemoveClick} type='button'>Remove from Favorites </Button>) 
-                : 
-                    <Button variant='primary' className='details-button' onClick={handleAddClick} type='button'>Add to Favorites </Button>
+                    <div>
+                        <Button variant='danger' className='details-button' onClick={handleRemoveClick} type='button'>Remove from Favorites </Button>
+                        <div className='comment-section'>
+                            {commentsArray ? commentsArray.map(c => <div key={c._id} className='comment'>
+                                <h6 className='username'>{c.user}</h6>
+                                <p>{c.comment}</p>
+                                </div>) : null}
+                            <textarea onChange={(e) => setWriteComment(e.target.value)} name="write-comment" id="write-comment" cols="5" rows="5"/>
+                            <button onClick={submitCommentHandler}>submit</button>
+                        </div>
+
+                        
+                    </div>
+                    
+                    ) 
+                : (
+                    <div>
+                        <Button variant='primary' className='details-button' onClick={handleAddClick} type='button'>Add to Favorites </Button>
+                        <div className='comment-section'>
+                            {commentsArray ? commentsArray.map(c => <div key={c._id} className='comment'>
+                                <h6 className='username'>{c.user}</h6>
+                                <p>{c.comment}</p>
+                                </div>) : null}
+                            <textarea onChange={(e) => setWriteComment(e.target.value)} name="write-comment" id="write-comment" cols="5" rows="5"/>
+                            <button onClick={submitCommentHandler}>submit</button>
+                        </div>
+
+                        
+                    </div>
+                    )
                 }
                 
-                
+               
                 </div>
             </div>
         </React.Fragment>

@@ -15,6 +15,8 @@ module.exports = {
       .catch(next)
   },
 
+
+
   post: {
     register: (req, res, next) => {
       const { username, password, city, instructor } = req.body;
