@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import './index.css';
 import Jumbotron from './Jumbotron';
 import InfoSection from './InfoSection';
-import Header from '../Header'
+import Header from '../Header';
 import StatisticsSection from './StatisticsSection';
 
 const Home = ({isLogged}) => {

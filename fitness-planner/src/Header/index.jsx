@@ -16,6 +16,7 @@ const Header = ({isLogged, fixed, bgColor}) => {
   const color = bgColor ? bgColor : headerBgrd
   const userValue = useContext(userContext);
   let instructor = false;
+  const abortController = new AbortController;
   if(isLogged) {
     instructor = (userValue && userValue.instructor) || localStorage.getItem('instructor') === 'true';
   }
@@ -46,6 +47,9 @@ const Header = ({isLogged, fixed, bgColor}) => {
 
   useEffect(() => {
     setUrl(`/search/${search}`)
+    return function cleanup() {
+      abortController.abort();
+    }
   }, [search])
 
     return (

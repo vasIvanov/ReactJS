@@ -28,6 +28,7 @@ const FavoritePlans = ({isLogged}) => {
     useEffect(() => {
         if(isLogged && city) {
             fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city.toLowerCase()}&APPID=c27fcad2928805171f49ebfa27cfa75b&units=${units}`).then(r => r.json()).then(r => {
+                console.log(r);
                 setTemperature(r.main.temp);
                 setFeelTemp(r.main.feels_like)
             })

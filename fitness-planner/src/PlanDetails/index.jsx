@@ -14,15 +14,15 @@ const PlanDetails = ({match, isLogged, history, setUserData}) => {
     const userValue = useContext(userContext)
     const userId = (userValue && userValue._id) || localStorage.getItem('_id');
     const planId = match.params.id;
+    const username = (userValue && userValue.username) || localStorage.getItem('username');
     const [added, setAdded] = useState(false);
     const plans = (userValue && userValue.plans) || JSON.parse(localStorage.getItem('plans'));
     const [writeComment, setWriteComment] = useState('');
     const [commentsArray, setComments] = useState('');
 
     const submitCommentHandler = () => {
-        planService.postComment({comment: writeComment, user: userValue.username}, plan._id).then(r => {
+        planService.postComment({comment: writeComment, user: username}, plan._id).then(r => {
             planService.getComments(plan._id).then(comments => {
-                console.log(comments);
                 setComments(comments)
             })
         })
@@ -89,11 +89,11 @@ const PlanDetails = ({match, isLogged, history, setUserData}) => {
         let header = Object.keys(plan.exercises)
         return header.map((key, index) => {
            return (
-            <div className='plan-details' key={index}>
+            <div className='plan-days' key={index}>
                 <h5>Day {key.toUpperCase().split('DAY')[1]}</h5>
                 {plan.exercises[key].map((e, i) => {
                     return (
-                        <p key={i}>{e}</p>
+                        <p className='exercice' key={i}>{e}</p>
                     )
                 })}
             </div>
@@ -119,10 +119,13 @@ const PlanDetails = ({match, isLogged, history, setUserData}) => {
                 <div className="media">
                     <img src={plan.imageUrl} alt=""/>
                 </div>
-                <div>
+                <div className='plan-info'>
                     <h2 className="plan-name">{plan.name}</h2>
-                    <p className="plan-complexity">{plan.level}</p>
-                    <p className="plan-details">{plan.details}</p>
+                    <p className="plan-complexity">The plan is recommended for {plan.level} level.</p>
+                    <div className="plan-details">
+                        <h6>Description</h6>
+                        <p>{plan.details}</p>
+                    </div>
                 </div>
                 <div>
 
@@ -135,12 +138,13 @@ const PlanDetails = ({match, isLogged, history, setUserData}) => {
 
                             <Button variant='danger' onClick={handleShow} >Delete</Button>
                             <div className='comment-section'>
+                            <h6>Comment Section</h6>
                             {commentsArray ? commentsArray.map(c => <div key={c._id} className='comment'>
                                 <h6 className='username'>{c.user}</h6>
                                 <p>{c.comment}</p>
                                 </div>) : null}
                             <textarea onChange={(e) => setWriteComment(e.target.value)} name="write-comment" id="write-comment" cols="5" rows="5"/>
-                            <button onClick={submitCommentHandler}>submit</button>
+                            <button className='btn btn-primary' onClick={submitCommentHandler}>Submit</button>
                         </div>
                             <Modal show={show} onHide={() => setShow(false)}>
                                 <Modal.Header closeButton>
@@ -161,12 +165,13 @@ const PlanDetails = ({match, isLogged, history, setUserData}) => {
                     <div>
                         <Button variant='danger' className='details-button' onClick={handleRemoveClick} type='button'>Remove from Favorites </Button>
                         <div className='comment-section'>
+                            <h6>Comment Section</h6>
                             {commentsArray ? commentsArray.map(c => <div key={c._id} className='comment'>
                                 <h6 className='username'>{c.user}</h6>
                                 <p>{c.comment}</p>
                                 </div>) : null}
                             <textarea onChange={(e) => setWriteComment(e.target.value)} name="write-comment" id="write-comment" cols="5" rows="5"/>
-                            <button onClick={submitCommentHandler}>submit</button>
+                            <button className='btn btn-primary' onClick={submitCommentHandler}>Submit</button>
                         </div>
 
                         
@@ -177,12 +182,13 @@ const PlanDetails = ({match, isLogged, history, setUserData}) => {
                     <div>
                         <Button variant='primary' className='details-button' onClick={handleAddClick} type='button'>Add to Favorites </Button>
                         <div className='comment-section'>
+                            <h6>Comment Section</h6>
                             {commentsArray ? commentsArray.map(c => <div key={c._id} className='comment'>
                                 <h6 className='username'>{c.user}</h6>
                                 <p>{c.comment}</p>
                                 </div>) : null}
                             <textarea onChange={(e) => setWriteComment(e.target.value)} name="write-comment" id="write-comment" cols="5" rows="5"/>
-                            <button onClick={submitCommentHandler}>submit</button>
+                            <button className='btn btn-primary' onClick={submitCommentHandler}>Submit</button>
                         </div>
 
                         

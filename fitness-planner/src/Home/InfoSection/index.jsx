@@ -22,7 +22,7 @@ const InfoSection = () => {
                 <Card.Body>
                     <Card.Title>Direct feedback</Card.Title>
                     <Card.Text>
-                        Ask the plan creator any questions you have
+                        Share your expirience with others
                     </Card.Text>
                 </Card.Body>
                 </Card>

@@ -28,3 +28,26 @@ html {
     background-color:#3f9653;
     color: #D4EDDA;
 }
+
+.media {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    height: auto;
+}
+
+.media:before {
+    display: block;
+    content: '';
+    padding-top: 56.25%;
+}
+
+.media img  {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

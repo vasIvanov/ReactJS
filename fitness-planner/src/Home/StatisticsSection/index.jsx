@@ -16,7 +16,7 @@ const StatisticsSection = () => {
     
     return (
         <article className="content">
-        <section className="media">
+        <section className="statistics-media">
         </section>
         <section className="product-details">
             <ul>

@@ -6,7 +6,7 @@ import planService from '../services/plan-service';
 // import widget from './cloudinaryWidget';
 import DynamicInputField from '../DynamicInputField'
 import { useEffect } from 'react';
-import Modal from './Modal';
+import Modal, {handleShow} from './Modal';
 import Header from '../Header';
 import { userContext } from '../userContext';
 
@@ -33,8 +33,6 @@ const CreatePlan = ({history, showChange, editPlan}) => {
     const [buttonActive, setButtonActive] = useState(false);
     const nullDays = () => { setDay1(''); setDay2(''); setDay3(''); setDay4(''); setDay5(''); setDay6(''); setDay7('');}
     const userId = (userValue && userValue._id) || localStorage.getItem('_id') || null;
-    console.log(planName);
-    
     useEffect(() => {
         if(editPlan) {
             setPlanName(editPlan.name);
@@ -48,10 +46,12 @@ const CreatePlan = ({history, showChange, editPlan}) => {
     }, [editPlan])
     
     const hanleUrlChange = (e) => {
+
         let value = e.target.value
         setPlanImage(value);
         setUrlStatus(false); 
         setButtonActive(false);
+        
     } 
 
     const setError = useCallback(() => {
@@ -179,9 +179,9 @@ const CreatePlan = ({history, showChange, editPlan}) => {
                         {imageUrlError ? <Alert variant={'danger'}>{imageUrlError}</Alert> : null}
                     </Form.Group> */}
                     <Form.Group controlId="exampleForm.ControlInput2">
-                        <Form.Label>Plan Image Url</Form.Label>
+                        <Form.Label>Plan Image Url (the image must be a landscape not portrait otherwise it may not be displayed properly)</Form.Label>
                         <Form.Control defaultValue={planImage} autoComplete="off"  className='custom-input' onChange={hanleUrlChange} type="text" />
-                        {urlStatus ? <Modal planImage={planImage}/> : null}
+                        {urlStatus ? <Modal  planImage={planImage}/> : null}
                         {imageUrlError ? <Alert className='custom-alert' variant={'danger'}>{imageUrlError}</Alert> : null}
                     </Form.Group>
 

@@ -25,7 +25,10 @@ const Plan = ({isLogged, plan}) => {
     return (
         <div className="plan">
             <Card>
-                <Card.Img variant="top" src={plan.imageUrl} />
+                <div className="media">
+                    <img src={plan.imageUrl} alt=""/>
+                </div>
+                {/* <Card.Img variant="top" src={plan.imageUrl} /> */}
                 <Card.Body>
                     <Card.Title>{plan.name}</Card.Title>
                     <Card.Text>
