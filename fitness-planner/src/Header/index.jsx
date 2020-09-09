@@ -16,7 +16,7 @@ const Header = ({isLogged, fixed, bgColor}) => {
   const color = bgColor ? bgColor : headerBgrd
   const userValue = useContext(userContext);
   let instructor = false;
-  const abortController = new AbortController;
+  const abortController = new AbortController();
   if(isLogged) {
     instructor = (userValue && userValue.instructor) || localStorage.getItem('instructor') === 'true';
   }
@@ -50,7 +50,7 @@ const Header = ({isLogged, fixed, bgColor}) => {
     return function cleanup() {
       abortController.abort();
     }
-  }, [search])
+  }, [search, abortController])
 
     return (
       <Navbar bg={color}  fixed={fixed} expand="lg">

@@ -1,25 +1,25 @@
 .plans {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .plan {
-    padding: 0.5em;
+  padding: 0.5em;
 }
 
 .plans-tabs {
-    max-width: 80em;
-    margin: 0 auto;
+  max-width: 80em;
+  margin: 0 auto;
 }
 
 .weather-section {
-    text-align: center;
-    margin: 1em 0;
+  text-align: center;
+  margin: 1em 0;
 }
 
 .custom-units-button {
-    background-color: honeydew;
-    color: black;
-    border: none;
-    font-size: 0.9em;
+  background-color: honeydew;
+  color: black;
+  border: none;
+  font-size: 0.9em;
 }

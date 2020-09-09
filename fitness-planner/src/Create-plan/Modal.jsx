@@ -1,6 +1,5 @@
 import React, {useState, Fragment} from 'react'
 import {Button, Modal, Container, Image} from 'react-bootstrap';
-import { useEffect } from 'react';
 
 const Modaling = ({planImage}) => {
     const [show, setShow] = useState(false);

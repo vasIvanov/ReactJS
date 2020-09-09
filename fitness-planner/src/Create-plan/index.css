@@ -1,53 +1,60 @@
 .days-table {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-
 textarea {
-    width: 100%;
+  width: 100%;
 }
 
 .wrapper {
-    max-width: 80em;
-    margin: 0 auto;
-    padding: 1em;
+  max-width: 80em;
+  margin: 0 auto;
+  padding: 1em;
 }
 
-
 .plan-name {
-    text-align: center;
+  text-align: center;
 }
 
 .plan-details {
-    font-size: 1.2em;
+  font-size: 1.2em;
 }
 
 .create-button {
-    border: none;
-    outline: none;
-    background-color: blue;
-    color: white;
-    padding: 0.5em 1em;
-    border-radius: 0.3em;
-    font-size: 1.05em;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    margin: 0.5em 0 3em 0;
+  border: none;
+  outline: none;
+  background-color: blue;
+  color: white;
+  padding: 0.5em 1em;
+  border-radius: 0.3em;
+  font-size: 1.05em;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  margin: 0.5em 0 3em 0;
 }
 
 .create-button:disabled {
-    background-color: grey;
+  background-color: grey;
 }
 
 .create-button:disabled:hover {
-    cursor: not-allowed;
+  cursor: not-allowed;
 }
 
 .custom-input {
-    margin-bottom: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .custom-alert {
-    margin-top: 0.5em;
+  margin-top: 0.5em;
+}
+
+.link-warning {
+  display: inline-block;
+  padding: 0.3em;
+  border-radius: 0.3em;
+  font-weight: bold;
+  background: yellow;
+  color: black;
 }

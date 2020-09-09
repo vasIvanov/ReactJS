@@ -1,53 +1,58 @@
-*, *:before, *:after {
-    padding: 0;
-    margin: 0;
-    box-sizing: inherit;
+*,
+*:before,
+*:after {
+  padding: 0;
+  margin: 0;
+  box-sizing: inherit;
 }
 
 html {
-    box-sizing: border-box;
-    font: 18px/1.5 'Courgette', cursive;
-    position: relative;
-
+  box-sizing: border-box;
+  font: 18px/1.5 'Courgette', cursive;
+  position: relative;
 }
 
-
 .toast-outer {
-    position: relative;
-    min-height: 0px;
+  position: relative;
+  min-height: 0px;
 }
 
 .toast-inner {
-    z-index: 100;
-    position: absolute;
-    top: 4em;
-    left: 0;
+  z-index: 100;
+  position: absolute;
+  top: 4em;
+  left: 0;
 }
 
 .toast-body {
-    background-color:#3f9653;
-    color: #D4EDDA;
+  background-color: #3f9653;
+  color: #d4edda;
 }
 
 .media {
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-    height: auto;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  height: auto;
 }
 
 .media:before {
-    display: block;
-    content: '';
-    padding-top: 56.25%;
+  display: block;
+  content: '';
+  padding-top: 56.25%;
 }
 
-.media img  {
-    position: absolute;
-    display: block;
-    width: 100%;
-    height: auto;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.media img {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.no-plans-fallback {
+  text-align: center;
+  font-size: 1.2em;
 }
