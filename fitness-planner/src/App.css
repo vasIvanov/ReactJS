@@ -56,3 +56,8 @@ html {
   text-align: center;
   font-size: 1.2em;
 }
+
+#root.dark {
+  background: #343a40;
+  color: white;
+}

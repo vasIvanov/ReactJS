@@ -8,9 +8,15 @@ import Header from '../Header';
 const Plans = ({ isLogged, history }) => {
   const [plans, setPlans] = useState('');
   useEffect(() => {
+    let isMounted = true;
     planService.load().then((r) => {
-      setPlans(r);
+      if (isMounted) {
+        setPlans(r);
+      }
     });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return plans ? (

@@ -17,8 +17,6 @@ const FavoritePlans = ({ isLogged }) => {
     '';
   let message = '';
   let city = '';
-  console.log(userPlans);
-
   if (isLogged) {
     city =
       (userValue && userValue.city) || localStorage.getItem('city') || false;
@@ -38,7 +36,6 @@ const FavoritePlans = ({ isLogged }) => {
       )
         .then((r) => r.json())
         .then((r) => {
-          console.log(r);
           setTemperature(r.main.temp);
           setFeelTemp(r.main.feels_like);
         });
@@ -50,7 +47,7 @@ const FavoritePlans = ({ isLogged }) => {
       <Header isLogged={isLogged} bgColor="dark" />
       {isLogged && city ? (
         <div className="weather-section">
-          <p>{`Weather in ${city}`}</p>
+          <p>{`Weather in ${city.toLocaleUpperCase()}`}</p>
           {temperature && feelTemp && units === 'metric' ? (
             <p>
               {temperature}

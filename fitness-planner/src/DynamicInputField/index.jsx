@@ -15,12 +15,10 @@ const DynamicInputField = ({
   setDay6,
   setDay7,
   dayValue,
-  setButtonActive,
 }) => {
   const [inputFields, setInputFields] = useState(
     dayValue ? [...dayValue] : ['']
   );
-
   useEffect(() => {
     if (day === '1') {
       setDay1(inputFields);
@@ -64,8 +62,14 @@ const DynamicInputField = ({
   const videoRef = useRef('');
   const exerciseRef = useRef('');
   const [inputError, setInpurError] = useState(true);
+
   const handleInputChange = (index, event, video) => {
-    if (videoRef.current.value !== '' || exerciseRef.current.value !== '') {
+    // exerciseRef.current.value = event.current.value;
+    if (
+      videoRef.current.value !== '' ||
+      exerciseRef.current.value !== '' ||
+      event.target.value !== ''
+    ) {
       setInpurError(false);
     } else {
       setInpurError(true);
@@ -84,65 +88,113 @@ const DynamicInputField = ({
     //   setInputFields(values);
     //   console.log('2');
     // }
-    const values = [...inputFields];
-    values[index] = {
-      exercise: exerciseRef.current.value,
-      video: videoRef.current.value,
-    };
-    setInputFields(values);
+    if (dayValue) {
+      if (video) {
+        const values = [...inputFields];
+        values[index].video = event.target.value;
+        // {
+        //   exercise: exerciseRef.current.value,
+        //   video: event.target.value,
+        // };
+        setInputFields(values);
+      } else {
+        const values = [...inputFields];
+        values[index].exercise = event.target.value;
+        // {
+        //   exercise: event.target.value,
+        //   video: videoRef.current.value,
+        // };
+        setInputFields(values);
+      }
+    } else {
+      const values = [...inputFields];
+      values[index] = {
+        exercise: exerciseRef.current.value,
+        video: videoRef.current.value,
+      };
+      setInputFields(values);
+    }
   };
-  console.log(inputFields);
   return (
     <form className="day">
       Day {day}
       {inputError ? (
         <Alert variant={'danger'}>
-          You must enter exericese explanation or video link!
+          You must enter exercise explanation or video link!
         </Alert>
       ) : null}
       <div className="form-row">
-        {inputFields.map((inputField, index) => (
-          <Fragment key={index}>
-            <div className="form-group col-sm-6 exercise-wrapper">
-              <label htmlFor="day">Exercise {index + 1}</label>
-              <textarea
-                type="text"
-                className="form-control"
-                id="exercise"
-                name="exercise"
-                onChange={(event) => handleInputChange(index, event)}
-                ref={exerciseRef}
-              />
-              <input
-                className="form-control"
-                type="text"
-                placeholder="Video Example"
-                onChange={(e) => handleInputChange(index, e, e.target.value)}
-                ref={videoRef}
-              />
-            </div>
-            <div className="form-group col-sm-2">
-              {index === 0 ? (
-                <button
-                  className="custom-add"
-                  type="button"
-                  onClick={() => handleAddFields()}
-                >
-                  +
-                </button>
+        {inputFields.map((inputField, index) => {
+          return (
+            <Fragment key={index}>
+              {dayValue ? (
+                <div className="form-group col-sm-6 exercise-wrapper">
+                  <label htmlFor="day">Exercise {index + 1}</label>
+                  <textarea
+                    type="text"
+                    className="form-control"
+                    id="exercise"
+                    name="exercise"
+                    onChange={(event) => handleInputChange(index, event, false)}
+                    ref={exerciseRef}
+                    value={inputField.exercise || inputField}
+                  />
+
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder="Video Example"
+                    onChange={(e) => handleInputChange(index, e, true)}
+                    ref={videoRef}
+                    value={inputField.video}
+                  />
+                </div>
+              ) : (
+                <div className="form-group col-sm-6 exercise-wrapper">
+                  <label htmlFor="day">Exercise {index + 1}</label>
+                  <textarea
+                    type="text"
+                    className="form-control"
+                    id="exercise"
+                    name="exercise"
+                    onChange={(event) => handleInputChange(index, event)}
+                    ref={exerciseRef}
+                  />
+
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder="Video Example"
+                    onChange={(e) =>
+                      handleInputChange(index, e, e.target.value)
+                    }
+                    ref={videoRef}
+                  />
+                </div>
+              )}
+              {!dayValue && !inputError ? (
+                <div className="form-group col-sm-2">
+                  <button
+                    className="custom-add"
+                    type="button"
+                    onClick={() => handleAddFields()}
+                  >
+                    +
+                  </button>
+                  {index > 0 ? (
+                    <button
+                      className="custom-remove"
+                      type="button"
+                      onClick={() => handleRemoveFields(index)}
+                    >
+                      -
+                    </button>
+                  ) : null}
+                </div>
               ) : null}
-              {index > 0 ? (
-                <button
-                  className="custom-remove"
-                  type="button"
-                  onClick={() => handleRemoveFields(index)}
-                >
-                  -
-                </button>
-              ) : null}
-            </div>
-          </Fragment>
-        ))}
+            </Fragment>
+          );
+        })}
       </div>
     </form>
   );

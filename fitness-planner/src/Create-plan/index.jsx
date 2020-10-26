@@ -1,14 +1,13 @@
 import React, { useState, useCallback, useContext } from 'react';
 import { Form, Alert } from 'react-bootstrap';
 import './index.css';
-import validate from './schema';
-import planService from '../services/plan-service';
 // import widget from './cloudinaryWidget';
-import DynamicInputField from '../DynamicInputField';
 import { useEffect } from 'react';
 import Modal from './Modal';
 import Header from '../Header';
 import { userContext } from '../userContext';
+import GenerateInput from './GenerateInput';
+import { checkButton, validateAndCreatePlan } from './utils';
 
 const CreatePlan = ({ history, showChange, editPlan }) => {
   const userValue = useContext(userContext);
@@ -31,7 +30,8 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
   const [day7, setDay7] = useState('');
   const [urlStatus, setUrlStatus] = useState(false);
   const [buttonActive, setButtonActive] = useState(false);
-  console.log(day1);
+  const userId =
+    (userValue && userValue._id) || localStorage.getItem('_id') || null;
   const nullDays = () => {
     setDay1('');
     setDay2('');
@@ -41,8 +41,6 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
     setDay6('');
     setDay7('');
   };
-  const userId =
-    (userValue && userValue._id) || localStorage.getItem('_id') || null;
   useEffect(() => {
     if (editPlan) {
       setPlanName(editPlan.name);
@@ -78,46 +76,19 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
       img.onerror = setError;
       img.src = planImage;
     }
-
-    if (days === '2' && urlStatus) {
-      setButtonActive(day1 !== '' && day2 !== '' && urlStatus);
-    } else if (days === '3') {
-      setButtonActive(day1 !== '' && day2 !== '' && day3 !== '' && urlStatus);
-    } else if (days === '4') {
-      setButtonActive(
-        day1 !== '' && day2 !== '' && day3 !== '' && day4 !== '' && urlStatus
-      );
-    } else if (days === '5') {
-      setButtonActive(
-        day1 !== '' &&
-          day2 !== '' &&
-          day3 !== '' &&
-          day4 !== '' &&
-          day5 !== '' &&
-          urlStatus
-      );
-    } else if (days === '6') {
-      setButtonActive(
-        day1 !== '' &&
-          day2 !== '' &&
-          day3 !== '' &&
-          day4 !== '' &&
-          day5 !== '' &&
-          day6 !== '' &&
-          urlStatus
-      );
-    } else if (days === '7') {
-      setButtonActive(
-        day1 !== '' &&
-          day2 !== '' &&
-          day3 !== '' &&
-          day4 !== '' &&
-          day5 !== '' &&
-          day6 !== '' &&
-          day7 !== '' &&
-          urlStatus
-      );
-    }
+    checkButton(
+      days,
+      setButtonActive,
+      urlStatus,
+      day1,
+      day2,
+      day3,
+      day4,
+      day5,
+      day5,
+      day6,
+      day7
+    );
   }, [
     days,
     day1,
@@ -131,14 +102,12 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
     planImage,
     setError,
   ]);
-
   const handleSelect = (e) => {
     if (!editPlan) {
       nullDays();
     }
     setDays(e.target.value);
   };
-
   const handleSubmit = () => {
     const exercises = {
       day1,
@@ -149,13 +118,11 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
       day6,
       day7,
     };
-
     for (let propName in exercises) {
       if (exercises[propName] === '') {
         delete exercises[propName];
       }
     }
-
     setNameError('');
     setImageUrlError('');
     setDetailsError('');
@@ -168,49 +135,20 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
       author: userId,
       imageUrl: planImage,
     };
-    console.log(planName);
-
-    validate(planName, planImage, planDetails)
-      .then(() => {
-        if (editPlan) {
-          const planId = editPlan._id;
-          planService.update(planId, data).then((plan) => {
-            console.log(plan);
-
-            if (plan.errMsg) {
-              setServerError(plan.errMsg);
-              window.scrollTo(0, 0);
-              return;
-            }
-            showChange();
-            history.push('/');
-          });
-        } else {
-          planService.create(data).then((e) => {
-            if (e.errMsg) {
-              setServerError(e.errMsg);
-              window.scrollTo(0, 0);
-              return;
-            }
-            showChange();
-            history.push('/');
-          });
-        }
-      })
-      .catch((err) => {
-        err.inner.forEach((error) => {
-          if (error.path === 'planName') {
-            setNameError(error.message);
-          } else if (error.path === 'planImage') {
-            setImageUrlError(error.message);
-          } else if (error.path === 'planDetails') {
-            setDetailsError(error.message);
-          }
-        });
-        window.scrollTo(0, 0);
-      });
+    validateAndCreatePlan(
+      planName,
+      planImage,
+      planDetails,
+      editPlan,
+      data,
+      setServerError,
+      showChange,
+      history,
+      setNameError,
+      setImageUrlError,
+      setDetailsError
+    );
   };
-
   return (
     <React.Fragment>
       <Header isLogged={true} bgColor="dark" />
@@ -254,7 +192,6 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
               </Alert>
             ) : null}
           </Form.Group>
-
           <Form.Group controlId="exampleForm.ControlSelect3">
             <Form.Label>Complexity level</Form.Label>
             <Form.Control
@@ -305,256 +242,19 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
               <Alert variant={'danger'}>{detailsError}</Alert>
             ) : null}
           </Form.Group>
-          <p className="link-warning">
-            If you want to add a video example type Example after the exercise
-            explanation and the video link!
-          </p>
         </Form>
-        {days === '2' ? (
-          <div className="days-table">
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                (editPlan && editPlan.exercises && editPlan.exercises.day1) ||
-                ''
-              }
-              day={'1'}
-              setDay1={setDay1}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                (editPlan && editPlan.exercises && editPlan.exercises.day2) ||
-                ''
-              }
-              day={'2'}
-              setDay2={setDay2}
-            />
-          </div>
-        ) : null}
-        {days === '3' ? (
-          <div className="days-table">
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                (editPlan && editPlan.exercises && editPlan.exercises.day1) ||
-                ''
-              }
-              day={'1'}
-              setDay1={setDay1}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                (editPlan && editPlan.exercises && editPlan.exercises.day2) ||
-                ''
-              }
-              day={'2'}
-              setDay2={setDay2}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                (editPlan && editPlan.exercises && editPlan.exercises.day3) ||
-                ''
-              }
-              day={'3'}
-              setDay3={setDay3}
-            />
-          </div>
-        ) : null}
-        {days === '4' ? (
-          <div className="days-table">
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day1
-              }
-              day={'1'}
-              setDay1={setDay1}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day2
-              }
-              day={'2'}
-              setDay2={setDay2}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day3
-              }
-              day={'3'}
-              setDay3={setDay3}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day4
-              }
-              day={'4'}
-              setDay4={setDay4}
-            />
-          </div>
-        ) : null}
-        {days === '5' ? (
-          <div className="days-table">
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day1
-              }
-              day={'1'}
-              setDay1={setDay1}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day2
-              }
-              day={'2'}
-              setDay2={setDay2}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day3
-              }
-              day={'3'}
-              setDay3={setDay3}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day4
-              }
-              day={'4'}
-              setDay4={setDay4}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day5
-              }
-              day={'5'}
-              setDay5={setDay5}
-            />
-          </div>
-        ) : null}
-        {days === '6' ? (
-          <div className="days-table">
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day1
-              }
-              day={'1'}
-              setDay1={setDay1}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day2
-              }
-              day={'2'}
-              setDay2={setDay2}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day3
-              }
-              day={'3'}
-              setDay3={setDay3}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day4
-              }
-              day={'4'}
-              setDay4={setDay4}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day5
-              }
-              day={'5'}
-              setDa5={setDay5}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day6
-              }
-              day={'6'}
-              setDay6={setDay6}
-            />
-          </div>
-        ) : null}
-        {days === '7' ? (
-          <div className="days-table">
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day1
-              }
-              day={'1'}
-              setDay1={setDay1}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day2
-              }
-              day={'2'}
-              setDay2={setDay2}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day3
-              }
-              day={'3'}
-              setDay3={setDay3}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day4
-              }
-              day={'4'}
-              setDay4={setDay4}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day5
-              }
-              day={'5'}
-              setDay5={setDay5}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day6
-              }
-              day={'6'}
-              setDay6={setDay6}
-            />
-            <DynamicInputField
-              setButtonActive={setButtonActive}
-              dayValue={
-                editPlan && editPlan.exercises && editPlan.exercises.day7
-              }
-              day={'7'}
-              setDay7={setDay7}
-            />
-          </div>
-        ) : null}
+        <GenerateInput
+          setButtonActive={setButtonActive}
+          editPlan={editPlan}
+          days={days}
+          setDay1={setDay1}
+          setDay2={setDay2}
+          setDay3={setDay3}
+          setDay4={setDay4}
+          setDay5={setDay5}
+          setDay6={setDay6}
+          setDay7={setDay7}
+        />
         {editPlan ? (
           <button
             className="create-button"

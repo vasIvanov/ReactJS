@@ -1,86 +1,84 @@
 .details {
-    padding: 0 1em;
-    max-width: 80em;
-    margin: 1em auto;
-
+  padding: 0 1em;
+  max-width: 80em;
+  margin: 1em auto;
 }
 
 .plan-wrapper {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .plan-details {
-    flex: 0 0 45%;
-    margin: 0.5em;
-    text-align: left;
-    margin-bottom: 1em;
-    padding: 0.5em;
-    border-radius: 0.2em;
+  flex: 0 0 45%;
+  margin: 0.5em;
+  text-align: left;
+  margin-bottom: 1em;
+  padding: 0.5em;
+  border-radius: 0.2em;
 }
 
 .plan-details h6 {
-    display: inline-block;
-    border-bottom: 1px solid #343A40;
+  display: inline-block;
+  border-bottom: 1px solid #343a40;
 }
 
 .exercice {
-    border-bottom: 1px solid #343A40;
+  border-bottom: 1px solid #343a40;
+  background-color: #343a40;
+  color: white;
 }
 
 .plan-days {
-    flex: 0 0 45%;
-    margin: 0.5em;
-    text-align: center;
-    border: 1px solid #343A40;
-    border-radius: 0.3em;
-    padding: 0.3em 0.5em;
+  flex: 0 0 45%;
+  margin: 0.5em;
+  text-align: center;
+  border: 1px solid #343a40;
+  border-radius: 0.3em;
+  padding: 0.3em 0.5em;
 }
 
 .details-button {
-    margin-right: 0.5em;
-    margin-bottom: 4em;
+  margin-right: 0.5em;
+  margin-bottom: 4em;
 }
 
 .author-panel {
-    margin-bottom: 4em;
+  margin-bottom: 4em;
 }
 
 .plan-complexity {
-    border-bottom: 1px solid #343A40;
-    font-size: 1.4em;
-    text-align: center;
-    display: inline-block;
+  border-bottom: 1px solid #343a40;
+  font-size: 1.4em;
+  text-align: center;
+  display: inline-block;
 }
 
-.plan-info{
-    text-align: center;
+.plan-info {
+  text-align: center;
 }
-
 
 .edit-link {
-    color: white;
-    background-color: blue;
-    padding: 0.3em 0.7em;
-    border-radius: 0.3em;
-    margin-right: 0.5em;
-
+  color: white;
+  background-color: blue;
+  padding: 0.3em 0.7em;
+  border-radius: 0.3em;
+  margin-right: 0.5em;
 }
 
 .edit-link:hover {
-    text-decoration: none;
-    color: blue;
-    background-color: white;
+  text-decoration: none;
+  color: blue;
+  background-color: white;
 }
 
 .custom-modal-footer {
-    justify-content: center;
+  justify-content: center;
 }
 
 .custom-modal-title {
-    text-align: center;
+  text-align: center;
 }
-
 
 /* .delete-link {
     color: red;
@@ -96,36 +94,44 @@
 } */
 
 .comment-section {
-    max-width: 40em;
-    margin: 0 auto;
-    margin-bottom: 4em;
-    text-align: center;
+  max-width: 40em;
+  margin: 0 auto;
+  margin-bottom: 4em;
+  text-align: center;
+  padding: 0.8em;
 }
 
 .comment-section h6 {
-    text-align: center;
-    font-size: 1.2em;
-    margin-bottom: 1em;
-    display: inline-block;
-    border-bottom: 1px solid #343A40;
+  text-align: center;
+  font-size: 1.2em;
+  margin-bottom: 1em;
+  display: inline-block;
+  border-bottom: 1px solid #343a40;
 }
 
 .comment {
-    text-align: left;
-    margin-bottom: 1em;
-    padding: 0.5em;
-    box-shadow: 1px 1px 35px -2px rgba(0,0,0,0.37);
-    border-radius: 0.2em;
+  text-align: left;
+  margin-bottom: 1em;
+  padding: 0.5em;
+  box-shadow: 1px 1px 35px -2px rgba(0, 0, 0, 0.37);
+  border-radius: 0.2em;
 }
 
 .username {
-    border-bottom: 0.3px solid black;
-    display: inline-block;
-    padding: 0.3em 0.5em;
-
+  border-bottom: 0.3px solid black;
+  display: inline-block;
+  padding: 0.3em 0.5em;
 }
 
 #write-comment {
-    padding: 0.3em 0.5em;
+  padding: 0.3em 0.5em;
 }
 
+.plan-days {
+  background-color: yellowgreen;
+}
+
+.example:hover {
+  text-decoration: none;
+  color: yellowgreen;
+}

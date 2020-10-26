@@ -6,6 +6,7 @@ import { userContext } from '../userContext';
 import { Button, Modal } from 'react-bootstrap';
 import Header from '../Header';
 import { Link } from 'react-router-dom';
+import { renderData } from './utils';
 
 const PlanDetails = ({ match, isLogged, history, setUserData }) => {
   const [plan, setPlan] = useState('');
@@ -19,6 +20,14 @@ const PlanDetails = ({ match, isLogged, history, setUserData }) => {
     (userValue && userValue.plans) || JSON.parse(localStorage.getItem('plans'));
   const [writeComment, setWriteComment] = useState('');
   const [commentsArray, setComments] = useState('');
+  const [show, setShow] = useState(false);
+  const handleShow = () => setShow(true);
+  const handleDelete = () => {
+    setShow(false);
+    planService.deletePlan(plan._id).then(() => {
+      history.push('/my-plans');
+    });
+  };
 
   const submitCommentHandler = () => {
     planService
@@ -39,7 +48,6 @@ const PlanDetails = ({ match, isLogged, history, setUserData }) => {
   useEffect(() => {
     planService.load(planId).then((plan) => {
       setPlan(plan);
-      console.log(plan);
       setComments(plan.comments);
       userServices.getUsers().then((r) => {
         const user = r.filter((u) => u._id === userId)[0];
@@ -86,60 +94,6 @@ const PlanDetails = ({ match, isLogged, history, setUserData }) => {
       history.push('/');
     });
   };
-
-  const renderData = () => {
-    console.log(plan);
-    let header = Object.keys(plan.exercises);
-    console.log(header);
-    return header.map((key, index) => {
-      return (
-        <div className="plan-days" key={index}>
-          <h5>Day {key.toUpperCase().split('DAY')[1]}</h5>
-          {plan.exercises[key].map((e, i) => {
-            if (typeof plan.exercises[key][i] === 'string') {
-              return (
-                <p className="exercice" key={i}>
-                  {e.split('Example')[0]}
-                  {e.includes('Example') ? (
-                    <a
-                      rel="noopener noreferrer"
-                      target="_blank"
-                      href={e.split('Example')[1]}
-                    >
-                      Watch Example
-                    </a>
-                  ) : null}
-                </p>
-              );
-            } else {
-              console.log(plan.exercises[key][i]);
-              console.log(e.exercise);
-              return (
-                <p className="exercice" key={i}>
-                  {e.exercise} <br></br>
-                  {e.video ? (
-                    <a rel="noopener noreferrer" target="_blank" href={e.video}>
-                      Watch Example
-                    </a>
-                  ) : null}
-                </p>
-              );
-            }
-          })}
-        </div>
-      );
-    });
-  };
-
-  const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
-  const handleDelete = () => {
-    setShow(false);
-    planService.deletePlan(plan._id).then(() => {
-      history.push('/my-plans');
-    });
-  };
-
   return plan ? (
     <React.Fragment>
       <Header isLogged={isLogged} bgColor="dark" />
@@ -158,7 +112,7 @@ const PlanDetails = ({ match, isLogged, history, setUserData }) => {
           </div>
         </div>
         <div>
-          <div className="plan-wrapper">{renderData()}</div>
+          <div className="plan-wrapper">{renderData(plan)}</div>
 
           {isAuthor ? (
             <div className="author-panel">
