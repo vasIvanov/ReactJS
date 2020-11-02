@@ -3,39 +3,73 @@ import './Login.css';
 import withForm from '../shared/hocs/withForm';
 import userService from '../services/user-service';
 import {userContext} from '../userContext';
+import {loginUser} from '../actions/userActions';
+import {connect} from 'react-redux';
+import store from '../store';
 
 class Login extends React.Component {
-    
-    state = { error: null }
-    usernameChangeHandler = this.props.controlChangeHandler('username');
-    passwordChangeHandler = this.props.controlChangeHandler('password');
-    
+    constructor(props) {
+        super(props);
+        this.state = {
+            form: {
+                username: '',
+                password: '',
+            },
+            errors: null
+        };
+    }
+    // usernameChangeHandler = this.props.controlChangeHandler('username');
+    // passwordChangeHandler = this.props.controlChangeHandler('password');
+    controlChangeHandler = name => e => {
+        console.log(name);
+        const newValue = e.target.value;
+        this.setState(({ form }) => {
+            return { form:  { ...form, [name]: newValue }};
+        });
+    }
 
+    getFormState = () => {
+        return this.state.form;
+    }
+
+    getErrorsState = () => {
+        return this.state.errors
+    }
+    login = async (history, data) => {
+        // return userService.login(data).then((res) => {
+          
+        //   this.setState({isLogged: true, userData: res});
+        //   history.push('/')
+        // });
+        console.log(data);
+        await this.props.loginUser(data);
+        this.props.loginStateChange()
+        history.push('/')
+    }
     submitHandler = () => {
-        const errors = this.props.getErrorsState();
+        const errors = this.getErrorsState();
         if(!!errors) {
             return;
         }
-        const data = this.props.getFormState();
+        const data = this.getFormState();
         
-        this.props.login(this.props.history, data).catch(error => {
-            this.setState({error})
-        })
+        this.login(this.props.history, data)
         
     }
 
     render(){
         const {error} = this.state;
+        console.log(store.getState());
         return (
             <form className="Login">
                 <div className="form-control">
                     <label>Username</label>
-                    <input type="text" onChange={this.usernameChangeHandler}/>
+                    <input type="text" onChange={this.controlChangeHandler('username')}/>
                    
                 </div>
                 <div className="form-control">
                     <label>Password</label>
-                    <input type="password" onChange={this.passwordChangeHandler}/>
+                    <input type="password" onChange={this.controlChangeHandler('password')}/>
                 </div>
                 {error ? 
                     <div>{error}</div> : null
@@ -49,4 +83,10 @@ class Login extends React.Component {
     
 }
 
-export default withForm(Login, {username: '', password: ''});
+// export default withForm(Login, {username: '', password: ''});
+export default connect(
+    (state) => ({user: state.user.user}),
+      {
+        loginUser
+      }
+  )(Login);

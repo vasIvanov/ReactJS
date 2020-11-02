@@ -4,9 +4,10 @@ import './Profile.css'
 import Posts from '../Posts/Posts'
 import userService from '../services/user-service'
 import {userContext} from '../userContext';
+import store from '../store'
 
 export default function () {
-    const userValue = useContext(userContext);
+    const userValue = store.getState().user.user;
     
     const myWidget = cloudinary.createUploadWidget({
         cloudName: 'dhkrkvztl', 
@@ -15,7 +16,7 @@ export default function () {
     }, (error, result) => { 
           if (!error && result && result.event === "success") { 
             console.log('Done! Here is the image info: ', result.info.url); 
-            userData.imageUrl = result.info.url;
+            userValue.imageUrl = result.info.url;
             
             userService.update(userData)
           }
@@ -25,7 +26,8 @@ export default function () {
 
     return <div className="Profile">
         <div className="personal-info">
-            <img src={userValue.imageUrl ? `${userValue.imageUrl}` : ''} alt=""/>
+            {userValue && userValue.imageUrl ? <img src={userValue.imageUrl ? `${userValue.imageUrl}` : ''} alt=""/> : null}
+            
             <p>
                 <span>Username: </span>
                 {userValue.username}

@@ -2,48 +2,54 @@ import React, { useState, useEffect } from 'react';
 import './Posts.css';
 import Post from './Post/Post';
 import postService from '../services/post-service';
+import {fetchPosts, sortByLength, sortByDate} from '../actions/postActions';
+import {connect} from 'react-redux';
+import store from '../store';
+const Posts = ({limit, userId, posts, fetchPosts, sortByLength, sortByDate, isLogged}) => {
+    if(isLogged) {
+        console.log(store.getState().user.user.username);
 
-const Posts = ({limit, userId}) => {
-    const [posts, setPosts] = useState(null);
-
+    }
+    // const [posts, setPosts] = useState(null);
     useEffect(() => {
-        postService.load(null, limit, userId).then(posts => {
-            setPosts(posts)
-        });
-    }, [limit, userId])
+        // postService.load(null, limit, userId).then(posts => {
+        //     setPosts(posts)
+        // });
+        fetchPosts(null, limit, userId);
+        
+    }, [limit, userId, fetchPosts])
 
     return posts ? <div className='Posts'>
-        {posts.map(post => <Post key={post._id} imageUrl="/logo192.png" author={post.author.username}>{post.description}</Post>)}
+        <button type="button" onClick={sortByLength.bind(null, posts, 'shortest')}>Sort by shortest</button>
+        <button type="button" onClick={sortByLength.bind(null, posts, 'longest')}>Sort by longest</button>
+        <button type="button" onClick={sortByDate.bind(null, posts, 'newest')}>Sort by newest</button>
+        <button type="button" onClick={sortByDate.bind(null, posts, 'oldest')}>Sort by oldest</button>
+        {/* {posts.map(post => <Post key={post._id} imageUrl="/logo192.png" author={post.author.username}>{post.description}</Post>)} */}
+        {posts ? posts.map(post => <Post key={post._id} imageUrl="/logo192.png" author={post.author.username}>{post.description}</Post>) : posts.map(post => <Post key={post._id} imageUrl="/logo192.png" author={post.author.username}>{post.description}</Post>)}
                 
     </div> : <div>Loading...</div>
     
 }
 
 // class Posts extends React.Component {
-//     state = {
-//         posts: null
-//     };
-
 //     componentDidMount() {
-        
-//         postService.load(null, this.props.limit, this.props.userId).then(posts => {
-//             this.setState({ posts });
-//         });
+//         console.log(fetchPosts);
+//         this.props.fetchPosts();
 //     }
 
 //     render() {
-//         const {posts} = this.state;
-//         return posts ? <div className='Posts'>
-//             {posts.map(post => <Post key={post._id} imageUrl="/logo192.png" author={post.author.username}>{post.description}</Post>)}
+//         return this.props.posts ? <div className='Posts'>
+//             {this.props.posts.map(post => <Post key={post._id} imageUrl="/logo192.png" author={post.author.username}>{post.description}</Post>)}
                  
 //         </div> : <div>Loading...</div>
 //     }
 // }
 
-// function Posts() {
-//     return <div className='Posts'>
-//         <Post imageUrl="/logo192.png" author="Me">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Amet in qui illo. Quod fugiat similique facere repellat enim, quas, ex maiores ipsum eius officia libero cum itaque, tenetur reprehenderit ratione animi quia rerum fugit laborum vero quibusdam dolor. Maiores natus, voluptates dolor eaque nihil enim alias quae. Minus, rerum dolores?</Post>
-//     </div>
-// }
-
-export default Posts;
+export default connect(
+    (state) =>({posts: state.posts.items}),
+        {
+            fetchPosts,
+            sortByLength,
+            sortByDate 
+        }
+)(Posts);
