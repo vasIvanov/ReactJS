@@ -118,7 +118,7 @@ const DynamicInputField = ({
   return (
     <form className="day">
       Day {day}
-      {inputError ? (
+      {inputError && !dayValue ? (
         <Alert variant={'danger'}>
           You must enter exercise explanation or video link!
         </Alert>

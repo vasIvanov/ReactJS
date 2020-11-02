@@ -1,22 +1,24 @@
 .plans {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.plan {
+@media only screen and (min-width: 1000px) {
+  .plan {
     flex: 30% 0 0;
     padding: 0.5em;
+  }
 }
 
 .custom {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .custom * {
-    color: black;
-    font-weight: 600;
-    border-right: 1px solid white !important;
+  color: black;
+  font-weight: 600;
+  border-right: 1px solid white !important;
 }
 
 .custom *:hover {
@@ -24,6 +26,12 @@
 }
 
 .custom .active {
-    font-weight: 900;
-    border-bottom: 2px solid green !important;
+  font-weight: 900;
+  border-bottom: 2px solid green !important;
+}
+
+@media only screen and (max-width: 900px) {
+  .plan {
+    width: 100%;
+  }
 }
