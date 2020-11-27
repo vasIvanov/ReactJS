@@ -5,7 +5,7 @@ import Link from '../shared/Link/Link'
 function Footer({isLogged}) {
     return <nav className='Footer'>
         <ul>
-            <Link url='#'>
+            <Link to='#'>
                 <img id="logo" src="logo192.png" alt=""/>
             </Link>
             <Link to="/">Posts</Link>

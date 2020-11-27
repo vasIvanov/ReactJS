@@ -1,9 +1,8 @@
 /*eslint-disable no-undef */
-import React, {useContext} from 'react';
+import React from 'react';
 import './Profile.css'
 import Posts from '../Posts/Posts'
 import userService from '../services/user-service'
-import {userContext} from '../userContext';
 import store from '../store'
 
 export default function () {

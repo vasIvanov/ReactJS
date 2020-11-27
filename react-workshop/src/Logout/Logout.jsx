@@ -1,13 +1,11 @@
-import React from 'react';
-import userService from '../services/user-service';
 import {logoutUser} from '../actions/userActions'
 import {connect} from 'react-redux';
 
 
-function Logout({history, logoutUser, logoutStateChange}) {
+function Logout({history, logoutUser, isLoggedStateChange}) {
     const loggingOut = async () => {
         await logoutUser()
-        logoutStateChange()
+        isLoggedStateChange('logout')
     }
     loggingOut()
     history.push('/')

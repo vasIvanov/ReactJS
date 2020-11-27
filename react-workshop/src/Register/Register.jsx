@@ -1,8 +1,6 @@
 import React from 'react';
 import './Register.css';
-import withForm from '../shared/hocs/withForm';
 import * as yup from 'yup';
-import userService from '../services/user-service';
 import {connect} from 'react-redux';
 import {registerUser} from '../actions/userActions';
 
@@ -49,8 +47,26 @@ class Register  extends React.Component {
             // userService.register(data).then(() => {
             //     this.props.history.push('/login')
             // })
+        try{
+            await schema.validate(this.state.form, {abortEarly: false})
             await this.props.registerUser(this.state.form);
             this.props.history.push('/');
+        } catch(err)  {
+            const errors = err.inner.reduce((acc, {path, message}) => {
+                acc[path] = (acc[path] || []).concat(message);
+                return acc;
+            }, {})
+            this.setState({ errors })
+        }
+        // .then(() => this.state.form).catch(err => {
+        //     const errors = err.inner.reduce((acc, {path, message}) => {
+        //         acc[path] = (acc[path] || []).concat(message);
+        //         return acc;
+        //     }, {})
+        //     this.setState({ errors })
+            
+        // })
+
         // })
     }
 

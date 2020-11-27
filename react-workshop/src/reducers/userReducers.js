@@ -5,10 +5,9 @@ export const userReducer = (state = {}, action) => {
     case REGISTER_USER:
       return {item: action.payload };
     case LOGIN_USER:
-      console.log(action.payload);
-      return {user: action.payload}
+      return {user: action.payload, isLogged: true}
     case LOGOUT_USER:
-      return {user: null}
+      return {user: null, isLogged: false}
     default:
       return state;
   }

@@ -1,8 +1,5 @@
 import React from 'react';
 import './Login.css';
-import withForm from '../shared/hocs/withForm';
-import userService from '../services/user-service';
-import {userContext} from '../userContext';
 import {loginUser} from '../actions/userActions';
 import {connect} from 'react-redux';
 import store from '../store';
@@ -35,25 +32,17 @@ class Login extends React.Component {
     getErrorsState = () => {
         return this.state.errors
     }
-    login = async (history, data) => {
-        // return userService.login(data).then((res) => {
-          
-        //   this.setState({isLogged: true, userData: res});
-        //   history.push('/')
-        // });
-        console.log(data);
-        await this.props.loginUser(data);
-        this.props.loginStateChange()
-        history.push('/')
-    }
-    submitHandler = () => {
+    
+    submitHandler = async() => {
         const errors = this.getErrorsState();
         if(!!errors) {
             return;
         }
         const data = this.getFormState();
         
-        this.login(this.props.history, data)
+        await this.props.loginUser(data);
+        this.props.isLoggedStateChange('login')
+        this.props.history.push('/')
         
     }
 

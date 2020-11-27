@@ -1,6 +1,5 @@
 import React from 'react';
 import Posts from '../Posts';
-import postService from '../../services/post-service';
 import './Create-Post.css';
 import {createPost} from '../../actions/postActions';
 import {connect} from 'react-redux';

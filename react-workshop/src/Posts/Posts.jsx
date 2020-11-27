@@ -1,15 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, {  useEffect } from 'react';
 import './Posts.css';
 import Post from './Post/Post';
-import postService from '../services/post-service';
 import {fetchPosts, sortByLength, sortByDate} from '../actions/postActions';
 import {connect} from 'react-redux';
-import store from '../store';
 const Posts = ({limit, userId, posts, fetchPosts, sortByLength, sortByDate, isLogged}) => {
-    if(isLogged) {
-        console.log(store.getState().user.user.username);
-
-    }
     // const [posts, setPosts] = useState(null);
     useEffect(() => {
         // postService.load(null, limit, userId).then(posts => {

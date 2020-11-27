@@ -155,7 +155,7 @@ const GenerateInput = ({
             setButtonActive={setButtonActive}
             dayValue={editPlan && editPlan.exercises && editPlan.exercises.day5}
             day={'5'}
-            setDa5={setDay5}
+            setDay5={setDay5}
           />
           <DynamicInputField
             setButtonActive={setButtonActive}
