@@ -23,6 +23,8 @@ import Plans from './Plans/index';
 import Footer from './Footer';
 import MyPlans from './MyPlans';
 import EditPlan from './EditPlan';
+import CreateDance from './Dance/Create-dance';
+import DanceDetails from './Dance/Dance-details'
 
 const App = () => {
   const cookies = parseCookies();
@@ -67,8 +69,10 @@ const App = () => {
               {isLogged && <Route path="/logout" render={render(Logout, { isLogged, logout: logoutFunc(setIsLogged, setUserData, setShow, setMessage) })} />}
               
               {isLogged && ((userData && userData.instructor) || localStorage.getItem('instructor')) ? <Route path='/create-plan'  render={render(CreatePlan, {isLogged, showChange: () => {setShow(true); setMessage('Plan Created')}})}  /> : null}
+              {isLogged && ((userData && userData.instructor) || localStorage.getItem('instructor')) ? <Route path='/create-dance'  render={render(CreateDance, {isLogged, showChange: () => {setShow(true); setMessage('Dance Created')}})}  /> : null}
               {isLogged && ((userData && userData.instructor) || localStorage.getItem('instructor')) ? <Route path='/my-plans' render={render(MyPlans, {isLogged})} /> : null}
               <Route path='/details/:id'  render={render(PlanDetails, {isLogged, setUserData})} />
+              <Route path='/dance-details/:id'  render={render(DanceDetails, {isLogged, setUserData})} />
               <Route path='/edit/:id'  render={render(EditPlan, {isLogged, setUserData, showChange: () => {setShow(true); setMessage('Plan Updated')}})} />
               <Route path='/plans'  render={render(Plans, {isLogged, categorized: true} )} />
               <Route path='/search/:query?' render={render(SearchedResults, {isLogged})} />

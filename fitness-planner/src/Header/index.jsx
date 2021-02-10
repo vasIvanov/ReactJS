@@ -54,7 +54,7 @@ const Header = ({isLogged, fixed, bgColor}) => {
 
     return (
       <Navbar bg={color}  fixed={fixed} expand="lg">
-        <Navbar.Brand ><Link className='brand' to="/">Fitness Planner</Link></Navbar.Brand>
+        <Navbar.Brand ><Link className='brand' to="/">Activity Planner</Link></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
@@ -65,6 +65,7 @@ const Header = ({isLogged, fixed, bgColor}) => {
               {isLogged && instructor ? <Dropdown/> : null}
               {/* {isLogged && instructor ? <Link className='link' to="/create-plan">Create Plan</Link> : null}
               {isLogged && instructor ? <Link className='link' to="/my-plans">Created Plans</Link> : null} */}
+              {isLogged && <Link className='link' to="/create-dance">Add Dance Event</Link>}
               {isLogged && <Link className='link' to="/logout">Logout</Link>}
             </Nav>
             <Form inline>

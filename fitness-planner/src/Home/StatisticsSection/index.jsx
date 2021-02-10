@@ -21,7 +21,8 @@ const StatisticsSection = () => {
         <section className="product-details">
             <ul>
                 <li>We have {instructors.length} Instructors</li>
-                <li>{plans.length} Plans to choose from</li>
+                <li>{plans.length} Fintess plans to choose from</li>
+                <li>0 Dance events to choose from</li>
                 <li>Over {users.length}  registered users </li>
                 <li>Now is the time to join !!!</li>
             </ul>

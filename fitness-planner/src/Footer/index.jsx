@@ -3,7 +3,7 @@ import './index.css';
 
 const Footer = () => {
     return (
-        <div className='footer'><span>Fitness Planner</span> Achieve Your Goals !</div>
+        <div className='footer'><span>Activity Planner</span> Achieve Your Goals !</div>
     )
 }
 

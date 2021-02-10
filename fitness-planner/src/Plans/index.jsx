@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import './index.css';
 import { Tabs, Tab } from 'react-bootstrap';
 import Plan from './Plan';
+import Dance from '../Dance/Dance';
 import planService from '../services/plan-service';
+import danceService from '../services/dance-service';
 import Header from '../Header';
 
 const Plans = ({ isLogged, history }) => {
   const [plans, setPlans] = useState('');
+  const [dances, setDances] = useState('');
+  console.log(dances);
   useEffect(() => {
     let isMounted = true;
     planService.load().then((r) => {
@@ -14,27 +18,38 @@ const Plans = ({ isLogged, history }) => {
         setPlans(r);
       }
     });
+    danceService.load().then(res => {
+      setDances(res);
+    })
     return () => {
       isMounted = false;
     };
   }, []);
 
-  return plans ? (
+  return (plans && dances) ? (
     <React.Fragment>
       <Header isLogged={isLogged} bgColor="dark" />
       <div className="plans-tabs">
-        <Tabs
+        {plans ?         <Tabs
           className="custom"
           defaultActiveKey="all"
           id="controlled-tab-example"
         >
-          <Tab eventKey="all" title="All Plans">
+          <Tab eventKey="all" title="All Activities">
             <div className="plans">
               {plans.map((plan, i) => (
                 <Plan
                   history={history}
                   key={i}
                   plan={plan}
+                  isLogged={isLogged}
+                />
+              ))}
+              {dances.map((dance, i) => (
+                <Dance
+                  history={history}
+                  key={i}
+                  dance={dance}
                   isLogged={isLogged}
                 />
               ))}
@@ -74,7 +89,22 @@ const Plans = ({ isLogged, history }) => {
               })}
             </div>
           </Tab>
-        </Tabs>
+          <Tab eventKey="dance-events" title="Dance Events">
+            <div className="plans">
+              {dances.map((dance, i) => {
+                  return (
+                    <Dance
+                      history={history}
+                      key={i}
+                      dance={dance}
+                      isLogged={isLogged}
+                    />
+                  );
+              })}
+            </div>
+          </Tab>
+        </Tabs> : null}
+
       </div>
 
       {plans.length < 1 && (
