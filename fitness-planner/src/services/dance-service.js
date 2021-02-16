@@ -27,6 +27,25 @@ const danceService = {
       credentials: 'include'
     }).then(res => res.json());
   },
+  deleteDance: function(id) {
+    return fetch(`http://localhost:9999/api/dance/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      credentials: 'include'
+    })
+  },
+  update: function(id, data) {
+    return fetch(`http://localhost:9999/api/dance/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(data),
+      credentials: 'include'
+    }).then(res => res.json());
+  }
 }
 
 export default danceService;

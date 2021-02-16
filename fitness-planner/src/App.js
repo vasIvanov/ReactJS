@@ -23,6 +23,7 @@ import Plans from './Plans/index';
 import Footer from './Footer';
 import MyPlans from './MyPlans';
 import EditPlan from './EditPlan';
+import EditDance from './Dance/EditDance';
 import CreateDance from './Dance/Create-dance';
 import DanceDetails from './Dance/Dance-details'
 
@@ -74,6 +75,7 @@ const App = () => {
               <Route path='/details/:id'  render={render(PlanDetails, {isLogged, setUserData})} />
               <Route path='/dance-details/:id'  render={render(DanceDetails, {isLogged, setUserData})} />
               <Route path='/edit/:id'  render={render(EditPlan, {isLogged, setUserData, showChange: () => {setShow(true); setMessage('Plan Updated')}})} />
+              <Route path='/edit-dance/:id'  render={render(EditDance, {isLogged, setUserData, showChange: () => {setShow(true); setMessage('Dance Updated')}})} />
               <Route path='/plans'  render={render(Plans, {isLogged, categorized: true} )} />
               <Route path='/search/:query?' render={render(SearchedResults, {isLogged})} />
               {isLogged && <Route path="/favorite-plans" render={render(FavoritePlans, { isLogged })} />}

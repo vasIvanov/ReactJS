@@ -65,7 +65,7 @@ const Header = ({isLogged, fixed, bgColor}) => {
               {isLogged && instructor ? <Dropdown/> : null}
               {/* {isLogged && instructor ? <Link className='link' to="/create-plan">Create Plan</Link> : null}
               {isLogged && instructor ? <Link className='link' to="/my-plans">Created Plans</Link> : null} */}
-              {isLogged && <Link className='link' to="/create-dance">Add Dance Event</Link>}
+              
               {isLogged && <Link className='link' to="/logout">Logout</Link>}
             </Nav>
             <Form inline>

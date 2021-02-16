@@ -25,6 +25,8 @@ const userSchema = new Schema({
 
     plans: [{ type: ObjectId, ref: "Plan" }],
 
+    dances: [{ type: ObjectId, ref: "Dance" }],
+
     instructor: {
         type: Boolean
     },

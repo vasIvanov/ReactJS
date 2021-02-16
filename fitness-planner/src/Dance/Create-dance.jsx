@@ -1,11 +1,11 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext, useEffect } from 'react';
 import { Form, Alert } from 'react-bootstrap';
 import Header from '../Header';
 import { userContext } from '../userContext';
 import danceService from '../services/dance-service';
 import './create-dance.css'
 
-const CreatePlan = ({ history, showChange }) => {
+const CreatePlan = ({ history, showChange, editDance }) => {
   const userValue = useContext(userContext);
   const[danceName, setDanceName] = useState('');
   const[danceImage, setDanceImage] = useState('');
@@ -16,6 +16,16 @@ const CreatePlan = ({ history, showChange }) => {
   const [danceDetails, setDanceDetails] = useState('');
   const userId =
     (userValue && userValue._id) || localStorage.getItem('_id') || null;
+
+  useEffect(() => {
+    if (editDance) {
+      setDanceName(editDance.name);
+      setDanceImage(editDance.imageUrl);
+      setType(editDance.type);
+      setDanceDetails(editDance.details);
+    }
+  }, [editDance]);
+
   const handleSubmit = () => {
     const data = {
       name: danceName,
@@ -24,18 +34,26 @@ const CreatePlan = ({ history, showChange }) => {
       author: userId,
       imageUrl: danceImage,
     };
-    console.log(data);
-    danceService.create(data).then((e) => {
-      console.log('here');
-      if (e.errMsg) {
-        setServerError(e.errMsg);
-        window.scrollTo(0, 0);
-        return;
-      }
-      showChange();
-      history.push('/');
-    });
+    if (editDance) {
+      const danceId = editDance._id;
+      danceService.update(danceId, data).then((dance) => {
+
+        showChange();
+        history.push('/');
+      });
+    } else {
+      danceService.create(data).then((e) => {
+        if (e.errMsg) {
+          setServerError(e.errMsg);
+          window.scrollTo(0, 0);
+          return;
+        }
+        showChange();
+        history.push('/');
+      });
+    }
   }
+
   return (
     <React.Fragment>
       <Header isLogged={true} bgColor="dark" />
@@ -95,13 +113,23 @@ const CreatePlan = ({ history, showChange }) => {
             />
           </Form.Group>
       </Form>
-      <button
+      {editDance ? (
+          <button
+            className="create-button"
+            type="button"
+            onClick={handleSubmit}
+          >
+            Edit
+          </button>
+        ) : (
+          <button
             className="create-button"
             type="button"
             onClick={handleSubmit}
           >
             Create
           </button>
+        ) }
       </div>
 
     </React.Fragment>

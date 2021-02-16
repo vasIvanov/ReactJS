@@ -18,7 +18,9 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
   const [commentsArray, setComments] = useState('');
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
-
+  const dances =
+  (userValue && userValue.dances) || JSON.parse(localStorage.getItem('dances'));
+  console.log(added);
   const submitCommentHandler = () => {
     danceService
       .postComment({ comment: writeComment, user: username }, dance._id)
@@ -39,12 +41,61 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
     danceService.getOne(danceId).then((plan) => {
       setDance(plan);
       setComments(plan.comments);
+      userValue.dances.forEach((p) => {
+        console.log(p._id, danceId);
+        if (p._id === danceId) {
+          setAdded(true);
+          return;
+        }
+      });
     });
   }, [danceId, userId]);
+
+  const handleAddClick = () => {
+    userServices.update({ _id: userId, danceId, add: false, addDance: true }).then(() => {
+      if (userValue) {
+        dances.push(dance);
+        setUserData({
+          ...userValue,
+          dances,
+        });
+      }
+      if (localStorage.getItem('dances')) {
+        dances.push(dance);
+        localStorage.setItem('dances', JSON.stringify(dance));
+      }
+      history.push('/');
+    });
+  };
+
+  const handleRemoveClick = () => {
+    userServices.update({ _id: userId, danceId, add: false, removeDance: true }).then(() => {
+      if (userValue) {
+        const filteredDances = dances.filter((p) => p._id !== danceId);
+        setUserData({
+          ...userValue,
+          dances: filteredDances,
+        });
+      }
+      if (localStorage.getItem('dances')) {
+        let newPlans = dances.filter((p) => p._id !== danceId);
+        localStorage.setItem('dances', JSON.stringify(newPlans));
+      }
+      history.push('/');
+    });
+  };
+
+  const handleDelete = () => {
+    setShow(false);
+    danceService.deleteDance(dance._id).then(() => {
+      history.push('/my-plans');
+    });
+  };
+  
   return(
     <React.Fragment>
       <Header isLogged={isLogged} bgColor="dark" />
-      {dance ? <div>
+      {dance ? <div className="details">
         <div className="media">
           <img src={dance.imageUrl} alt="" />
         </div>
@@ -83,6 +134,52 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
                   Submit
                 </button>
               </div>
+              {isAuthor ?(
+            <div className="author-panel">
+              <Link className="edit-link" to={`/edit-dance/${dance._id}`}>
+                Edit
+              </Link>
+
+              <Button variant="danger" onClick={handleShow}>
+                Delete
+              </Button>
+              <Modal show={show} onHide={() => setShow(false)}>
+                <Modal.Header closeButton>
+                  <Modal.Title className="custom-modal-title">
+                    Are you sure you want to delete this plan?
+                  </Modal.Title>
+                </Modal.Header>
+                <Modal.Footer className="custom-modal-footer">
+                  <Button variant="primary" onClick={handleDelete}>
+                    Yes, Delete!
+                  </Button>
+                  <Button variant="secondary" onClick={() => setShow(false)}>
+                    No
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+            </div>
+          )  :
+              added ? 
+               <Button
+               variant="danger"
+               className="details-button"
+               onClick={handleRemoveClick}
+               type="button"
+             >
+               Remove from Favorites{' '}
+             </Button>
+              : 
+              <Button
+                variant="primary"
+                className="details-button"
+                onClick={handleAddClick}
+                type="button"
+              >
+                Add to Favorites{' '}
+              </Button>
+           
+            }
       </div> : null}
     </React.Fragment>
   )

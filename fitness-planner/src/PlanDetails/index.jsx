@@ -79,7 +79,7 @@ const PlanDetails = ({ match, isLogged, history, setUserData }) => {
   };
 
   const handleRemoveClick = () => {
-    userServices.update({ _id: userId, planId, add: false }).then(() => {
+    userServices.update({ _id: userId, planId, add: false, removePlan: true }).then(() => {
       if (userValue) {
         const filteredPlans = plans.filter((p) => p._id !== planId);
         setUserData({

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import './index.css';
 import Plan from '../Plans/Plan';
+import Dance from '../Dance/Dance';
 import { userContext } from '../userContext';
 import Header from '../Header';
 import { Button } from 'react-bootstrap';
@@ -15,6 +16,10 @@ const FavoritePlans = ({ isLogged }) => {
     (userValue && userValue.plans) ||
     JSON.parse(localStorage.getItem('plans')) ||
     '';
+  const userDances = (userValue && userValue.dances) ||
+  JSON.parse(localStorage.getItem('dances')) ||
+  '';
+  console.log(userValue);
   let message = '';
   let city = '';
   if (isLogged) {
@@ -102,6 +107,17 @@ const FavoritePlans = ({ isLogged }) => {
         <div className="no-plans-fallback">
           <p>You dont have favorite plans yet!</p>
         </div>
+      )}
+      {userDances ? (
+        <div className="plans-tabs">
+          <div className="plans">
+            {userDances.map((plan, i) => (
+              <Dance key={i} dance={plan} isLogged={isLogged} />
+            ))}
+          </div>
+        </div>
+      ) : (
+        'Loading ...'
       )}
     </React.Fragment>
   );

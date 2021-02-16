@@ -39,7 +39,7 @@ module.exports = {
 
     login: (req, res, next) => {
       const { username, password } = req.body;
-      models.User.findOne({ username }).populate('plans')
+      models.User.findOne({ username }).populate('plans').populate('dances')
         .then((user) => !!user ?  Promise.all([user, user.matchPassword(password)]) : [null, false])
         .then(([user, match]) => {
           if (!match || !user) {
@@ -67,13 +67,22 @@ module.exports = {
 
   put: (req, res, next) => {
     const id = req.params.id;
-    const { planId, add } = req.body;
+    const { planId, add, addDance, danceId, removePlan, removeDance } = req.body;
     if(add) {
       models.User.updateOne({ _id: id },  { $push: { plans: planId }})
         .then((updatedUser) => res.send(updatedUser))
         .catch(next)
-    } else {
+    } else if(removePlan){
       models.User.updateOne({ _id: id },  { $pull: { plans: planId }})
+        .then((updatedUser) => res.send(updatedUser))
+        .catch(next)
+    }
+    if(addDance) {
+      models.User.updateOne({ _id: id },  { $push: { dances: danceId }})
+      .then((updatedUser) => res.send(updatedUser))
+      .catch(next)
+    } else if(removeDance){
+      models.User.updateOne({ _id: id },  { $pull: { dances: danceId }})
         .then((updatedUser) => res.send(updatedUser))
         .catch(next)
     }

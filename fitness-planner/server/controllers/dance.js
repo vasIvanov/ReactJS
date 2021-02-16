@@ -90,4 +90,24 @@ module.exports = {
         }
       });
   },
+  put: (req, res, next) => {
+    const id = req.params.id;
+    const { name, imageUrl, type, details } = req.body;
+    models.Dance.updateOne(
+      { _id: id },
+      { name, imageUrl, type, details }
+    )
+      .then((updatedPlan) => res.send(updatedPlan))
+      .catch((err) => {
+        if (err.errmsg.includes('duplicate key')) {
+          res.send({ errMsg: 'Dance name already in use!' });
+        }
+      });
+  },
+  delete: (req, res, next) => {
+    const id = req.params.id;
+    models.Dance.deleteOne({ _id: id })
+      .then((removedPlan) => res.send(removedPlan))
+      .catch(next);
+  },
 }
