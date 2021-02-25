@@ -69,6 +69,7 @@ module.exports = {
       author,
       type,
       details,
+      danceLocation
     } = req.body;
     const { _id } = req.user;
     models.Dance.create({
@@ -77,6 +78,7 @@ module.exports = {
       author,
       type,
       details,
+      danceLocation
     })
       .then((createdDance) => {
         return Promise.all([models.Dance.findOne({ _id: createdDance._id })]);

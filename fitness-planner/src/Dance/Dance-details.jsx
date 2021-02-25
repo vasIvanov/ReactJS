@@ -105,6 +105,10 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
             The dance is {dance.type} type.
           </p>
           <div className="plan-details">
+          {dance.danceLocation ? 
+          <div dangerouslySetInnerHTML={{__html: dance.danceLocation}}>
+          </div> : null}
+          <br/>
             <h6>Description</h6>
             <p>{dance.details}</p>
           </div>

@@ -24,6 +24,10 @@ const danceSchema = new Schema({
     type: String
   },
 
+  danceLocation: {
+    type: String
+  },
+
   author: { type: ObjectId, ref: "User" },
 
   comments: [{user:{type: String}, comment: {type: String}}]

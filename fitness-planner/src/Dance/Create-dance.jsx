@@ -14,6 +14,7 @@ const CreatePlan = ({ history, showChange, editDance }) => {
   const [imageUrlError, setImageUrlError] = useState('');
   const [type, setType] = useState('');
   const [danceDetails, setDanceDetails] = useState('');
+  const [danceLocation, setDanceLocation] = useState('');
   const userId =
     (userValue && userValue._id) || localStorage.getItem('_id') || null;
 
@@ -33,7 +34,9 @@ const CreatePlan = ({ history, showChange, editDance }) => {
       details: danceDetails,
       author: userId,
       imageUrl: danceImage,
+      danceLocation
     };
+    console.log(data);
     if (editDance) {
       const danceId = editDance._id;
       danceService.update(danceId, data).then((dance) => {
@@ -112,6 +115,14 @@ const CreatePlan = ({ history, showChange, editDance }) => {
               rows="3"
             />
           </Form.Group>
+          <Form.Group controlId="exampleForm.ControlInput7">
+          <Form.Label>Dance event location map link</Form.Label>
+          <Form.Control
+            defaultValue={danceLocation}
+            onChange={(e) => setDanceLocation(e.target.value)}
+            type="text"
+          />
+        </Form.Group>
       </Form>
       {editDance ? (
           <button
