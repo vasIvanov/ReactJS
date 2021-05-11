@@ -5,10 +5,10 @@ import InfoSection from './InfoSection';
 import Header from '../Header';
 import StatisticsSection from './StatisticsSection';
 
-const Home = ({isLogged}) => {
+const Home = ({isLogged, history}) => {
     return (
         <Fragment>
-            <Header isLogged={isLogged} fixed='top'/>
+            <Header history={history} isLogged={isLogged} fixed='top'/>
             <div className='home-content'>
                 <Jumbotron isLogged={isLogged}/>
                 <InfoSection />

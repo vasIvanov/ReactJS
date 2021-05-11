@@ -9,7 +9,7 @@ import { useEffect, useContext } from 'react';
 import {userContext} from '../userContext';
 import Dropdown from './Dropdown';
 
-const Header = ({isLogged, fixed, bgColor}) => {
+const Header = ({isLogged, fixed, bgColor, history}) => {
   const [search, setSearch] = useState('');
   const [url, setUrl] = useState('/search?');
   const [headerBgrd, setIsHeaderBgrd] = useState('');
@@ -20,8 +20,9 @@ const Header = ({isLogged, fixed, bgColor}) => {
   if(isLogged) {
     instructor = (userValue && userValue.instructor) || localStorage.getItem('instructor') === 'true';
   }
-
+  console.log(history);
   const handleSearchChange = (e) => {
+    e.preventDefault()
     setSearch(e.target.value);
   }
 
@@ -68,7 +69,7 @@ const Header = ({isLogged, fixed, bgColor}) => {
               
               {isLogged && <Link className='link' to="/logout">Logout</Link>}
             </Nav>
-            <Form inline>
+            <Form inline onSubmit={e => {e.preventDefault(); history.push(url);}}>
               <FormControl onChange={handleSearchChange} type="text" placeholder="Search" className="mr-sm-2" />
               <Link className='link custom-link' to={url} >Search</Link>
             </Form>

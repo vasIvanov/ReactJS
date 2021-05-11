@@ -6,7 +6,7 @@ import { userContext } from '../userContext';
 import Header from '../Header';
 import { Button } from 'react-bootstrap';
 
-const FavoritePlans = ({ isLogged }) => {
+const FavoritePlans = ({ isLogged, history }) => {
   const userValue = useContext(userContext);
   const [temperature, setTemperature] = useState('');
   const [feelTemp, setFeelTemp] = useState('');
@@ -49,7 +49,7 @@ const FavoritePlans = ({ isLogged }) => {
 
   return (
     <React.Fragment>
-      <Header isLogged={isLogged} bgColor="dark" />
+      <Header history={history} isLogged={isLogged} bgColor="dark" />
       {isLogged && city ? (
         <div className="weather-section">
           <p>{`Weather in ${city.toLocaleUpperCase()}`}</p>

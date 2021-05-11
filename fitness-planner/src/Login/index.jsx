@@ -42,7 +42,7 @@ const Login = ({history, login}) => {
       
     return (
       <React.Fragment>
-        <Header isLogged={false}  bgColor='dark'/>
+        <Header history={history} isLogged={false}  bgColor='dark'/>
         <div className="form">
         <Form>
           <Form.Group controlId="formBasicUsername">

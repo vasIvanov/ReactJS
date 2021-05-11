@@ -151,7 +151,7 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
   };
   return (
     <React.Fragment>
-      <Header isLogged={true} bgColor="dark" />
+      <Header history={history} isLogged={true} bgColor="dark" />
       <div className="wrapper">
         <Form>
           <Form.Group controlId="exampleForm.ControlInput1">

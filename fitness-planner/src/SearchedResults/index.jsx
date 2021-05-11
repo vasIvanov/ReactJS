@@ -7,7 +7,7 @@ import Dance from '../Dance/Dance';
 import Header from '../Header';
 import './index.css';
 
-const SearchedResults = ({ match, isLogged }) => {
+const SearchedResults = ({ match, isLogged, history }) => {
   const query = match.params.query;
   const [plans, setPlans] = useState('');
   const [dances, setDances] = useState('');
@@ -23,7 +23,7 @@ const SearchedResults = ({ match, isLogged }) => {
 
   return (
     <React.Fragment>
-      <Header isLogged={isLogged} bgColor="dark" />
+      <Header history={history} isLogged={isLogged} bgColor="dark" />
       <div className="searched-plans">
 
         {plans ? plans.map((plan) => (

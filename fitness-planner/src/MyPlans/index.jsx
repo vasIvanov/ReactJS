@@ -18,7 +18,7 @@ const MyPlans = ({ isLogged, history }) => {
   }, [insId]);
   return (
     <Fragment>
-      <Header isLogged={isLogged} bgColor="dark" />
+      <Header history={history} isLogged={isLogged} bgColor="dark" />
       {myPlans ? (
         <div className="plans-tabs">
           <div className="plans">

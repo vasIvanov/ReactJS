@@ -96,7 +96,7 @@ const PlanDetails = ({ match, isLogged, history, setUserData }) => {
   };
   return plan ? (
     <React.Fragment>
-      <Header isLogged={isLogged} bgColor="dark" />
+      <Header history={history} isLogged={isLogged} bgColor="dark" />
       <div className="details">
         <div className="media">
           <img src={plan.imageUrl} alt="" />

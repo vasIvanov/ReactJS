@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Form, Alert } from 'react-bootstrap';
 import Header from '../Header';
 import { userContext } from '../userContext';
@@ -59,7 +59,7 @@ const CreatePlan = ({ history, showChange, editDance }) => {
 
   return (
     <React.Fragment>
-      <Header isLogged={true} bgColor="dark" />
+      <Header history={history} isLogged={true} bgColor="dark" />
       <div className="dance-wrapper">
       <Form>
         <Form.Group controlId="exampleForm.ControlInput1">
@@ -104,6 +104,7 @@ const CreatePlan = ({ history, showChange, editDance }) => {
               <option>Folklore</option>
               <option>Modern</option>
               <option>Ballet</option>
+              <option>Dance Exercise</option>
             </Form.Control>
           </Form.Group>
           <Form.Group controlId="exampleForm.ControlTextarea6">

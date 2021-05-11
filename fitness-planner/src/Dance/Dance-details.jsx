@@ -49,7 +49,7 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
         }
       });
     });
-  }, [danceId, userId]);
+  }, [danceId, userId, userValue.dances]);
 
   const handleAddClick = () => {
     userServices.update({ _id: userId, danceId, add: false, addDance: true }).then(() => {
@@ -94,7 +94,7 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
   
   return(
     <React.Fragment>
-      <Header isLogged={isLogged} bgColor="dark" />
+      <Header history={history} isLogged={isLogged} bgColor="dark" />
       {dance ? <div className="details">
         <div className="media">
           <img src={dance.imageUrl} alt="" />

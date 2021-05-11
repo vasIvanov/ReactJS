@@ -28,7 +28,7 @@ const Plans = ({ isLogged, history }) => {
 
   return (plans && dances) ? (
     <React.Fragment>
-      <Header isLogged={isLogged} bgColor="dark" />
+      <Header history={history} isLogged={isLogged} bgColor="dark" />
       <div className="plans-tabs">
         {plans ?         <Tabs
           className="custom"

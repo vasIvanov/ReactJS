@@ -55,7 +55,7 @@ const Register = ({ history, showChange }) => {
 
   return (
     <Fragment>
-      <Header isLogged={false} bgColor="dark" />
+      <Header history={history} isLogged={false} bgColor="dark" />
       <div className="form">
         <Form>
           <Form.Group controlId="formBasicUsername">

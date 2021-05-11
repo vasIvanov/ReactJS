@@ -1,9 +1,9 @@
 import React from 'react';
 import Header from '../Header'
-const NotFound = () => {
+const NotFound = ({history}) => {
     return (
         <div>
-            <Header isLogged={false}  bgColor='dark'/>
+            <Header history={history} isLogged={false}  bgColor='dark'/>
             Not Found
         </div>
     )
