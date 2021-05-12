@@ -19,7 +19,7 @@ const FavoritePlans = ({ isLogged, history }) => {
   const userDances = (userValue && userValue.dances) ||
   JSON.parse(localStorage.getItem('dances')) ||
   '';
-  console.log(userValue);
+
   let message = '';
   let city = '';
   if (isLogged) {
@@ -100,9 +100,7 @@ const FavoritePlans = ({ isLogged, history }) => {
             ))}
           </div>
         </div>
-      ) : (
-        'Loading ...'
-      )}
+      ) : null}
       {userPlans.length < 1 && (
         <div className="no-plans-fallback">
           <p>You dont have favorite plans yet!</p>
@@ -116,9 +114,7 @@ const FavoritePlans = ({ isLogged, history }) => {
             ))}
           </div>
         </div>
-      ) : (
-        'Loading ...'
-      )}
+      ) : null}
     </React.Fragment>
   );
 };

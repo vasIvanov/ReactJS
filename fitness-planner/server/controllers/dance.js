@@ -34,6 +34,7 @@ module.exports = {
         .catch(next);
       return;
     }
+
     models.Dance.find()
       .sort({ _id: -1 })
       .then((plan) => res.send(plan))
@@ -63,14 +64,7 @@ module.exports = {
       .catch(next);
   },
   post: (req, res, next) => {
-    const {
-      name,
-      imageUrl,
-      author,
-      type,
-      details,
-      danceLocation
-    } = req.body;
+    const { name, imageUrl, author, type, details, danceLocation } = req.body;
     const { _id } = req.user;
     models.Dance.create({
       name,
@@ -78,7 +72,7 @@ module.exports = {
       author,
       type,
       details,
-      danceLocation
+      danceLocation,
     })
       .then((createdDance) => {
         return Promise.all([models.Dance.findOne({ _id: createdDance._id })]);
@@ -95,10 +89,7 @@ module.exports = {
   put: (req, res, next) => {
     const id = req.params.id;
     const { name, imageUrl, type, details } = req.body;
-    models.Dance.updateOne(
-      { _id: id },
-      { name, imageUrl, type, details }
-    )
+    models.Dance.updateOne({ _id: id }, { name, imageUrl, type, details })
       .then((updatedPlan) => res.send(updatedPlan))
       .catch((err) => {
         if (err.errmsg.includes('duplicate key')) {
@@ -112,4 +103,4 @@ module.exports = {
       .then((removedPlan) => res.send(removedPlan))
       .catch(next);
   },
-}
+};
