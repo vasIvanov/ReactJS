@@ -97,7 +97,7 @@ const Register = ({ history, showChange }) => {
             ) : null}
           </Form.Group>
 
-          <Form.Group controlId="formBasicPassword">
+          <Form.Group controlId="formBasicRePassword">
             <Form.Label>Repeat Password</Form.Label>
             <Form.Control
               value={rePassword}

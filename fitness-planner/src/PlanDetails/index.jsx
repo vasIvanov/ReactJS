@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback, memo } from 'react';
 import './index.css';
 import planService from '../services/plan-service';
 import userServices from '../services/user-service';
@@ -21,15 +21,17 @@ const PlanDetails = ({ match, isLogged, history, setUserData }) => {
   const [writeComment, setWriteComment] = useState('');
   const [commentsArray, setComments] = useState('');
   const [show, setShow] = useState(false);
+
   const handleShow = () => setShow(true);
-  const handleDelete = () => {
+
+  const handleDelete = useCallback(() => {
     setShow(false);
     planService.deletePlan(plan._id).then(() => {
       history.push('/my-plans');
     });
-  };
+  }, [history, plan._id]);
 
-  const submitCommentHandler = () => {
+  const submitCommentHandler = useCallback(() => {
     planService
       .postComment({ comment: writeComment, user: username }, plan._id)
       .then((r) => {
@@ -38,13 +40,12 @@ const PlanDetails = ({ match, isLogged, history, setUserData }) => {
         });
       });
     document.getElementById('write-comment').value = '';
-  };
+  }, [plan._id, username, writeComment]);
 
   let isAuthor = false;
   if (plan) {
     isAuthor = userId === plan.author;
   }
-
   useEffect(() => {
     planService.load(planId).then((plan) => {
       setPlan(plan);
@@ -61,7 +62,7 @@ const PlanDetails = ({ match, isLogged, history, setUserData }) => {
     });
   }, [planId, userId]);
 
-  const handleAddClick = () => {
+  const handleAddClick = useCallback(() => {
     userServices.update({ _id: userId, planId, add: true }).then(() => {
       if (userValue) {
         plans.push(plan);
@@ -76,9 +77,9 @@ const PlanDetails = ({ match, isLogged, history, setUserData }) => {
       }
       history.push('/');
     });
-  };
+  }, [history, planId, plans, setUserData, userId, userValue, plan]);
 
-  const handleRemoveClick = () => {
+  const handleRemoveClick = useCallback(() => {
     userServices.update({ _id: userId, planId, add: false, removePlan: true }).then(() => {
       if (userValue) {
         const filteredPlans = plans.filter((p) => p._id !== planId);
@@ -93,7 +94,8 @@ const PlanDetails = ({ match, isLogged, history, setUserData }) => {
       }
       history.push('/');
     });
-  };
+  }, [history, planId, plans, setUserData, userId, userValue]);
+
   return plan ? (
     <React.Fragment>
       <Header history={history} isLogged={isLogged} bgColor="dark" />
@@ -242,4 +244,4 @@ const PlanDetails = ({ match, isLogged, history, setUserData }) => {
   );
 };
 
-export default PlanDetails;
+export default memo(PlanDetails);
