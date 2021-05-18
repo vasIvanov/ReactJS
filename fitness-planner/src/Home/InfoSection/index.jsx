@@ -3,7 +3,6 @@ import './index.css';
 import { CardDeck, Card } from 'react-bootstrap';
 
 const InfoSection = () => {
-
     return (
         <React.Fragment>
             <CardDeck className='custom-card-deck'>

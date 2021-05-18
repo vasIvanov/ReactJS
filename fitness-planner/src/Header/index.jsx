@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, memo, useMemo, useCallback} from 'react';
 import './index.css';
 import { Form, Navbar, Nav, FormControl } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -11,21 +11,25 @@ import Dropdown from './Dropdown';
 
 const Header = ({isLogged, fixed, bgColor, history}) => {
   const [search, setSearch] = useState('');
-  const [url, setUrl] = useState('/search?');
   const [headerBgrd, setIsHeaderBgrd] = useState('');
   const color = bgColor ? bgColor : headerBgrd
   const userValue = useContext(userContext);
-  let instructor = false;
-  const abortController = new AbortController();
-  if(isLogged) {
-    instructor = (userValue && userValue.instructor) || localStorage.getItem('instructor') === 'true';
-  }
-  console.log(history);
-  const handleSearchChange = (e) => {
+  const controller = new AbortController();
+
+  const instructor = useMemo(() => {
+    if(isLogged) {
+      return (userValue && userValue.instructor) || localStorage.getItem('instructor') === 'true' || false;
+    }
+    return false;
+  }, [isLogged, userValue])
+
+
+  const handleSearchChange = useCallback((e) => {
     e.preventDefault()
     setSearch(e.target.value);
-  }
+  }, []);
 
+  useEffect(() => {
     if(fixed) {
       document.addEventListener('scroll', () => {
         const isTop = window.scrollY < 100;
@@ -46,12 +50,10 @@ const Header = ({isLogged, fixed, bgColor, history}) => {
       });
     }
 
-  useEffect(() => {
-    setUrl(`/search/${search}`)
-    return function cleanup() {
-      abortController.abort();
+    return () => {
+      controller.abort()
     }
-  }, [search, abortController])
+  }, [fixed, headerBgrd, controller])
 
     return (
       <Navbar bg={color}  fixed={fixed} expand="lg">
@@ -69,13 +71,13 @@ const Header = ({isLogged, fixed, bgColor, history}) => {
               
               {isLogged && <Link className='link' to="/logout">Logout</Link>}
             </Nav>
-            <Form inline onSubmit={e => {e.preventDefault(); history.push(url);}}>
+            <Form inline onSubmit={e => {e.preventDefault(); history.push(`/search/${search}`);}}>
               <FormControl onChange={handleSearchChange} type="text" placeholder="Search" className="mr-sm-2" />
-              <Link className='link custom-link' to={url} >Search</Link>
+              <Link className='link custom-link' to={`/search/${search}`} >Search</Link>
             </Form>
           </Navbar.Collapse>
       </Navbar>
     ) 
 }
 
-export default Header;
+export default memo(Header);

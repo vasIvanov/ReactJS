@@ -35,6 +35,7 @@ module.exports = {
       return;
     }
     models.Plan.find()
+      .populate('author')
       .sort({ _id: -1 })
       .then((plan) => res.send(plan))
       .catch(next);
@@ -67,15 +68,8 @@ module.exports = {
   },
 
   post: (req, res, next) => {
-    const {
-      name,
-      imageUrl,
-      author,
-      goal,
-      level,
-      details,
-      exercises,
-    } = req.body;
+    const { name, imageUrl, author, goal, level, details, exercises } =
+      req.body;
     const { _id } = req.user;
     models.Plan.create({
       name,

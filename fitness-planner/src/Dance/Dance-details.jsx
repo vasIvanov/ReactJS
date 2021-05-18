@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback, memo } from 'react';
 import danceService from '../services/dance-service';
 import userServices from '../services/user-service';
 import { userContext } from '../userContext';
@@ -20,8 +20,8 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
   const handleShow = () => setShow(true);
   const dances =
   (userValue && userValue.dances) || JSON.parse(localStorage.getItem('dances'));
-  console.log(added);
-  const submitCommentHandler = () => {
+
+  const submitCommentHandler = useCallback(() => {
     danceService
       .postComment({ comment: writeComment, user: username }, dance._id)
       .then((r) => {
@@ -30,13 +30,13 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
         });
       });
     document.getElementById('write-comment').value = '';
-  };
+  }, [dance._id, username, writeComment]);
   
   let isAuthor = false;
   if (dance) {
     isAuthor = userId === dance.author;
   }
-  console.log(dance);
+
   useEffect(() => {
     danceService.getOne(danceId).then((plan) => {
       setDance(plan);
@@ -51,7 +51,7 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
     });
   }, [danceId, userId, userValue.dances]);
 
-  const handleAddClick = () => {
+  const handleAddClick = useCallback(() => {
     userServices.update({ _id: userId, danceId, add: false, addDance: true }).then(() => {
       if (userValue) {
         dances.push(dance);
@@ -66,9 +66,9 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
       }
       history.push('/');
     });
-  };
+  }, [danceId, dances, history, setUserData, userId, userValue, dance]);
 
-  const handleRemoveClick = () => {
+  const handleRemoveClick = useCallback(() => {
     userServices.update({ _id: userId, danceId, add: false, removeDance: true }).then(() => {
       if (userValue) {
         const filteredDances = dances.filter((p) => p._id !== danceId);
@@ -83,14 +83,14 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
       }
       history.push('/');
     });
-  };
+  }, [danceId, dances, history, setUserData, userId, userValue]);
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     setShow(false);
     danceService.deleteDance(dance._id).then(() => {
       history.push('/my-plans');
     });
-  };
+  }, [dance._id, history]);
   
   return(
     <React.Fragment>
@@ -138,7 +138,7 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
                   Submit
                 </button>
               </div>
-              {isAuthor ?(
+              {isAuthor ? (
             <div className="author-panel">
               <Link className="edit-link" to={`/edit-dance/${dance._id}`}>
                 Edit
@@ -182,11 +182,10 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
               >
                 Add to Favorites{' '}
               </Button>
-           
             }
       </div> : null}
     </React.Fragment>
   )
 }
 
-export default DanceDetails
+export default memo(DanceDetails);

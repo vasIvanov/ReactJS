@@ -36,6 +36,7 @@ module.exports = {
     }
 
     models.Dance.find()
+      .populate('author')
       .sort({ _id: -1 })
       .then((plan) => res.send(plan))
       .catch(next);
