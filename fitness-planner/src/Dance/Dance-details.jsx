@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useCallback, memo } from 'react';
 import danceService from '../services/dance-service';
 import userServices from '../services/user-service';
 import { userContext } from '../userContext';
@@ -30,7 +30,7 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
         });
       });
     document.getElementById('write-comment').value = '';
-  }, []);
+  }, [dance._id, username, writeComment]);
   
   let isAuthor = false;
   if (dance) {
@@ -182,11 +182,10 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
               >
                 Add to Favorites{' '}
               </Button>
-           
             }
       </div> : null}
     </React.Fragment>
   )
 }
 
-export default DanceDetails
+export default memo(DanceDetails);

@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useCallback, memo } from 'react';
 import './index.css';
 import { Button, Form, Alert } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,7 +17,7 @@ const Register = ({ history, showChange }) => {
   const [rePasswordError, setRePasswordError] = useState('');
   const [userError, setUserError] = useState('');
 
-  const submitHandler = () => {
+  const submitHandler = useCallback(() => {
     setUsernameError('');
     setPasswordError('');
     setRePasswordError('');
@@ -51,7 +51,7 @@ const Register = ({ history, showChange }) => {
           }
         });
       });
-  };
+  }, [city, history, instructor, password, rePassword, showChange, username]);
 
   return (
     <Fragment>
@@ -127,4 +127,4 @@ const Register = ({ history, showChange }) => {
     </Fragment>
   );
 };
-export default Register;
+export default memo(Register);

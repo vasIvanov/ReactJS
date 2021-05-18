@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, memo, useEffect, useState } from 'react';
 import Header from '../Header';
 import planService from '../services/plan-service';
 import danceService from '../services/dance-service';
@@ -22,6 +22,7 @@ const MyPlans = ({ isLogged, history }) => {
       setMyDances(dances);
     });
   }, [insId]);
+
   return (
     <Fragment>
       <Header history={history} isLogged={isLogged} bgColor="dark" />
@@ -58,4 +59,4 @@ const MyPlans = ({ isLogged, history }) => {
   );
 };
 
-export default MyPlans;
+export default memo(MyPlans);

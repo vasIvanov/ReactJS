@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import './index.css';
 
 const Plan = ({ isLogged, plan }) => {
-  console.log('plan');
   return (
     <div className="plan">
       <Card>

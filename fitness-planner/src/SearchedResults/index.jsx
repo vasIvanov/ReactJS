@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import planService from '../services/plan-service';
 import danceService from '../services/dance-service';
 import { useEffect } from 'react';
@@ -39,4 +39,4 @@ const SearchedResults = ({ match, isLogged, history }) => {
   ) 
 };
 
-export default SearchedResults;
+export default memo(SearchedResults);

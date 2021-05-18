@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import './index.css';
 import { Tabs, Tab } from 'react-bootstrap';
 import Plan from './Plan';
@@ -131,4 +131,4 @@ const Plans = ({ isLogged, history }) => {
   );
 };
 
-export default Plans;
+export default memo(Plans);

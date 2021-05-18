@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext, memo } from 'react';
 import { Form, Alert } from 'react-bootstrap';
 import './index.css';
 // import widget from './cloudinaryWidget';
@@ -32,6 +32,7 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
   const [buttonActive, setButtonActive] = useState(false);
   const userId =
     (userValue && userValue._id) || localStorage.getItem('_id') || null;
+
   const nullDays = () => {
     setDay1('');
     setDay2('');
@@ -41,6 +42,7 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
     setDay6('');
     setDay7('');
   };
+
   useEffect(() => {
     if (editPlan) {
       setPlanName(editPlan.name);
@@ -52,21 +54,21 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
     }
   }, [editPlan]);
 
-  const hanleUrlChange = (e) => {
+  const hanleUrlChange = useCallback((e) => {
     let value = e.target.value;
     setPlanImage(value);
     setUrlStatus(false);
     setButtonActive(false);
-  };
+  }, []);
 
   const setError = useCallback(() => {
     setImageUrlError('Invalid URL!');
   }, []);
 
-  const setSuccess = () => {
+  const setSuccess = useCallback(() => {
     setImageUrlError('');
     setUrlStatus(true);
-  };
+  }, []);
 
   // const myWidget = widget(setPlanImage);
   useEffect(() => {
@@ -76,6 +78,7 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
       img.onerror = setError;
       img.src = planImage;
     }
+
     checkButton(
       days,
       setButtonActive,
@@ -89,6 +92,7 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
       day6,
       day7
     );
+
   }, [
     days,
     day1,
@@ -101,14 +105,19 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
     urlStatus,
     planImage,
     setError,
+    setSuccess
   ]);
-  const handleSelect = (e) => {
+
+  const handleSelect = useCallback((e) => {
     if (!editPlan) {
       nullDays();
     }
+
     setDays(e.target.value);
-  };
-  const handleSubmit = () => {
+    
+  }, [editPlan]);
+
+  const handleSubmit = useCallback(() => {
     const exercises = {
       day1,
       day2,
@@ -118,11 +127,13 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
       day6,
       day7,
     };
+
     for (let propName in exercises) {
       if (exercises[propName] === '') {
         delete exercises[propName];
       }
     }
+
     setNameError('');
     setImageUrlError('');
     setDetailsError('');
@@ -135,6 +146,7 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
       author: userId,
       imageUrl: planImage,
     };
+
     validateAndCreatePlan(
       planName,
       planImage,
@@ -148,7 +160,26 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
       setImageUrlError,
       setDetailsError
     );
-  };
+
+  }, [     
+      day1,
+      day2,
+      day3,
+      day4,
+      day5,
+      day6,
+      day7,
+      editPlan,
+      goal,
+      history,
+      level,
+      planDetails,
+      planImage, 
+      planName, 
+      showChange, 
+      userId
+    ]);
+
   return (
     <React.Fragment>
       <Header history={history} isLogged={true} bgColor="dark" />
@@ -286,4 +317,4 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
   );
 };
 
-export default CreatePlan;
+export default memo(CreatePlan);

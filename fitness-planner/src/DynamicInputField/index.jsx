@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useCallback, memo } from 'react';
 import { Alert } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
@@ -47,23 +47,23 @@ const DynamicInputField = ({
     setDay7,
   ]);
 
-  const handleAddFields = () => {
+  const handleAddFields = useCallback(() => {
     const values = [...inputFields];
     values.push('');
     setInputFields(values);
-  };
+  }, [inputFields]);
 
-  const handleRemoveFields = (index) => {
+  const handleRemoveFields = useCallback((index) => {
     const values = [...inputFields];
     values.splice(index, 1);
     setInputFields(values);
-  };
+  }, [inputFields]);
 
   const videoRef = useRef('');
   const exerciseRef = useRef('');
   const [inputError, setInpurError] = useState(true);
 
-  const handleInputChange = (index, event, video) => {
+  const handleInputChange = useCallback((index, event, video) => {
     // exerciseRef.current.value = event.current.value;
     if (
       videoRef.current.value !== '' ||
@@ -114,7 +114,8 @@ const DynamicInputField = ({
       };
       setInputFields(values);
     }
-  };
+  }, [dayValue, inputFields]);
+
   return (
     <form className="day">
       Day {day}
@@ -200,4 +201,4 @@ const DynamicInputField = ({
   );
 };
 
-export default DynamicInputField;
+export default memo(DynamicInputField);

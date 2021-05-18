@@ -1,11 +1,10 @@
-import React, { useState, useContext, useEffect, memo } from 'react';
+import React, { useState, useContext, useEffect, memo, useCallback } from 'react';
 import { Form, Alert } from 'react-bootstrap';
 import Header from '../Header';
 import { userContext } from '../userContext';
 import danceService from '../services/dance-service';
 import validate from './schema'
 import './create-dance.css'
-
 
 const CreatePlan = ({ history, showChange, editDance }) => {
   const userValue = useContext(userContext);
@@ -29,9 +28,7 @@ const CreatePlan = ({ history, showChange, editDance }) => {
     }
   }, [editDance]);
 
-
-
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     const data = {
       name: danceName,
       type,
@@ -45,7 +42,6 @@ const CreatePlan = ({ history, showChange, editDance }) => {
       if (editDance) {
         const danceId = editDance._id;
         danceService.update(danceId, data).then((dance) => {
-  
           showChange();
           history.push('/');
         });
@@ -70,9 +66,7 @@ const CreatePlan = ({ history, showChange, editDance }) => {
       });
       window.scrollTo(0, 0);
     });
-    
-
-  }
+  }, [danceDetails, danceImage, danceLocation, danceName, editDance, history, showChange, type, userId])
 
   return (
     <React.Fragment>
@@ -156,7 +150,6 @@ const CreatePlan = ({ history, showChange, editDance }) => {
           </button>
         ) }
       </div>
-
     </React.Fragment>
   )
 }

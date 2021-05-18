@@ -1,4 +1,4 @@
-import React, {useState, memo, useMemo} from 'react';
+import React, {useState, memo, useMemo, useCallback} from 'react';
 import './index.css';
 import { Form, Navbar, Nav, FormControl } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -15,6 +15,7 @@ const Header = ({isLogged, fixed, bgColor, history}) => {
   const color = bgColor ? bgColor : headerBgrd
   const userValue = useContext(userContext);
   const controller = new AbortController();
+
   const instructor = useMemo(() => {
     if(isLogged) {
       return (userValue && userValue.instructor) || localStorage.getItem('instructor') === 'true' || false;
@@ -23,14 +24,13 @@ const Header = ({isLogged, fixed, bgColor, history}) => {
   }, [isLogged, userValue])
 
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = useCallback((e) => {
     e.preventDefault()
     setSearch(e.target.value);
-  }
+  }, []);
 
   useEffect(() => {
     if(fixed) {
-      console.log(headerBgrd);
       document.addEventListener('scroll', () => {
         const isTop = window.scrollY < 100;
         if (!isTop) {
@@ -40,7 +40,6 @@ const Header = ({isLogged, fixed, bgColor, history}) => {
         }
       });
     } else {
-      console.log('in fixed = false');
       document.removeEventListener('scroll', () => {
         const isTop = window.scrollY < 100;
         if (!isTop) {

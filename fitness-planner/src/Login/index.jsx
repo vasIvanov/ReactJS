@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import './index.css';
 import { Button, Form, Alert } from 'react-bootstrap';
 import {
@@ -14,7 +14,7 @@ const Login = ({history, login}) => {
     const [error, setError] = useState('');
     
   
-    const handleSubmit = (e) => {
+    const handleSubmit = useCallback((e) => {
       e.preventDefault();
       setError('');
       const data = {
@@ -38,7 +38,7 @@ const Login = ({history, login}) => {
             } 
           })
         })
-    }
+    }, [history, login, password, username])
       
     return (
       <React.Fragment>
@@ -73,4 +73,4 @@ const Login = ({history, login}) => {
     )
 }
 
-export default Login;
+export default memo(Login);
