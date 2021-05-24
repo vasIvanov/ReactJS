@@ -2,11 +2,12 @@ import React, { useState, Fragment } from 'react';
 import './index.css';
 import { Button, Form, Alert } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import userService from '../services/user-service';
 import validate from './schema';
 import Header from '../Header';
+import { userRegister } from '../features/userSlice';
+import {useDispatch} from 'react-redux'
 
-const Register = ({ history, showChange }) => {
+const Register = ({ history }) => {
   const [username, emailChange] = useState('');
   const [password, passwordChange] = useState('');
   const [rePassword, rePasswordChange] = useState('');
@@ -16,6 +17,7 @@ const Register = ({ history, showChange }) => {
   const [passwordError, setPasswordError] = useState('');
   const [rePasswordError, setRePasswordError] = useState('');
   const [userError, setUserError] = useState('');
+  const dispatch = useDispatch()
 
   const submitHandler = () => {
     setUsernameError('');
@@ -31,14 +33,8 @@ const Register = ({ history, showChange }) => {
 
     validate(username, password, rePassword)
       .then(() => {
-        userService.register(data).then((e) => {
-          if (e.errorMessage) {
-            setUserError(e.errorMessage);
-          } else {
-            showChange();
-            history.push('/login');
-          }
-        });
+        dispatch(userRegister(data))
+        history.push('/login')
       })
       .catch((err) => {
         err.inner.forEach((error) => {

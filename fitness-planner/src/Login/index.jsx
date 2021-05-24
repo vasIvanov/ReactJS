@@ -7,12 +7,14 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import validate from './schema';
 import Header from '../Header';
+import { useDispatch } from 'react-redux'
+import {userLogin} from '../features/userSlice'
 
-const Login = ({history, login}) => {
+const Login = ({history}) => {
     const [username, setUsername] = useState('');
     const [password, passwordChange] = useState('');
     const [error, setError] = useState('');
-    
+    const dispatch = useDispatch()
   
     const handleSubmit = (e) => {
       e.preventDefault();
@@ -24,19 +26,21 @@ const Login = ({history, login}) => {
 
       validate(username, password)
         .then(() => {
-          login(history, data)
-          .catch(error => {
-            setError(error.errorMessage);
-          })
+          dispatch(userLogin(data))
+          // dispatch(showToast({show: true, message: 'Login Successful!!!!'}))
+          history.push('/plans')
         })
         .catch(err => {
-          err.inner.forEach(error => {
-            if(error.path === 'username') {
-              setError(error.message);
-            } else if(error.path === 'password') {
-              setError(error.message);
-            } 
-          })
+          console.log(err);
+          if(err.inner){
+            err.inner.forEach(error => {
+              if(error.path === 'username') {
+                setError(error.message);
+              } else if(error.path === 'password') {
+                setError(error.message);
+              } 
+            })
+          }
         })
     }
       
@@ -67,7 +71,6 @@ const Login = ({history, login}) => {
             </Button>
             <Link className='custom-register-button' to='/register'>Dont have account?</Link>
           </Form>
-          
         </div>
       </React.Fragment>
     )

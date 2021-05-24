@@ -1,26 +1,28 @@
-import React, {useState} from 'react';
+import React, {useState, memo} from 'react';
 import './index.css';
 import { Form, Navbar, Nav, FormControl } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Link
 } from 'react-router-dom'
-import { useEffect, useContext } from 'react';
-import {userContext} from '../userContext';
+import { useEffect } from 'react';
 import Dropdown from './Dropdown';
+import { useDispatch, useSelector } from 'react-redux';
+import {userLogout} from '../features/userSlice'
 
 const Header = ({isLogged, fixed, bgColor, history}) => {
   const [search, setSearch] = useState('');
   const [url, setUrl] = useState('/search?');
   const [headerBgrd, setIsHeaderBgrd] = useState('');
   const color = bgColor ? bgColor : headerBgrd
-  const userValue = useContext(userContext);
-  let instructor = false;
   const abortController = new AbortController();
-  if(isLogged) {
-    instructor = (userValue && userValue.instructor) || localStorage.getItem('instructor') === 'true';
-  }
-  console.log(history);
+  const dispatch = useDispatch()
+  const instructor = useSelector(state => state.user.user?.instructor) || localStorage.getItem('instructor') 
+
+  // if(isLogged) {
+  //   instructor = (userValue && userValue.instructor) || localStorage.getItem('instructor') === 'true';
+  // }
+
   const handleSearchChange = (e) => {
     e.preventDefault()
     setSearch(e.target.value);
@@ -67,7 +69,11 @@ const Header = ({isLogged, fixed, bgColor, history}) => {
               {/* {isLogged && instructor ? <Link className='link' to="/create-plan">Create Plan</Link> : null}
               {isLogged && instructor ? <Link className='link' to="/my-plans">Created Plans</Link> : null} */}
               
-              {isLogged && <Link className='link' to="/logout">Logout</Link>}
+              {isLogged && <Link className='link' to='#' onClick={(e) => {
+                e.preventDefault();
+                dispatch(userLogout())
+                history.push('/')
+              }}>Logout</Link>}
             </Nav>
             <Form inline onSubmit={e => {e.preventDefault(); history.push(url);}}>
               <FormControl onChange={handleSearchChange} type="text" placeholder="Search" className="mr-sm-2" />
@@ -78,4 +84,4 @@ const Header = ({isLogged, fixed, bgColor, history}) => {
     ) 
 }
 
-export default Header;
+export default memo(Header);

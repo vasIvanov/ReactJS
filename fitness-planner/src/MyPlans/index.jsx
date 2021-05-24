@@ -2,15 +2,14 @@ import React, { Fragment, useEffect, useState } from 'react';
 import Header from '../Header';
 import planService from '../services/plan-service';
 import danceService from '../services/dance-service';
-import { useContext } from 'react';
-import { userContext } from '../userContext';
 import Plan from '../Plans/Plan';
 import Dance from '../Dance/Dance';
+import { useSelector } from 'react-redux';
 
 const MyPlans = ({ isLogged, history }) => {
-  const userValue = useContext(userContext);
+  const user = useSelector(state => state.user.user)
   const insId =
-    (userValue && userValue._id) || localStorage.getItem('_id') || null;
+    (user && user._id) || localStorage.getItem('_id') || null;
   const [myPlans, setMyPlans] = useState('');
   const [myDances, setMyDances] = useState('');
 

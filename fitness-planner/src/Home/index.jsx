@@ -5,7 +5,9 @@ import InfoSection from './InfoSection';
 import Header from '../Header';
 import StatisticsSection from './StatisticsSection';
 
+
 const Home = ({isLogged, history}) => {
+
     return (
         <Fragment>
             <Header history={history} isLogged={isLogged} fixed='top'/>
