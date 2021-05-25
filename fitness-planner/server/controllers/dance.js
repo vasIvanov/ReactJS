@@ -82,7 +82,7 @@ module.exports = {
       })
       .catch((err) => {
         if (err.errmsg.includes('duplicate key')) {
-          res.send({ errMsg: 'Plan name already in use!' });
+          res.status(409).send({ errMsg: 'Dance name already in use!' });
         }
       });
   },
@@ -100,7 +100,7 @@ module.exports = {
   delete: (req, res, next) => {
     const id = req.params.id;
     models.Dance.deleteOne({ _id: id })
-      .then((removedPlan) => res.send(removedPlan))
+      .then((removedDance) => res.send({ removedDance, id }))
       .catch(next);
   },
 };

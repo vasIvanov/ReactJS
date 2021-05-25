@@ -1,24 +1,24 @@
-import React, { useState, useContext, useEffect, memo } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { Form, Alert } from 'react-bootstrap';
 import Header from '../Header';
-import { userContext } from '../userContext';
 import danceService from '../services/dance-service';
 import validate from './schema'
 import './create-dance.css'
+import { useDispatch, useSelector } from 'react-redux';
+import { createDance } from '../features/danceSlice';
 
 
 const CreatePlan = ({ history, showChange, editDance }) => {
-  const userValue = useContext(userContext);
+  const dispatch = useDispatch()
   const[danceName, setDanceName] = useState('');
   const[danceImage, setDanceImage] = useState('');
   const [nameError, setNameError] = useState('');
-  const [serverError, setServerError] = useState('');
   const [type, setType] = useState('');
   const [danceDetails, setDanceDetails] = useState('');
   const [danceLocation, setDanceLocation] = useState('');
+  const error = useSelector(state => state.dance.error);
   const [detailsError, setDetailsError] = useState('')
-  const userId =
-    (userValue && userValue._id) || localStorage.getItem('_id') || null;
+  const userId = useSelector(state => state.user.user._id) || localStorage.getItem('_id') || null;
 
   useEffect(() => {
     if (editDance) {
@@ -45,20 +45,29 @@ const CreatePlan = ({ history, showChange, editDance }) => {
       if (editDance) {
         const danceId = editDance._id;
         danceService.update(danceId, data).then((dance) => {
-  
           showChange();
           history.push('/');
         });
       } else {
-        danceService.create(data).then((e) => {
-          if (e.errMsg) {
-            setServerError(e.errMsg);
-            window.scrollTo(0, 0);
-            return;
-          }
-          showChange();
-          history.push('/');
-        });
+        try {
+          dispatch(createDance(data));
+        } catch (err) {
+          console.log(err);
+          window.scrollTo(0, 0);
+          return;
+        }
+          
+        history.push('/plans')
+        // history.push('/');
+        // danceService.create(data).then((e) => {
+        //   if (e.errMsg) {
+        //     setServerError(e.errMsg);
+        //     window.scrollTo(0, 0);
+        //     return;
+        //   }
+        //   showChange();
+        //   history.push('/');
+        // });
       }
     }).catch((err) => {
       err.inner.forEach((error) => {
@@ -87,8 +96,8 @@ const CreatePlan = ({ history, showChange, editDance }) => {
             type="text"
           />
           {nameError ? <Alert variant={'danger'}>{nameError}</Alert> : null}
-          {serverError ? (
-            <Alert variant={'danger'}>{serverError}</Alert>
+          {error ? (
+            <Alert variant={'danger'}>{error}</Alert>
           ) : null}
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlInput2">

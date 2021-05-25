@@ -5,11 +5,14 @@ import { userContext } from '../userContext';
 import { Button, Modal } from 'react-bootstrap';
 import Header from '../Header';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteDance } from '../features/danceSlice';
 
 const DanceDetails = ({ match, isLogged, history, setUserData }) => {
   const [dance, setDance] = useState('');
+  const dispatch = useDispatch();
   const userValue = useContext(userContext);
-  const userId = (userValue && userValue._id) || localStorage.getItem('_id');
+  const userId = useSelector(state => state.user.user._id) || localStorage.getItem('_id');
   const danceId = match.params.id;
   const username =
     (userValue && userValue.username) || localStorage.getItem('username');
@@ -18,8 +21,7 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
   const [commentsArray, setComments] = useState('');
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
-  const dances =
-  (userValue && userValue.dances) || JSON.parse(localStorage.getItem('dances'));
+  const dances = useSelector(state => state.user.user.dances) || JSON.parse(localStorage.getItem('dances'));
   console.log(added);
   const submitCommentHandler = () => {
     danceService
@@ -41,7 +43,7 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
     danceService.getOne(danceId).then((plan) => {
       setDance(plan);
       setComments(plan.comments);
-      userValue.dances.forEach((p) => {
+      dances.forEach((p) => {
         console.log(p._id, danceId);
         if (p._id === danceId) {
           setAdded(true);
@@ -49,7 +51,7 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
         }
       });
     });
-  }, [danceId, userId, userValue.dances]);
+  }, [danceId, userId, dances]);
 
   const handleAddClick = () => {
     userServices.update({ _id: userId, danceId, add: false, addDance: true }).then(() => {
@@ -87,9 +89,11 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
 
   const handleDelete = () => {
     setShow(false);
-    danceService.deleteDance(dance._id).then(() => {
-      history.push('/my-plans');
-    });
+    dispatch(deleteDance(dance._id));
+    history.push('/plans')
+    // danceService.deleteDance(dance._id).then(() => {
+    //   history.push('/my-plans');
+    // });
   };
   
   return(

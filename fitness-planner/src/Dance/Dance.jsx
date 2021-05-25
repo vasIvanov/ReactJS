@@ -8,7 +8,6 @@ const Dance = ({history,
   dance,
   isLogged}) => {
     const [authorName, setAuthorName] = useState('');
-    console.log(dance);
     useEffect(() => {
       let isMounted = true;
       if (dance.author) {
