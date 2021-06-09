@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import './index.css';
 import Plan from '../Plans/Plan';
 import Dance from '../Dance/Dance';
-import { userContext } from '../userContext';
 import Header from '../Header';
 import { Button } from 'react-bootstrap';
+import {useSelector} from 'react-redux';
 
 const FavoritePlans = ({ isLogged, history }) => {
-  const userValue = useContext(userContext);
+  const user = useSelector(state => state.user.user);
   const [temperature, setTemperature] = useState('');
   const [feelTemp, setFeelTemp] = useState('');
   const [units, setUnits] = useState('metric');
   const [unitsSign, setUnitsSign] = useState('C');
   const userPlans =
-    (userValue && userValue.plans) ||
+    (user && user.plans) ||
     JSON.parse(localStorage.getItem('plans')) ||
     '';
-  const userDances = (userValue && userValue.dances) ||
+  const userDances = (user && user.dances) ||
   JSON.parse(localStorage.getItem('dances')) ||
   '';
 
@@ -24,7 +24,7 @@ const FavoritePlans = ({ isLogged, history }) => {
   let city = '';
   if (isLogged) {
     city =
-      (userValue && userValue.city) || localStorage.getItem('city') || false;
+      (user && user.city) || localStorage.getItem('city') || false;
   }
 
   if (

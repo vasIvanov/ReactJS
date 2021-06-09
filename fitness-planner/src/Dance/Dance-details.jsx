@@ -1,36 +1,36 @@
-import React, { useState, useEffect, useContext } from 'react';
-import danceService from '../services/dance-service';
-import userServices from '../services/user-service';
-import { userContext } from '../userContext';
+import React, { useState, useEffect, memo } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import Header from '../Header';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteDance } from '../features/danceSlice';
+import { deleteDance, postDanceComment } from '../features/danceSlice';
+import { toggleFavoriteDance, userToggleFavoriteDance } from '../features/userSlice';
 
-const DanceDetails = ({ match, isLogged, history, setUserData }) => {
-  const [dance, setDance] = useState('');
-  const dispatch = useDispatch();
-  const userValue = useContext(userContext);
-  const userId = useSelector(state => state.user.user._id) || localStorage.getItem('_id');
+
+const DanceDetails = ({ match, isLogged, history }) => {
+  // const [dance, setDance] = useState('');
   const danceId = match.params.id;
-  const username =
-    (userValue && userValue.username) || localStorage.getItem('username');
+  const dance = useSelector(state => state.dance.dances.find(dance => dance._id === danceId))
+  const dispatch = useDispatch();
+  const userId = useSelector(state => state.user.user._id) || localStorage.getItem('_id');
+  const username = useSelector(state => state.user.user.username) || localStorage.getItem('username');
   const [added, setAdded] = useState(false);
   const [writeComment, setWriteComment] = useState('');
-  const [commentsArray, setComments] = useState('');
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
+
   const dances = useSelector(state => state.user.user.dances) || JSON.parse(localStorage.getItem('dances'));
-  console.log(added);
+
   const submitCommentHandler = () => {
-    danceService
-      .postComment({ comment: writeComment, user: username }, dance._id)
-      .then((r) => {
-        danceService.getComments(dance._id).then((comments) => {
-          setComments(comments);
-        });
-      });
+    dispatch(postDanceComment({danceId: dance._id, data: {comment: writeComment, user: username}}))
+    // dispatch(selectDance({id: dance._id, comment: {comment: writeComment, user: username}}))
+    // danceService
+    //   .postComment({ comment: writeComment, user: username }, dance._id)
+    //   .then((r) => {
+    //     danceService.getComments(dance._id).then((comments) => {
+    //       setComments(comments);
+    //     });
+    //   });
     document.getElementById('write-comment').value = '';
   };
   
@@ -38,53 +38,54 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
   if (dance) {
     isAuthor = userId === dance.author;
   }
-  console.log(dance);
   useEffect(() => {
-    danceService.getOne(danceId).then((plan) => {
-      setDance(plan);
-      setComments(plan.comments);
       dances.forEach((p) => {
-        console.log(p._id, danceId);
         if (p._id === danceId) {
           setAdded(true);
           return;
         }
       });
-    });
   }, [danceId, userId, dances]);
 
   const handleAddClick = () => {
-    userServices.update({ _id: userId, danceId, add: false, addDance: true }).then(() => {
-      if (userValue) {
-        dances.push(dance);
-        setUserData({
-          ...userValue,
-          dances,
-        });
-      }
-      if (localStorage.getItem('dances')) {
-        dances.push(dance);
-        localStorage.setItem('dances', JSON.stringify(dance));
-      }
-      history.push('/');
-    });
+    dispatch(userToggleFavoriteDance({ _id: userId, danceId, add: false, addDance: true }));
+    dispatch(toggleFavoriteDance({dance, add: true}))
+
+    // userServices.update({ _id: userId, danceId, add: false, addDance: true }).then(() => {
+    //   if (userValue) {
+    //     dances.push(dance);
+    //     setUserData({
+    //       ...userValue,
+    //       dances,
+    //     });
+    //   }
+    //   if (localStorage.getItem('dances')) {
+    //     dances.push(dance);
+    //     localStorage.setItem('dances', JSON.stringify(dance));
+    //   }
+    //   history.push('/');
+    // });
+    history.push('/');
   };
 
   const handleRemoveClick = () => {
-    userServices.update({ _id: userId, danceId, add: false, removeDance: true }).then(() => {
-      if (userValue) {
-        const filteredDances = dances.filter((p) => p._id !== danceId);
-        setUserData({
-          ...userValue,
-          dances: filteredDances,
-        });
-      }
-      if (localStorage.getItem('dances')) {
-        let newPlans = dances.filter((p) => p._id !== danceId);
-        localStorage.setItem('dances', JSON.stringify(newPlans));
-      }
-      history.push('/');
-    });
+    dispatch(userToggleFavoriteDance({ _id: userId, danceId, add: false, removeDance: true }));
+    dispatch(toggleFavoriteDance({dance, add: false}))
+    // userServices.update({ _id: userId, danceId, add: false, removeDance: true }).then(() => {
+    //   if (userValue) {
+    //     const filteredDances = dances.filter((p) => p._id !== danceId);
+    //     setUserData({
+    //       ...userValue,
+    //       dances: filteredDances,
+    //     });
+    //   }
+    //   if (localStorage.getItem('dances')) {
+    //     let newPlans = dances.filter((p) => p._id !== danceId);
+    //     localStorage.setItem('dances', JSON.stringify(newPlans));
+    //   }
+    //   history.push('/');
+    // });
+    history.push('/');
   };
 
   const handleDelete = () => {
@@ -120,8 +121,8 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
         <br/>
         <div className="comment-section">
                 <h6>Comment Section</h6>
-                {commentsArray
-                  ? commentsArray.map((c) => (
+                {dance.comments
+                  ? dance.comments.map((c) => (
                       <div key={c._id} className="comment">
                         <h6 className="username">{c.user}</h6>
                         <p>{c.comment}</p>
@@ -193,4 +194,4 @@ const DanceDetails = ({ match, isLogged, history, setUserData }) => {
   )
 }
 
-export default DanceDetails
+export default memo(DanceDetails);

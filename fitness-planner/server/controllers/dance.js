@@ -60,7 +60,9 @@ module.exports = {
       { _id: id },
       { $push: { comments: { user, comment } } }
     )
-      .then((updatedPlan) => res.send(updatedPlan))
+      .then(() => {
+        models.Dance.findOne({ _id: id }).then((finded) => res.send(finded));
+      })
       .catch(next);
   },
   post: (req, res, next) => {
@@ -88,9 +90,14 @@ module.exports = {
   },
   put: (req, res, next) => {
     const id = req.params.id;
-    const { name, imageUrl, type, details } = req.body;
-    models.Dance.updateOne({ _id: id }, { name, imageUrl, type, details })
-      .then((updatedPlan) => res.send(updatedPlan))
+    const { name, imageUrl, type, details, danceLocation } = req.body;
+    models.Dance.updateOne(
+      { _id: id },
+      { name, imageUrl, type, details, danceLocation }
+    )
+      .then(() => {
+        models.Dance.findOne({ _id: id }).then((finded) => res.send(finded));
+      })
       .catch((err) => {
         if (err.errmsg.includes('duplicate key')) {
           res.send({ errMsg: 'Dance name already in use!' });

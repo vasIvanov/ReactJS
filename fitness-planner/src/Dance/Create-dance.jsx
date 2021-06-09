@@ -1,17 +1,16 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Form, Alert } from 'react-bootstrap';
 import Header from '../Header';
-import danceService from '../services/dance-service';
 import validate from './schema'
 import './create-dance.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { createDance } from '../features/danceSlice';
+import { createDance, editDance as editDanceFnc } from '../features/danceSlice';
 
 
-const CreatePlan = ({ history, showChange, editDance }) => {
+const CreateDance = ({ history, editDance }) => {
   const dispatch = useDispatch()
-  const[danceName, setDanceName] = useState('');
-  const[danceImage, setDanceImage] = useState('');
+  const [danceName, setDanceName] = useState('');
+  const [danceImage, setDanceImage] = useState('');
   const [nameError, setNameError] = useState('');
   const [type, setType] = useState('');
   const [danceDetails, setDanceDetails] = useState('');
@@ -40,24 +39,28 @@ const CreatePlan = ({ history, showChange, editDance }) => {
       imageUrl: danceImage,
       danceLocation
     };
-
     validate(danceName, danceDetails).then(() => {
       if (editDance) {
         const danceId = editDance._id;
-        danceService.update(danceId, data).then((dance) => {
-          showChange();
-          history.push('/');
-        });
+        // danceService.update(danceId, data).then((dance) => {
+        //   showChange();
+        //   history.push('/');
+        // });
+        try {
+          dispatch(editDanceFnc({id:danceId, data, history}))
+        } catch (error) {
+          console.log(error);
+        }
       } else {
         try {
-          dispatch(createDance(data));
+          dispatch(createDance({data, history}));
         } catch (err) {
           console.log(err);
           window.scrollTo(0, 0);
           return;
         }
-          
-        history.push('/plans')
+        console.log(error);
+
         // history.push('/');
         // danceService.create(data).then((e) => {
         //   if (e.errMsg) {
@@ -70,6 +73,7 @@ const CreatePlan = ({ history, showChange, editDance }) => {
         // });
       }
     }).catch((err) => {
+      console.log(err);
       err.inner.forEach((error) => {
         if (error.path === 'danceName') {
           setNameError(error.message);
@@ -79,8 +83,6 @@ const CreatePlan = ({ history, showChange, editDance }) => {
       });
       window.scrollTo(0, 0);
     });
-    
-
   }
 
   return (
@@ -170,4 +172,4 @@ const CreatePlan = ({ history, showChange, editDance }) => {
   )
 }
 
-export default memo(CreatePlan);
+export default memo(CreateDance);

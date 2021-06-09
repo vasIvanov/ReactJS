@@ -51,13 +51,39 @@ export const userLogout = createAsyncThunk('user/userLogout', async () => {
   return res.status === 200 ? res.text() : Promise.reject(res);
 });
 
+export const userToggleFavoriteDance = createAsyncThunk(
+  'user/userAddFavoriteDance',
+  async (data) => {
+    const res = await fetch(`http://localhost:9999/api/user/${data._id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+    const text = await res.text();
+
+    return res.status === 200 ? text : Promise.reject(text);
+  }
+);
+
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
     user: null,
     status: null,
   },
-  reducers: {},
+  reducers: {
+    toggleFavoriteDance: (state, action) => {
+      if (action.payload.add) {
+        state.user.dances.push(action.payload.dance);
+      } else {
+        const index = state.user.dances.indexOf(action.payload.dance);
+        state.user.dances.splice(index, 1);
+      }
+    },
+  },
   extraReducers: {
     [userLogin.fulfilled]: (state, { payload }) => {
       console.log(payload);
@@ -92,5 +118,17 @@ export const userSlice = createSlice({
     [userRegister.rejected]: (state, { payload }) => {
       state.status = 'failed';
     },
+    [userToggleFavoriteDance.fulfilled]: (state, { payload }) => {
+      state.status = 'completed';
+      return state;
+    },
+    [userToggleFavoriteDance.pending]: (state, { payload }) => {
+      state.status = 'loading';
+    },
+    [userToggleFavoriteDance.rejected]: (state, { payload }) => {
+      state.status = 'failed';
+    },
   },
 });
+
+export const { toggleFavoriteDance } = userSlice.actions;
