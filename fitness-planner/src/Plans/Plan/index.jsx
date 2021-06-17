@@ -1,27 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import './index.css';
-import userService from '../../services/user-service';
-import { useEffect } from 'react';
 
 const Plan = ({ isLogged, plan }) => {
-  const [authorName, setAuthorName] = useState('');
-  useEffect(() => {
-    let isMounted = true;
-    if (plan.author) {
-      userService.getUsers().then((users) => {
-        if (isMounted) {
-          const filteredUser = users.filter((u) => u._id === plan.author)[0];
-          setAuthorName(filteredUser.username);
-        }
-      });
-    }
-    return () => {
-      isMounted = false;
-    };
-  }, [plan.author]);
-
   return (
     <div className="plan">
       <Card>
@@ -34,7 +16,7 @@ const Plan = ({ isLogged, plan }) => {
           <Card.Text>
             {plan.level} | {plan.goal}
             <br />
-            {plan.author ? <i>created by: {authorName}</i> : null}
+            {plan.author ? <i>created by: {plan.author.username}</i> : null}
           </Card.Text>
           {isLogged ? (
             <Link className="link details-link" to={`/details/${plan._id}`}>

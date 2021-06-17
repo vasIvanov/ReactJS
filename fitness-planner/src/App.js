@@ -26,23 +26,28 @@ const App = () => {
   const [userData, setUserData] = useState(null);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+  const danceState = useSelector((state) => state.dance);
   const isLogged =
     useSelector((state) => !!state.user.user) ||
     !!localStorage.getItem('username');
   const userPlans =
     (user && user.plans) || JSON.parse(localStorage.getItem('plans')) || null;
-
-  console.log(userPlans);
+  console.log(danceState);
   window.onbeforeunload = function () {
+    // if (isLogged && user) {
+    //   localStorage.setItem('username', user.username);
+    //   if (user.city) {
+    //     localStorage.setItem('city', user.city);
+    //   }
+    //   localStorage.setItem('_id', user._id);
+    //   localStorage.setItem('plans', JSON.stringify(user.plans));
+    //   localStorage.setItem('instructor', user.instructor);
+    // }
     if (isLogged && user) {
-      localStorage.setItem('username', user.username);
-      if (user.city) {
-        localStorage.setItem('city', user.city);
-      }
-      localStorage.setItem('_id', user._id);
-      localStorage.setItem('plans', JSON.stringify(user.plans));
-      localStorage.setItem('instructor', user.instructor);
+      localStorage.setItem('user', JSON.stringify(user));
     }
+
+    // localStorage.setItem('dance', JSON.stringify(danceState));
   };
 
   const showingToast = useSelector((state) => state.toast.show);

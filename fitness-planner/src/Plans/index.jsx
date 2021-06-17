@@ -1,26 +1,30 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, {  useEffect, memo } from 'react';
 import './index.css';
 import { Tabs, Tab } from 'react-bootstrap';
 import Plan from './Plan';
 import Dance from '../Dance/Dance';
-import planService from '../services/plan-service';
 import Header from '../Header';
 import { useDispatch, useSelector } from 'react-redux';
 import { getDances } from '../features/danceSlice';
+import { getPlans } from '../features/planSlice';
 
 const Plans = ({ isLogged, history }) => {
-  const [plans, setPlans] = useState('');
+  // const [plans, setPlans] = useState('');
+  const plans = useSelector(state => state.plan.plans)
   // const [dances, setDances] = useState('');
   const dances = useSelector(state => state.dance.dances)
   const dispatch = useDispatch();
 
   useEffect(() => {
-    let isMounted = true;
-    planService.load().then((r) => {
-      if (isMounted) {
-        setPlans(r);
-      }
-    });
+    // let isMounted = true;
+    // planService.load().then((r) => {
+    //   if (isMounted) {
+    //     setPlans(r);
+    //   }
+    // });
+    if(plans === null) {
+      dispatch(getPlans())
+    }
     // danceService.load().then(res => {
     //   setDances(res);
     // })
@@ -28,10 +32,10 @@ const Plans = ({ isLogged, history }) => {
       dispatch(getDances())
     }
 
-    return () => {
-      isMounted = false;
-    };
-  }, [dispatch, dances]);
+    // return () => {
+    //   isMounted = false;
+    // };
+  }, [dispatch, dances, plans]);
 
   return (plans && dances) ? (
     <React.Fragment>

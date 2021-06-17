@@ -1,16 +1,18 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Form, Alert } from 'react-bootstrap';
 import './index.css';
 // import widget from './cloudinaryWidget';
 import { useEffect } from 'react';
 import Modal from './Modal';
 import Header from '../Header';
-import { userContext } from '../userContext';
 import GenerateInput from './GenerateInput';
 import { checkButton, validateAndCreatePlan } from './utils';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+
 
 const CreatePlan = ({ history, showChange, editPlan }) => {
-  const userValue = useContext(userContext);
+  const dispatch = useDispatch();
   const [planName, setPlanName] = useState('');
   const [planImage, setPlanImage] = useState('');
   const [level, setLevel] = useState('Select ...');
@@ -30,8 +32,7 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
   const [day7, setDay7] = useState('');
   const [urlStatus, setUrlStatus] = useState(false);
   const [buttonActive, setButtonActive] = useState(false);
-  const userId =
-    (userValue && userValue._id) || localStorage.getItem('_id') || null;
+  const userId = useSelector(state => state.user.user._id)
   const nullDays = () => {
     setDay1('');
     setDay2('');
@@ -146,7 +147,8 @@ const CreatePlan = ({ history, showChange, editPlan }) => {
       history,
       setNameError,
       setImageUrlError,
-      setDetailsError
+      setDetailsError,
+      dispatch
     );
   };
   return (

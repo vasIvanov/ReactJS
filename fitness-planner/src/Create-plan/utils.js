@@ -1,5 +1,5 @@
 import validate from './schema';
-import planService from '../services/plan-service';
+import { createPlan, editingPlan } from '../features/planSlice';
 
 export const checkButton = (days, setButtonActive, urlStatus, ...args) => {
   if (days === '2' && urlStatus) {
@@ -62,31 +62,34 @@ export const validateAndCreatePlan = (
   history,
   setNameError,
   setImageUrlError,
-  setDetailsError
+  setDetailsError,
+  dispatch
 ) => {
   validate(planName, planImage, planDetails)
     .then(() => {
       if (editPlan) {
         const planId = editPlan._id;
-        planService.update(planId, data).then((plan) => {
-          if (plan.errMsg) {
-            setServerError(plan.errMsg);
-            window.scrollTo(0, 0);
-            return;
-          }
-          showChange();
-          history.push('/');
-        });
+        dispatch(editingPlan({ id: planId, data, history }));
+        // planService.update(planId, data).then((plan) => {
+        //   if (plan.errMsg) {
+        //     setServerError(plan.errMsg);
+        //     window.scrollTo(0, 0);
+        //     return;
+        //   }
+        //   showChange();
+        //   history.push('/');
+        // });
       } else {
-        planService.create(data).then((e) => {
-          if (e.errMsg) {
-            setServerError(e.errMsg);
-            window.scrollTo(0, 0);
-            return;
-          }
-          showChange();
-          history.push('/');
-        });
+        dispatch(createPlan({ data, history }));
+        // planService.create(data).then((e) => {
+        //   if (e.errMsg) {
+        //     setServerError(e.errMsg);
+        //     window.scrollTo(0, 0);
+        //     return;
+        //   }
+        //   showChange();
+        //   history.push('/');
+        // });
       }
     })
     .catch((err) => {

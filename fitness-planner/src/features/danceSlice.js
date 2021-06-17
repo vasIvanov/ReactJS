@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { userLogout } from './userSlice';
 
 export const getDances = createAsyncThunk(
   'dance/getDances',
@@ -7,6 +8,19 @@ export const getDances = createAsyncThunk(
       `http://localhost:9999/api/dance${id ? `/${id}` : ''}${
         limit ? `?limit=${limit}` : ''
       }${userId ? `?userId=${userId}` : ''}${query ? `?query=${query}` : ''}`
+    );
+
+    const json = await res.json();
+
+    return res.status === 200 ? json : Promise.reject(json);
+  }
+);
+
+export const getUserCreatedDances = createAsyncThunk(
+  'dance/getUserCreatedDances',
+  async (userId) => {
+    const res = await fetch(
+      `http://localhost:9999/api/dance${userId ? `?userId=${userId}` : ''}`
     );
 
     const json = await res.json();
@@ -103,6 +117,23 @@ export const danceSlice = createSlice({
     dances: null,
     status: null,
     error: null,
+    userCreatedDances: null,
+    // dances:
+    //   (JSON.parse(localStorage.getItem('dance')) &&
+    //     JSON.parse(localStorage.getItem('dance')).dances) ||
+    //   null,
+    // status:
+    //   (JSON.parse(localStorage.getItem('dance')) &&
+    //     JSON.parse(localStorage.getItem('dance')).status) ||
+    //   null,
+    // error:
+    //   (JSON.parse(localStorage.getItem('dance')) &&
+    //     JSON.parse(localStorage.getItem('dance')).error) ||
+    //   null,
+    // userCreatedDances:
+    //   (JSON.parse(localStorage.getItem('dance')) &&
+    //     JSON.parse(localStorage.getItem('dance')).userCreatedDances) ||
+    //   null,
   },
   reducers: {
     selectDance: (state, action) => {
@@ -175,7 +206,7 @@ export const danceSlice = createSlice({
 
         const index = state.dances.indexOf(danceToEdit);
         state.dances[index] = payload;
-        state.dances.filter((dance) => dance._id !== payload.id);
+        // state.dances.filter((dance) => dance._id !== payload.id);
         state.error = null;
         state.status = 'completed';
       }
@@ -209,6 +240,24 @@ export const danceSlice = createSlice({
     [postDanceComment.rejected]: (state, action) => {
       state.status = 'failed';
       state.error = action.payload;
+    },
+    [getUserCreatedDances.fulfilled]: (state, { payload }) => {
+      state.userCreatedDances = payload;
+      state.error = null;
+      state.status = 'completed';
+
+      return state;
+    },
+    [getUserCreatedDances.pending]: (state, { payload }) => {
+      state.status = 'loading';
+      state.error = null;
+    },
+    [getUserCreatedDances.rejected]: (state, action) => {
+      state.status = 'failed';
+      state.error = action.payload;
+    },
+    [userLogout.fulfilled]: (state, action) => {
+      state.userCreatedDances = null;
     },
   },
 });

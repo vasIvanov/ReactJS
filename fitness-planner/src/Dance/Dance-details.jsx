@@ -4,7 +4,7 @@ import Header from '../Header';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteDance, postDanceComment } from '../features/danceSlice';
-import { toggleFavoriteDance, userToggleFavoriteDance } from '../features/userSlice';
+import { toggleFavoriteDance, userToggleFavorite } from '../features/userSlice';
 
 
 const DanceDetails = ({ match, isLogged, history }) => {
@@ -23,20 +23,12 @@ const DanceDetails = ({ match, isLogged, history }) => {
 
   const submitCommentHandler = () => {
     dispatch(postDanceComment({danceId: dance._id, data: {comment: writeComment, user: username}}))
-    // dispatch(selectDance({id: dance._id, comment: {comment: writeComment, user: username}}))
-    // danceService
-    //   .postComment({ comment: writeComment, user: username }, dance._id)
-    //   .then((r) => {
-    //     danceService.getComments(dance._id).then((comments) => {
-    //       setComments(comments);
-    //     });
-    //   });
     document.getElementById('write-comment').value = '';
   };
   
   let isAuthor = false;
   if (dance) {
-    isAuthor = userId === dance.author;
+    isAuthor = userId === dance.author._id;
   }
   useEffect(() => {
       dances.forEach((p) => {
@@ -48,7 +40,7 @@ const DanceDetails = ({ match, isLogged, history }) => {
   }, [danceId, userId, dances]);
 
   const handleAddClick = () => {
-    dispatch(userToggleFavoriteDance({ _id: userId, danceId, add: false, addDance: true }));
+    dispatch(userToggleFavorite({ _id: userId, danceId, add: false, addDance: true }));
     dispatch(toggleFavoriteDance({dance, add: true}))
 
     // userServices.update({ _id: userId, danceId, add: false, addDance: true }).then(() => {
@@ -69,7 +61,7 @@ const DanceDetails = ({ match, isLogged, history }) => {
   };
 
   const handleRemoveClick = () => {
-    dispatch(userToggleFavoriteDance({ _id: userId, danceId, add: false, removeDance: true }));
+    dispatch(userToggleFavorite({ _id: userId, danceId, add: false, removeDance: true }));
     dispatch(toggleFavoriteDance({dance, add: false}))
     // userServices.update({ _id: userId, danceId, add: false, removeDance: true }).then(() => {
     //   if (userValue) {

@@ -1,33 +1,40 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import Header from '../Header';
-import planService from '../services/plan-service';
-import danceService from '../services/dance-service';
 import Plan from '../Plans/Plan';
 import Dance from '../Dance/Dance';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserCreatedDances } from '../features/danceSlice';
+import { getUserCreatedPlans } from '../features/planSlice';
 
 const MyPlans = ({ isLogged, history }) => {
+  const dispatch = useDispatch()
   const user = useSelector(state => state.user.user)
+  const userCreatedDances = useSelector(state => state.dance.userCreatedDances);
+  const userCreatedPlans = useSelector(state => state.plan.userCreatedPlans)
   const insId =
     (user && user._id) || localStorage.getItem('_id') || null;
-  const [myPlans, setMyPlans] = useState('');
-  const [myDances, setMyDances] = useState('');
 
   useEffect(() => {
-    planService.load(null, null, insId).then((plans) => {
-      setMyPlans(plans);
-    });
-    danceService.load(null, null, insId).then((dances) => {
-      setMyDances(dances);
-    });
-  }, [insId]);
+    // planService.load(null, null, insId).then((plans) => {
+    //   setMyPlans(plans);
+    // });
+    if(userCreatedPlans === null) {
+      dispatch(getUserCreatedPlans(insId))
+    }
+    if(userCreatedDances === null){
+      dispatch(getUserCreatedDances(insId))
+    }
+    // danceService.load(null, null, insId).then((dances) => {
+    //   setMyDances(dances);
+    // });
+  }, [insId, dispatch, userCreatedDances, userCreatedPlans]);
   return (
     <Fragment>
       <Header history={history} isLogged={isLogged} bgColor="dark" />
-      {myPlans ? (
+      {userCreatedPlans ? (
         <div className="plans-tabs">
           <div className="plans">
-            {myPlans.map((plan, i) => (
+            {userCreatedPlans.map((plan, i) => (
               <Plan history={history} key={i} plan={plan} isLogged={isLogged} />
             ))}
           </div>
@@ -36,10 +43,10 @@ const MyPlans = ({ isLogged, history }) => {
         'Loading ...'
       )}
 
-      {myDances ? (
+      {userCreatedDances ? (
         <div className="plans-tabs">
           <div className="plans">
-            {myDances.map((dance, i) => (
+            {userCreatedDances.map((dance, i) => (
               <Dance history={history} key={i} dance={dance} isLogged={isLogged} />
             ))}
           </div>
@@ -48,7 +55,7 @@ const MyPlans = ({ isLogged, history }) => {
         'Loading ...'
       )}
 
-      {myPlans.length < 1 && myDances.length < 1 && (
+      {userCreatedDances && userCreatedPlans && userCreatedPlans.length < 1 && userCreatedDances.length < 1 && (
         <div className="no-plans-fallback">
           <p>You havent created anything yet!</p>
         </div>

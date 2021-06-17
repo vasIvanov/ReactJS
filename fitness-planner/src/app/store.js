@@ -3,6 +3,7 @@ import counterReducer from '../features/counterSlice';
 import { userSlice } from '../features/userSlice';
 import toastReducer from '../features/toastSlice';
 import { danceSlice } from '../features/danceSlice';
+import { planSlice } from '../features/planSlice';
 
 export default configureStore({
   reducer: {
@@ -10,5 +11,6 @@ export default configureStore({
     user: userSlice.reducer,
     toast: toastReducer,
     dance: danceSlice.reducer,
+    plan: planSlice.reducer,
   },
 });

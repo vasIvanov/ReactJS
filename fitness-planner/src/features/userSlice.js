@@ -33,16 +33,7 @@ export const userRegister = createAsyncThunk(
 );
 
 export const userLogout = createAsyncThunk('user/userLogout', async () => {
-  localStorage.removeItem('username');
-  if (localStorage.getItem('city')) {
-    localStorage.removeItem('city');
-  }
-  if (localStorage.getItem('plans')) {
-    localStorage.removeItem('plans');
-  }
-  localStorage.removeItem('_id');
-  localStorage.removeItem('instructor');
-
+  localStorage.removeItem('user');
   const res = await fetch('http://localhost:9999/api/user/logout', {
     method: 'POST',
     credentials: 'include',
@@ -51,7 +42,7 @@ export const userLogout = createAsyncThunk('user/userLogout', async () => {
   return res.status === 200 ? res.text() : Promise.reject(res);
 });
 
-export const userToggleFavoriteDance = createAsyncThunk(
+export const userToggleFavorite = createAsyncThunk(
   'user/userAddFavoriteDance',
   async (data) => {
     const res = await fetch(`http://localhost:9999/api/user/${data._id}`, {
@@ -71,7 +62,7 @@ export const userToggleFavoriteDance = createAsyncThunk(
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
-    user: null,
+    user: JSON.parse(localStorage.getItem('user')) || null,
     status: null,
   },
   reducers: {
@@ -83,10 +74,17 @@ export const userSlice = createSlice({
         state.user.dances.splice(index, 1);
       }
     },
+    toggleFavoritePlan: (state, action) => {
+      if (action.payload.add) {
+        state.user.plans.push(action.payload.plan);
+      } else {
+        const index = state.user.plans.indexOf(action.payload.plan);
+        state.user.plans.splice(index, 1);
+      }
+    },
   },
   extraReducers: {
     [userLogin.fulfilled]: (state, { payload }) => {
-      console.log(payload);
       state.user = payload;
       state.status = 'completed';
       return state;
@@ -118,17 +116,18 @@ export const userSlice = createSlice({
     [userRegister.rejected]: (state, { payload }) => {
       state.status = 'failed';
     },
-    [userToggleFavoriteDance.fulfilled]: (state, { payload }) => {
+    [userToggleFavorite.fulfilled]: (state, { payload }) => {
       state.status = 'completed';
       return state;
     },
-    [userToggleFavoriteDance.pending]: (state, { payload }) => {
+    [userToggleFavorite.pending]: (state, { payload }) => {
       state.status = 'loading';
     },
-    [userToggleFavoriteDance.rejected]: (state, { payload }) => {
+    [userToggleFavorite.rejected]: (state, { payload }) => {
       state.status = 'failed';
     },
   },
 });
 
 export const { toggleFavoriteDance } = userSlice.actions;
+export const { toggleFavoritePlan } = userSlice.actions;

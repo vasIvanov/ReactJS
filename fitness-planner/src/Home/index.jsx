@@ -7,7 +7,6 @@ import StatisticsSection from './StatisticsSection';
 
 
 const Home = ({isLogged, history}) => {
-
     return (
         <Fragment>
             <Header history={history} isLogged={isLogged} fixed='top'/>
@@ -21,4 +20,3 @@ const Home = ({isLogged, history}) => {
 }
 
 export default Home;
-

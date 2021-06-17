@@ -30,6 +30,7 @@ module.exports = {
     if (userId) {
       models.Dance.find({ author: userId })
         .sort({ _id: -1 })
+        .populate('author', 'username')
         .then((plans) => res.send(plans))
         .catch(next);
       return;
@@ -37,6 +38,7 @@ module.exports = {
 
     models.Dance.find()
       .sort({ _id: -1 })
+      .populate('author', 'username')
       .then((plan) => res.send(plan))
       .catch(next);
   },
@@ -84,7 +86,7 @@ module.exports = {
       })
       .catch((err) => {
         if (err.errmsg.includes('duplicate key')) {
-          res.status(409).send({ errMsg: 'Dance name already in use!' });
+          res.send({ errMsg: 'Dance name already in use!' });
         }
       });
   },

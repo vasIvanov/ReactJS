@@ -1,98 +1,90 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import './index.css';
-import planService from '../services/plan-service';
-import userServices from '../services/user-service';
-import { userContext } from '../userContext';
 import { Button, Modal } from 'react-bootstrap';
 import Header from '../Header';
 import { Link } from 'react-router-dom';
 import { renderData } from './utils';
+import { useDispatch, useSelector } from 'react-redux';
+import { deletePlan, postPlanComment } from '../features/planSlice';
+import { toggleFavoritePlan, userToggleFavorite } from '../features/userSlice';
 
-const PlanDetails = ({ match, isLogged, history, setUserData }) => {
-  const [plan, setPlan] = useState('');
-  const userValue = useContext(userContext);
-  const userId = (userValue && userValue._id) || localStorage.getItem('_id');
+const PlanDetails = ({ match, isLogged, history }) => {
+  const user = useSelector(state => state.user.user)
+  const userId = user._id
   const planId = match.params.id;
-  const username =
-    (userValue && userValue.username) || localStorage.getItem('username');
+  const plan = useSelector(state => state.plan.plans.find(plan => plan._id === planId))
   const [added, setAdded] = useState(false);
-  const plans =
-    (userValue && userValue.plans) || JSON.parse(localStorage.getItem('plans'));
+  const plans = useSelector(state => state.user.user.plans) || JSON.parse(localStorage.getItem('plans'));
   const [writeComment, setWriteComment] = useState('');
-  const [commentsArray, setComments] = useState('');
   const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
+
   const handleShow = () => setShow(true);
+
   const handleDelete = () => {
     setShow(false);
-    planService.deletePlan(plan._id).then(() => {
-      history.push('/my-plans');
-    });
+    dispatch(deletePlan(plan._id))
+    history.push('/my-plans');
+    // planService.deletePlan(plan._id).then(() => {
+    //   history.push('/my-plans');
+    // });
   };
 
   const submitCommentHandler = () => {
-    planService
-      .postComment({ comment: writeComment, user: username }, plan._id)
-      .then((r) => {
-        planService.getComments(plan._id).then((comments) => {
-          setComments(comments);
-        });
-      });
+    dispatch(postPlanComment({planId: plan._id, data: { comment: writeComment, user: user.username }}))
     document.getElementById('write-comment').value = '';
   };
 
   let isAuthor = false;
   if (plan) {
-    isAuthor = userId === plan.author;
+    isAuthor = userId === plan.author._id;
   }
 
   useEffect(() => {
-    planService.load(planId).then((plan) => {
-      setPlan(plan);
-      setComments(plan.comments);
-      userServices.getUsers().then((r) => {
-        const user = r.filter((u) => u._id === userId)[0];
-        user.plans.forEach((p) => {
-          if (p._id === planId) {
-            setAdded(true);
-            return;
-          }
-        });
-      });
+    plans.forEach((p) => {
+      if (p._id === planId) {
+        setAdded(true);
+        return;
+      }
     });
-  }, [planId, userId]);
+}, [planId, userId, plans]);
 
   const handleAddClick = () => {
-    userServices.update({ _id: userId, planId, add: true }).then(() => {
-      if (userValue) {
-        plans.push(plan);
-        setUserData({
-          ...userValue,
-          plans,
-        });
-      }
-      if (localStorage.getItem('plans')) {
-        plans.push(plan);
-        localStorage.setItem('plans', JSON.stringify(plans));
-      }
-      history.push('/');
-    });
+    // userServices.update({ _id: userId, planId, add: true }).then(() => {
+    //   if (userValue) {
+    //     plans.push(plan);
+    //     setUserData({
+    //       ...userValue,
+    //       plans,
+    //     });
+    //   }
+    //   if (localStorage.getItem('plans')) {
+    //     plans.push(plan);
+    //     localStorage.setItem('plans', JSON.stringify(plans));
+    //   }
+    // });
+    dispatch(userToggleFavorite({ _id: userId, planId, add: true, addDance: false }));
+    dispatch(toggleFavoritePlan({plan, add: true}))
+    history.push('/');
   };
 
   const handleRemoveClick = () => {
-    userServices.update({ _id: userId, planId, add: false, removePlan: true }).then(() => {
-      if (userValue) {
-        const filteredPlans = plans.filter((p) => p._id !== planId);
-        setUserData({
-          ...userValue,
-          plans: filteredPlans,
-        });
-      }
-      if (localStorage.getItem('plans')) {
-        let newPlans = plans.filter((p) => p._id !== planId);
-        localStorage.setItem('plans', JSON.stringify(newPlans));
-      }
-      history.push('/');
-    });
+    // userServices.update({ _id: userId, planId, add: false, removePlan: true }).then(() => {
+    //   if (userValue) {
+    //     const filteredPlans = plans.filter((p) => p._id !== planId);
+    //     setUserData({
+    //       ...userValue,
+    //       plans: filteredPlans,
+    //     });
+    //   }
+    //   if (localStorage.getItem('plans')) {
+    //     let newPlans = plans.filter((p) => p._id !== planId);
+    //     localStorage.setItem('plans', JSON.stringify(newPlans));
+    //   }
+    // });
+    dispatch(userToggleFavorite({ _id: userId, planId, add: false, removePlan: true }));
+    dispatch(toggleFavoritePlan({plan, add: false}))
+    history.push('/');
   };
   return plan ? (
     <React.Fragment>
@@ -125,8 +117,8 @@ const PlanDetails = ({ match, isLogged, history, setUserData }) => {
               </Button>
               <div className="comment-section">
                 <h6>Comment Section</h6>
-                {commentsArray
-                  ? commentsArray.map((c) => (
+                {plan.comments
+                  ? plan.comments.map((c) => (
                       <div key={c._id} className="comment">
                         <h6 className="username">{c.user}</h6>
                         <p>{c.comment}</p>
@@ -175,8 +167,8 @@ const PlanDetails = ({ match, isLogged, history, setUserData }) => {
               </Button>
               <div className="comment-section">
                 <h6>Comment Section</h6>
-                {commentsArray
-                  ? commentsArray.map((c) => (
+                {plan.comments
+                  ? plan.comments.map((c) => (
                       <div key={c._id} className="comment">
                         <h6 className="username">{c.user}</h6>
                         <p>{c.comment}</p>
@@ -210,8 +202,8 @@ const PlanDetails = ({ match, isLogged, history, setUserData }) => {
               </Button>
               <div className="comment-section">
                 <h6>Comment Section</h6>
-                {commentsArray
-                  ? commentsArray.map((c) => (
+                {plan.comments
+                  ? plan.comments.map((c) => (
                       <div key={c._id} className="comment">
                         <h6 className="username">{c.user}</h6>
                         <p>{c.comment}</p>

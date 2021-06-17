@@ -17,6 +17,7 @@ module.exports = {
 
     if (query) {
       models.Plan.find()
+        .populate('author', 'username')
         .then((plans) => {
           const filteredPlans = plans.filter((plan) =>
             plan.name.toLowerCase().includes(query)
@@ -30,12 +31,14 @@ module.exports = {
     if (userId) {
       models.Plan.find({ author: userId })
         .sort({ _id: -1 })
+        .populate('author', 'username')
         .then((plans) => res.send(plans))
         .catch(next);
       return;
     }
     models.Plan.find()
       .sort({ _id: -1 })
+      .populate('author', 'username')
       .then((plan) => res.send(plan))
       .catch(next);
   },
@@ -55,7 +58,9 @@ module.exports = {
       { _id: id },
       { $push: { comments: { user, comment } } }
     )
-      .then((updatedPlan) => res.send(updatedPlan))
+      .then(() => {
+        models.Plan.findOne({ _id: id }).then((finded) => res.send(finded));
+      })
       .catch(next);
   },
 
@@ -67,16 +72,10 @@ module.exports = {
   },
 
   post: (req, res, next) => {
-    const {
-      name,
-      imageUrl,
-      author,
-      goal,
-      level,
-      details,
-      exercises,
-    } = req.body;
+    const { name, imageUrl, author, goal, level, details, exercises } =
+      req.body;
     const { _id } = req.user;
+    console.log(req.body);
     models.Plan.create({
       name,
       imageUrl,
@@ -87,12 +86,18 @@ module.exports = {
       exercises,
     })
       .then((createdPlan) => {
-        return Promise.all([models.Plan.findOne({ _id: createdPlan._id })]);
+        return Promise.all([
+          models.Plan.findOne({ _id: createdPlan._id }).populate(
+            'author',
+            'username'
+          ),
+        ]);
       })
       .then(([planObj]) => {
         res.send(planObj);
       })
       .catch((err) => {
+        console.log(err);
         if (err.errmsg.includes('duplicate key')) {
           res.send({ errMsg: 'Plan name already in use!' });
         }
@@ -106,7 +111,9 @@ module.exports = {
       { _id: id },
       { name, imageUrl, goal, level, details, exercises }
     )
-      .then((updatedPlan) => res.send(updatedPlan))
+      .then(() => {
+        models.Plan.findOne({ _id: id }).then((finded) => res.send(finded));
+      })
       .catch((err) => {
         if (err.errmsg.includes('duplicate key')) {
           res.send({ errMsg: 'Plan name already in use!' });
