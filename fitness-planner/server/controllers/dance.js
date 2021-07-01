@@ -79,7 +79,12 @@ module.exports = {
       danceLocation,
     })
       .then((createdDance) => {
-        return Promise.all([models.Dance.findOne({ _id: createdDance._id })]);
+        return Promise.all([
+          models.Dance.findOne({ _id: createdDance._id }).populate(
+            'author',
+            'username'
+          ),
+        ]);
       })
       .then(([danceObj]) => {
         res.send(danceObj);

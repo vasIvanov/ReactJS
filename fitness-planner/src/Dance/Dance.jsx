@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 const Dance = ({history,
   dance,
   isLogged}) => {
+    console.log(dance);
     return (
     <div className="plan">
       <Card>

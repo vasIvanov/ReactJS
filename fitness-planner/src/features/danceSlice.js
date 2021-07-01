@@ -162,6 +162,9 @@ export const danceSlice = createSlice({
         state.status = 'completed';
       } else {
         state.dances.push(payload);
+        if (state.userCreatedDances !== null) {
+          state.userCreatedDances.push(payload);
+        }
         state.error = null;
         state.status = 'completed';
       }
@@ -180,8 +183,14 @@ export const danceSlice = createSlice({
       const danceToDelete = state.dances.find(
         (dance) => dance._id === payload.id
       );
+      console.log(danceToDelete);
       const index = state.dances.indexOf(danceToDelete);
+      console.log(index);
       state.dances.splice(index, 1);
+      if (state.userCreatedDances !== null) {
+        const indexUserDance = state.userCreatedDances.indexOf(danceToDelete);
+        state.userCreatedDances.splice(indexUserDance, 1);
+      }
       // state.dances.filter((dance) => dance._id !== payload.id);
       state.error = null;
       state.status = 'completed';

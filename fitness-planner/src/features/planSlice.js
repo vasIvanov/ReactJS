@@ -167,6 +167,9 @@ export const planSlice = createSlice({
         state.status = 'completed';
       } else {
         state.plans.push(payload);
+        if (state.userCreatedPlans !== null) {
+          state.userCreatedPlans.push(payload);
+        }
         state.error = null;
         state.status = 'completed';
       }
@@ -180,8 +183,15 @@ export const planSlice = createSlice({
     },
     [deletePlan.fulfilled]: (state, { payload }) => {
       const planToDelete = state.plans.find((plan) => plan._id === payload.id);
+      console.log(planToDelete);
       const index = state.plans.indexOf(planToDelete);
+      console.log(index);
       state.plans.splice(index, 1);
+      if (state.userCreatedPlans !== null) {
+        console.log(planToDelete);
+        const indexUserPlan = state.userCreatedPlans.indexOf(planToDelete);
+        state.userCreatedPlans.splice(indexUserPlan, 1);
+      }
       // state.dances.filter((dance) => dance._id !== payload.id);
       state.error = null;
       state.status = 'completed';
