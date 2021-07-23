@@ -1,208 +1,146 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Login from './Login';
-import Register from './Register';
-import Home from './Home';
-import CreatePlan from './Create-plan';
-import PlanDetails from './PlanDetails';
-import FavoritePlans from './FavoritePlans';
-import Logout from './Logout';
-import NotFound from './NotFound';
-import SearchedResults from './SearchedResults';
-import { userContext } from './userContext';
+import { Switch, Route, withRouter } from 'react-router-dom';
+import Login from './Pages/Login';
+import Register from './Pages/Register';
+import Home from './Pages/HomePage';
+import CreatePlan from './Pages/Create-plan';
+import PlanDetails from './Pages/PlanDetails';
+import FavoritePlans from './Pages/FavoritePlans/';
+import NotFound from './Pages/NotFound';
+import SearchedResults from './Pages/SearchedResults';
 import { Toast } from 'react-bootstrap';
 import render from './utils/render';
-import parseCookies from './utils/parseCookies';
-import { loginFunc, logoutFunc } from './utils/user';
-import Plans from './Plans/index';
-import Footer from './Footer';
-import MyPlans from './MyPlans';
-import EditPlan from './EditPlan';
-import EditDance from './Dance/EditDance';
-import CreateDance from './Dance/Create-dance';
-import DanceDetails from './Dance/Dance-details';
+import Plans from './Pages/Plans';
+import Footer from './Components/Footer';
+import MyPlans from './Pages/MyPlans';
+import CreateDance from './Pages/Create-dance/Create-dance';
+import DanceDetails from './Pages/Dance-details/Dance-details';
+import { useSelector, useDispatch } from 'react-redux';
+import { showToast } from './features/toastSlice';
+import Header from './Components/Header';
+import { useState } from 'react';
 
-const App = () => {
-  const cookies = parseCookies();
-  const [userData, setUserData] = useState(null);
-  const [isLogged, setIsLogged] = useState(!!cookies['x-auth-token']);
-  const [show, setShow] = useState(false);
-  const [message, setMessage] = useState('');
+const App = ({ history, location }) => {
+  const [url, setUrl] = useState('');
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
+  const isLogged =
+    useSelector((state) => !!state.user.user) ||
+    !!localStorage.getItem('username');
   const userPlans =
-    (userData && userData.plans) ||
-    JSON.parse(localStorage.getItem('plans')) ||
-    null;
+    (user && user.plans) || JSON.parse(localStorage.getItem('plans')) || null;
 
   window.onbeforeunload = function () {
-    if (isLogged && userData) {
-      localStorage.setItem('username', userData.username);
-      if (userData.city) {
-        localStorage.setItem('city', userData.city);
-      }
-      localStorage.setItem('_id', userData._id);
-      localStorage.setItem('plans', JSON.stringify(userData.plans));
-      localStorage.setItem('instructor', userData.instructor);
+    if (isLogged && user) {
+      localStorage.setItem('user', JSON.stringify(user));
     }
   };
+  console.log(location.pathname);
+  const showingToast = useSelector((state) => state.toast.show);
+  const toastMessage = useSelector((state) => state.toast.message);
+
+  useEffect(() => setUrl(location.pathname), [setUrl, location.pathname]);
 
   return (
     <React.Fragment>
-      <Router>
-        <userContext.Provider value={userData}>
-          <div aria-live='polite' aria-atomic='true' className='toast-outer'>
-            <div className='toast-inner'>
-              <Toast
-                onClose={() => setShow(false)}
-                show={show}
-                delay={3000}
-                autohide
-              >
-                <Toast.Body className='toast-body'>{message}</Toast.Body>
-              </Toast>
-            </div>
-          </div>
-          <Switch>
-            {!isLogged && (
-              <Route exact path='/' render={render(Home, { isLogged })} />
-            )}
-            {isLogged && userPlans && userPlans.length > 0 ? (
-              <Route
-                exact
-                path='/'
-                render={render(FavoritePlans, { isLogged })}
-              />
-            ) : (
-              <Route
-                exact
-                path='/'
-                render={render(Plans, { isLogged, categorized: true })}
-              />
-            )}
-            {!isLogged && (
-              <Route
-                path='/login'
-                render={render(Login, {
-                  isLogged,
-                  login: loginFunc(
-                    setIsLogged,
-                    setUserData,
-                    setShow,
-                    setMessage
-                  ),
-                })}
-              />
-            )}
-            {!isLogged && (
-              <Route
-                path='/register'
-                render={render(Register, {
-                  isLogged,
-                  showChange: () => {
-                    setShow(true);
-                    setMessage('Registration Successful');
-                  },
-                })}
-              />
-            )}
-            {isLogged && (
-              <Route
-                path='/logout'
-                render={render(Logout, {
-                  isLogged,
-                  logout: logoutFunc(
-                    setIsLogged,
-                    setUserData,
-                    setShow,
-                    setMessage
-                  ),
-                })}
-              />
-            )}
-            {isLogged &&
-            ((userData && userData.instructor) ||
-              localStorage.getItem('instructor')) ? (
-              <Route
-                path='/create-plan'
-                render={render(CreatePlan, {
-                  isLogged,
-                  showChange: () => {
-                    setShow(true);
-                    setMessage('Plan Created');
-                  },
-                })}
-              />
-            ) : null}
-            {isLogged &&
-            ((userData && userData.instructor) ||
-              localStorage.getItem('instructor')) ? (
-              <Route
-                path='/create-dance'
-                render={render(CreateDance, {
-                  isLogged,
-                  showChange: () => {
-                    setShow(true);
-                    setMessage('Dance Created');
-                  },
-                })}
-              />
-            ) : null}
-            {isLogged &&
-            ((userData && userData.instructor) ||
-              localStorage.getItem('instructor')) ? (
-              <Route path='/my-plans' render={render(MyPlans, { isLogged })} />
-            ) : null}
-            <Route
-              path='/details/:id'
-              render={render(PlanDetails, { isLogged, setUserData })}
-            />
-            <Route
-              path='/dance-details/:id'
-              render={render(DanceDetails, { isLogged, setUserData })}
-            />
-            <Route
-              path='/edit/:id'
-              render={render(EditPlan, {
-                isLogged,
-                setUserData,
-                showChange: () => {
-                  setShow(true);
-                  setMessage('Plan Updated');
-                },
-              })}
-            />
-            <Route
-              path='/edit-dance/:id'
-              render={render(EditDance, {
-                isLogged,
-                setUserData,
-                showChange: () => {
-                  setShow(true);
-                  setMessage('Dance Updated');
-                },
-              })}
-            />
-            <Route
-              path='/plans'
-              render={render(Plans, { isLogged, categorized: true })}
-            />
-            <Route
-              path='/search/:query?'
-              render={render(SearchedResults, { isLogged })}
-            />
-            {isLogged && (
-              <Route
-                path='/favorite-plans'
-                render={render(FavoritePlans, { isLogged })}
-              />
-            )}
-            <Route component={NotFound} />
-          </Switch>
-          <Footer />
-        </userContext.Provider>
-      </Router>
+      <div aria-live='polite' aria-atomic='true' className='toast-outer'>
+        <div className='toast-inner'>
+          <Toast
+            onClose={() => dispatch(showToast({ show: false, message: '' }))}
+            show={showingToast}
+            delay={3000}
+            autohide
+          >
+            <Toast.Body className='toast-body'>{toastMessage}</Toast.Body>
+          </Toast>
+        </div>
+      </div>
+      {url === '/' ? (
+        <Header
+          history={history}
+          isLogged={isLogged}
+          fixed='top'
+          homepage={true}
+        />
+      ) : (
+        <Header history={history} isLogged={isLogged} />
+      )}
+      <Switch>
+        {!isLogged && (
+          <Route exact path='/' render={render(Home, { isLogged })} />
+        )}
+        {isLogged && userPlans && userPlans.length > 0 ? (
+          <Route exact path='/' render={render(FavoritePlans, { isLogged })} />
+        ) : (
+          <Route
+            exact
+            path='/'
+            render={render(Plans, { isLogged, categorized: true })}
+          />
+        )}
+        {!isLogged && <Route path='/login' render={render(Login)} />}
+        {!isLogged && <Route path='/register' render={render(Register)} />}
+
+        {isLogged &&
+        ((user && user.instructor) || localStorage.getItem('instructor')) ? (
+          <Route
+            path='/create-plan'
+            render={render(CreatePlan, {
+              isLogged,
+            })}
+          />
+        ) : null}
+        {isLogged &&
+        ((user && user.instructor) || localStorage.getItem('instructor')) ? (
+          <Route
+            path='/create-dance'
+            render={render(CreateDance, {
+              isLogged,
+            })}
+          />
+        ) : null}
+        {isLogged &&
+        ((user && user.instructor) || localStorage.getItem('instructor')) ? (
+          <Route path='/my-plans' render={render(MyPlans, { isLogged })} />
+        ) : null}
+        <Route path='/details/:id' render={render(PlanDetails, { isLogged })} />
+        <Route
+          path='/dance-details/:id'
+          render={render(DanceDetails, { isLogged })}
+        />
+        <Route
+          path='/edit/:id'
+          render={render(CreatePlan, {
+            isLogged,
+          })}
+        />
+        <Route
+          path='/edit-dance/:id'
+          render={render(CreateDance, {
+            isLogged,
+          })}
+        />
+        <Route
+          path='/plans'
+          render={render(Plans, { isLogged, categorized: true })}
+        />
+        <Route
+          path='/search/:query?'
+          render={render(SearchedResults, { isLogged })}
+        />
+        {isLogged && (
+          <Route
+            path='/favorite-plans'
+            render={render(FavoritePlans, { isLogged })}
+          />
+        )}
+
+        <Route component={NotFound} />
+      </Switch>
+      <Footer />
     </React.Fragment>
   );
 };
 
-export default App;
+export default withRouter(App);

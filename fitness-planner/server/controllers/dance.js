@@ -30,6 +30,7 @@ module.exports = {
     if (userId) {
       models.Dance.find({ author: userId })
         .sort({ _id: -1 })
+        .populate('author', 'username')
         .then((plans) => res.send(plans))
         .catch(next);
       return;
@@ -38,6 +39,7 @@ module.exports = {
     models.Dance.find()
       .populate('author')
       .sort({ _id: -1 })
+      .populate('author', 'username')
       .then((plan) => res.send(plan))
       .catch(next);
   },
@@ -61,7 +63,9 @@ module.exports = {
       { _id: id },
       { $push: { comments: { user, comment } } }
     )
-      .then((updatedPlan) => res.send(updatedPlan))
+      .then(() => {
+        models.Dance.findOne({ _id: id }).then((finded) => res.send(finded));
+      })
       .catch(next);
   },
   post: (req, res, next) => {
@@ -76,22 +80,32 @@ module.exports = {
       danceLocation,
     })
       .then((createdDance) => {
-        return Promise.all([models.Dance.findOne({ _id: createdDance._id })]);
+        return Promise.all([
+          models.Dance.findOne({ _id: createdDance._id }).populate(
+            'author',
+            'username'
+          ),
+        ]);
       })
       .then(([danceObj]) => {
         res.send(danceObj);
       })
       .catch((err) => {
         if (err.errmsg.includes('duplicate key')) {
-          res.send({ errMsg: 'Plan name already in use!' });
+          res.send({ errMsg: 'Dance name already in use!' });
         }
       });
   },
   put: (req, res, next) => {
     const id = req.params.id;
-    const { name, imageUrl, type, details } = req.body;
-    models.Dance.updateOne({ _id: id }, { name, imageUrl, type, details })
-      .then((updatedPlan) => res.send(updatedPlan))
+    const { name, imageUrl, type, details, danceLocation } = req.body;
+    models.Dance.updateOne(
+      { _id: id },
+      { name, imageUrl, type, details, danceLocation }
+    )
+      .then(() => {
+        models.Dance.findOne({ _id: id }).then((finded) => res.send(finded));
+      })
       .catch((err) => {
         if (err.errmsg.includes('duplicate key')) {
           res.send({ errMsg: 'Dance name already in use!' });
@@ -101,7 +115,7 @@ module.exports = {
   delete: (req, res, next) => {
     const id = req.params.id;
     models.Dance.deleteOne({ _id: id })
-      .then((removedPlan) => res.send(removedPlan))
+      .then((removedDance) => res.send({ removedDance, id }))
       .catch(next);
   },
 };
