@@ -4,49 +4,61 @@ import { userLogout } from './userSlice';
 export const getDances = createAsyncThunk(
   'dance/getDances',
   async (id, limit, userId, query) => {
-    const res = await fetch(
-      `http://localhost:9999/api/dance${id ? `/${id}` : ''}${
-        limit ? `?limit=${limit}` : ''
-      }${userId ? `?userId=${userId}` : ''}${query ? `?query=${query}` : ''}`
-    );
+    try {
+      const res = await fetch(
+        `http://localhost:9999/api/dance${id ? `/${id}` : ''}${
+          limit ? `?limit=${limit}` : ''
+        }${userId ? `?userId=${userId}` : ''}${query ? `?query=${query}` : ''}`
+      );
 
-    const json = await res.json();
+      const json = await res.json();
 
-    return res.status === 200 ? json : Promise.reject(json);
+      return res.status === 200 ? json : Promise.reject(json);
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
 export const getUserCreatedDances = createAsyncThunk(
   'dance/getUserCreatedDances',
   async (userId) => {
-    const res = await fetch(
-      `http://localhost:9999/api/dance${userId ? `?userId=${userId}` : ''}`
-    );
+    try {
+      const res = await fetch(
+        `http://localhost:9999/api/dance${userId ? `?userId=${userId}` : ''}`
+      );
 
-    const json = await res.json();
+      const json = await res.json();
 
-    return res.status === 200 ? json : Promise.reject(json);
+      return res.status === 200 ? json : Promise.reject(json);
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
 export const createDance = createAsyncThunk(
   'dance/createDance',
   async ({ data, history }) => {
-    const res = await fetch(`http://localhost:9999/api/dance/`, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(data),
-      credentials: 'include',
-    });
+    try {
+      const res = await fetch(`http://localhost:9999/api/dance/`, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(data),
+        credentials: 'include',
+      });
 
-    const json = await res.json();
-    if (json.errMsg) {
-      return json;
-    } else {
-      history.push('/plans');
-      return json;
+      const json = await res.json();
+      if (json.errMsg) {
+        return json;
+      } else {
+        history.push('/plans');
+        return json;
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 );
@@ -54,38 +66,46 @@ export const createDance = createAsyncThunk(
 export const deleteDance = createAsyncThunk(
   'dance/deleteDance',
   async (id, { rejectWithValue }) => {
-    const res = await fetch(`http://localhost:9999/api/dance/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      credentials: 'include',
-    });
+    try {
+      const res = await fetch(`http://localhost:9999/api/dance/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        credentials: 'include',
+      });
 
-    const json = await res.json();
+      const json = await res.json();
 
-    return res.status === 200 ? json : rejectWithValue(json);
+      return res.status === 200 ? json : rejectWithValue(json);
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
 export const editDance = createAsyncThunk(
   'dance/editDance',
   async ({ id, data, history }) => {
-    const res = await fetch(`http://localhost:9999/api/dance/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(data),
-      credentials: 'include',
-    });
+    try {
+      const res = await fetch(`http://localhost:9999/api/dance/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(data),
+        credentials: 'include',
+      });
 
-    const json = await res.json();
-    if (json.errMsg) {
-      return json;
-    } else {
-      history.push('/plans');
-      return json;
+      const json = await res.json();
+      if (json.errMsg) {
+        return json;
+      } else {
+        history.push('/plans');
+        return json;
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 );
@@ -93,21 +113,25 @@ export const editDance = createAsyncThunk(
 export const postDanceComment = createAsyncThunk(
   'dance/postDanceComment',
   async ({ danceId, data }, { rejectWithValue }) => {
-    const res = await fetch(
-      `http://localhost:9999/api/dance/comment/${danceId}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify(data),
-        credentials: 'include',
-      }
-    );
+    try {
+      const res = await fetch(
+        `http://localhost:9999/api/dance/comment/${danceId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify(data),
+          credentials: 'include',
+        }
+      );
 
-    const json = await res.json();
+      const json = await res.json();
 
-    return res.status === 200 ? json : rejectWithValue(json);
+      return res.status === 200 ? json : rejectWithValue(json);
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 

@@ -75,8 +75,6 @@ module.exports = {
   post: (req, res, next) => {
     const { name, imageUrl, author, goal, level, details, exercises } =
       req.body;
-    const { _id } = req.user;
-    console.log(req.body);
     models.Plan.create({
       name,
       imageUrl,

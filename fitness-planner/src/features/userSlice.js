@@ -1,61 +1,77 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export const userLogin = createAsyncThunk('user/userLogin', async (data) => {
-  const res = await fetch('http://localhost:9999/api/user/login', {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-  });
-
-  const json = await res.json();
-
-  return res.status === 200 ? json : Promise.reject(json);
-});
-
-export const userRegister = createAsyncThunk(
-  'user/userRegister',
-  async (data) => {
-    const res = await fetch('http://localhost:9999/api/user/register', {
+  try {
+    const res = await fetch('http://localhost:9999/api/user/login', {
       method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const json = await res.json();
-
-    return res.status === 200 ? json : Promise.reject(json);
-  }
-);
-
-export const userLogout = createAsyncThunk('user/userLogout', async () => {
-  localStorage.removeItem('user');
-  const res = await fetch('http://localhost:9999/api/user/logout', {
-    method: 'POST',
-    credentials: 'include',
-  });
-
-  return res.status === 200 ? res.text() : Promise.reject(res);
-});
-
-export const userToggleFavorite = createAsyncThunk(
-  'user/userAddFavoriteDance',
-  async (data) => {
-    const res = await fetch(`http://localhost:9999/api/user/${data._id}`, {
-      method: 'PUT',
       body: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
     });
-    const text = await res.text();
 
-    return res.status === 200 ? text : Promise.reject(text);
+    const json = await res.json();
+
+    return res.status === 200 ? json : Promise.reject(json);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+export const userRegister = createAsyncThunk(
+  'user/userRegister',
+  async (data) => {
+    try {
+      const res = await fetch('http://localhost:9999/api/user/register', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const json = await res.json();
+
+      return res.status === 200 ? json : Promise.reject(json);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const userLogout = createAsyncThunk('user/userLogout', async () => {
+  try {
+    localStorage.removeItem('user');
+    const res = await fetch('http://localhost:9999/api/user/logout', {
+      method: 'POST',
+      credentials: 'include',
+    });
+
+    return res.status === 200 ? res.text() : Promise.reject(res);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+export const userToggleFavorite = createAsyncThunk(
+  'user/userAddFavoriteDance',
+  async (data) => {
+    try {
+      const res = await fetch(`http://localhost:9999/api/user/${data._id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+      const text = await res.text();
+
+      return res.status === 200 ? text : Promise.reject(text);
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 

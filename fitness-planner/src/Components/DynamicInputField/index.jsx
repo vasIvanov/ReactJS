@@ -74,20 +74,6 @@ const DynamicInputField = ({
     } else {
       setInpurError(true);
     }
-    // if (videoRef.current.value !== null && videoRef.current.value !== '') {
-    //   console.log('1');
-    //   const values = [...inputFields];
-    //   values[index] = {
-    //     exercise: exerciseRef.current.value,
-    //     video: videoRef.current.value,
-    //   };
-    //   setInputFields(values);
-    // } else {
-    //   const values = [...inputFields];
-    //   values[index] = exerciseRef.current.value;
-    //   setInputFields(values);
-    //   console.log('2');
-    // }
     if (dayValue) {
       if (video) {
         const values = [...inputFields];

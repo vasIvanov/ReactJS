@@ -14,15 +14,15 @@ export const toastSlice = createSlice({
     },
   },
   extraReducers: {
-    [userLogin.fulfilled]: (state, payload) => {
+    [userLogin.fulfilled]: (state) => {
       state.show = true;
       state.message = 'Login Successful!';
     },
-    [userRegister.fulfilled]: (state, payload) => {
+    [userRegister.fulfilled]: (state) => {
       state.show = true;
       state.message = 'Registration Successful!';
     },
-    [userLogout.fulfilled]: (state, payload) => {
+    [userLogout.fulfilled]: (state) => {
       state.show = true;
       state.message = 'Logout Successful!';
     },

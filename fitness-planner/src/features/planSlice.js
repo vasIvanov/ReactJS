@@ -4,71 +4,86 @@ import { userLogout } from './userSlice';
 export const getPlans = createAsyncThunk(
   'plan/getPlans',
   async (id, limit, userId, query) => {
-    const res = await fetch(
-      `http://localhost:9999/api/plan${id ? `/${id}` : ''}${
-        limit ? `?limit=${limit}` : ''
-      }${userId ? `?userId=${userId}` : ''}${query ? `?query=${query}` : ''}`
-    );
+    try {
+      const res = await fetch(
+        `http://localhost:9999/api/plan${id ? `/${id}` : ''}${
+          limit ? `?limit=${limit}` : ''
+        }${userId ? `?userId=${userId}` : ''}${query ? `?query=${query}` : ''}`
+      );
 
-    const json = await res.json();
+      const json = await res.json();
 
-    return res.status === 200 ? json : Promise.reject(json);
+      return res.status === 200 ? json : Promise.reject(json);
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
 export const getUserCreatedPlans = createAsyncThunk(
   'plan/getUserCreatedPlans',
   async (userId) => {
-    const res = await fetch(
-      `http://localhost:9999/api/plan${userId ? `?userId=${userId}` : ''}`
-    );
+    try {
+      const res = await fetch(
+        `http://localhost:9999/api/plan${userId ? `?userId=${userId}` : ''}`
+      );
 
-    const json = await res.json();
+      const json = await res.json();
 
-    return res.status === 200 ? json : Promise.reject(json);
+      return res.status === 200 ? json : Promise.reject(json);
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
 export const postPlanComment = createAsyncThunk(
   'plan/postPlanComment',
   async ({ planId, data }, { rejectWithValue }) => {
-    const res = await fetch(
-      `http://localhost:9999/api/plan/comment/${planId}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify(data),
-        credentials: 'include',
-      }
-    );
+    try {
+      const res = await fetch(
+        `http://localhost:9999/api/plan/comment/${planId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify(data),
+          credentials: 'include',
+        }
+      );
 
-    const json = await res.json();
+      const json = await res.json();
 
-    return res.status === 200 ? json : rejectWithValue(json);
+      return res.status === 200 ? json : rejectWithValue(json);
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
 export const createPlan = createAsyncThunk(
   'plan/createPlan',
   async ({ data, history }) => {
-    console.log(data);
-    const res = await fetch(`http://localhost:9999/api/plan/`, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(data),
-      credentials: 'include',
-    });
+    try {
+      const res = await fetch(`http://localhost:9999/api/plan/`, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(data),
+        credentials: 'include',
+      });
 
-    const json = await res.json();
-    if (json.errMsg) {
-      return json;
-    } else {
-      history.push('/plans');
-      return json;
+      const json = await res.json();
+      if (json.errMsg) {
+        return json;
+      } else {
+        history.push('/plans');
+        return json;
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 );
@@ -76,38 +91,46 @@ export const createPlan = createAsyncThunk(
 export const deletePlan = createAsyncThunk(
   'plan/deletePlan',
   async (id, { rejectWithValue }) => {
-    const res = await fetch(`http://localhost:9999/api/plan/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      credentials: 'include',
-    });
+    try {
+      const res = await fetch(`http://localhost:9999/api/plan/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        credentials: 'include',
+      });
 
-    const json = await res.json();
+      const json = await res.json();
 
-    return res.status === 200 ? json : rejectWithValue(json);
+      return res.status === 200 ? json : rejectWithValue(json);
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
 export const editingPlan = createAsyncThunk(
   'plan/editPlan',
-  async ({ id, data, history }, { rejectWithValue }) => {
-    const res = await fetch(`http://localhost:9999/api/plan/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(data),
-      credentials: 'include',
-    });
+  async ({ id, data, history }) => {
+    try {
+      const res = await fetch(`http://localhost:9999/api/plan/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(data),
+        credentials: 'include',
+      });
 
-    const json = await res.json();
-    if (json.errMsg) {
-      return json;
-    } else {
-      history.push('/plans');
-      return json;
+      const json = await res.json();
+      if (json.errMsg) {
+        return json;
+      } else {
+        history.push('/plans');
+        return json;
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 );
@@ -182,7 +205,6 @@ export const planSlice = createSlice({
     },
     [deletePlan.fulfilled]: (state, { payload }) => {
       const index = state.plans.findIndex((plan) => plan._id === payload.id);
-      console.log(payload);
       if (index !== -1) {
         state.plans.splice(index, 1);
       }
@@ -190,7 +212,6 @@ export const planSlice = createSlice({
         const index = state.userCreatedPlans.findIndex(
           (plan) => plan._id === payload.id
         );
-        console.log(index);
         if (index !== -1) {
           state.userCreatedPlans.splice(index, 1);
         }

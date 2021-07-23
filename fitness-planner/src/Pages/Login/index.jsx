@@ -29,7 +29,6 @@ const Login = ({history}) => {
           history.push('/plans')
         })
         .catch(err => {
-          console.log(err);
           if(err.inner){
             err.inner.forEach(error => {
               if(error.path === 'username') {
@@ -40,7 +39,7 @@ const Login = ({history}) => {
             })
           }
         })
-    }, [history, login, password, username])
+    }, [history, password, username, dispatch])
       
     return (
       <React.Fragment>
