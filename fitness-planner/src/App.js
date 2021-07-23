@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Login from './Login';
@@ -9,7 +9,6 @@ import PlanDetails from './PlanDetails';
 import FavoritePlans from './FavoritePlans';
 import NotFound from './NotFound';
 import SearchedResults from './SearchedResults';
-import { userContext } from './userContext';
 import { Toast } from 'react-bootstrap';
 import render from './utils/render';
 import Plans from './Plans/index';
@@ -23,7 +22,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { showToast } from './features/toastSlice';
 
 const App = () => {
-  const [userData, setUserData] = useState(null);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const danceState = useSelector((state) => state.dance);
@@ -34,20 +32,9 @@ const App = () => {
     (user && user.plans) || JSON.parse(localStorage.getItem('plans')) || null;
   console.log(danceState);
   window.onbeforeunload = function () {
-    // if (isLogged && user) {
-    //   localStorage.setItem('username', user.username);
-    //   if (user.city) {
-    //     localStorage.setItem('city', user.city);
-    //   }
-    //   localStorage.setItem('_id', user._id);
-    //   localStorage.setItem('plans', JSON.stringify(user.plans));
-    //   localStorage.setItem('instructor', user.instructor);
-    // }
     if (isLogged && user) {
       localStorage.setItem('user', JSON.stringify(user));
     }
-
-    // localStorage.setItem('dance', JSON.stringify(danceState));
   };
 
   const showingToast = useSelector((state) => state.toast.show);
@@ -56,107 +43,98 @@ const App = () => {
   return (
     <React.Fragment>
       <Router>
-        <userContext.Provider value={userData}>
-          <div aria-live='polite' aria-atomic='true' className='toast-outer'>
-            <div className='toast-inner'>
-              <Toast
-                onClose={() =>
-                  dispatch(showToast({ show: false, message: '' }))
-                }
-                show={showingToast}
-                delay={3000}
-                autohide
-              >
-                <Toast.Body className='toast-body'>{toastMessage}</Toast.Body>
-              </Toast>
-            </div>
+        <div aria-live='polite' aria-atomic='true' className='toast-outer'>
+          <div className='toast-inner'>
+            <Toast
+              onClose={() => dispatch(showToast({ show: false, message: '' }))}
+              show={showingToast}
+              delay={3000}
+              autohide
+            >
+              <Toast.Body className='toast-body'>{toastMessage}</Toast.Body>
+            </Toast>
           </div>
-          <Switch>
-            {!isLogged && (
-              <Route exact path='/' render={render(Home, { isLogged })} />
-            )}
-            {isLogged && userPlans && userPlans.length > 0 ? (
-              <Route
-                exact
-                path='/'
-                render={render(FavoritePlans, { isLogged })}
-              />
-            ) : (
-              <Route
-                exact
-                path='/'
-                render={render(Plans, { isLogged, categorized: true })}
-              />
-            )}
-            {!isLogged && <Route path='/login' render={render(Login)} />}
-            {!isLogged && <Route path='/register' render={render(Register)} />}
-
-            {isLogged &&
-            ((user && user.instructor) ||
-              localStorage.getItem('instructor')) ? (
-              <Route
-                path='/create-plan'
-                render={render(CreatePlan, {
-                  isLogged,
-                })}
-              />
-            ) : null}
-            {isLogged &&
-            ((user && user.instructor) ||
-              localStorage.getItem('instructor')) ? (
-              <Route
-                path='/create-dance'
-                render={render(CreateDance, {
-                  isLogged,
-                })}
-              />
-            ) : null}
-            {isLogged &&
-            ((user && user.instructor) ||
-              localStorage.getItem('instructor')) ? (
-              <Route path='/my-plans' render={render(MyPlans, { isLogged })} />
-            ) : null}
+        </div>
+        <Switch>
+          {!isLogged && (
+            <Route exact path='/' render={render(Home, { isLogged })} />
+          )}
+          {isLogged && userPlans && userPlans.length > 0 ? (
             <Route
-              path='/details/:id'
-              render={render(PlanDetails, { isLogged, setUserData })}
+              exact
+              path='/'
+              render={render(FavoritePlans, { isLogged })}
             />
+          ) : (
             <Route
-              path='/dance-details/:id'
-              render={render(DanceDetails, { isLogged, setUserData })}
-            />
-            <Route
-              path='/edit/:id'
-              render={render(EditPlan, {
-                isLogged,
-                setUserData,
-              })}
-            />
-            <Route
-              path='/edit-dance/:id'
-              render={render(EditDance, {
-                isLogged,
-                setUserData,
-              })}
-            />
-            <Route
-              path='/plans'
+              exact
+              path='/'
               render={render(Plans, { isLogged, categorized: true })}
             />
-            <Route
-              path='/search/:query?'
-              render={render(SearchedResults, { isLogged })}
-            />
-            {isLogged && (
-              <Route
-                path='/favorite-plans'
-                render={render(FavoritePlans, { isLogged })}
-              />
-            )}
+          )}
+          {!isLogged && <Route path='/login' render={render(Login)} />}
+          {!isLogged && <Route path='/register' render={render(Register)} />}
 
-            <Route component={NotFound} />
-          </Switch>
-          <Footer />
-        </userContext.Provider>
+          {isLogged &&
+          ((user && user.instructor) || localStorage.getItem('instructor')) ? (
+            <Route
+              path='/create-plan'
+              render={render(CreatePlan, {
+                isLogged,
+              })}
+            />
+          ) : null}
+          {isLogged &&
+          ((user && user.instructor) || localStorage.getItem('instructor')) ? (
+            <Route
+              path='/create-dance'
+              render={render(CreateDance, {
+                isLogged,
+              })}
+            />
+          ) : null}
+          {isLogged &&
+          ((user && user.instructor) || localStorage.getItem('instructor')) ? (
+            <Route path='/my-plans' render={render(MyPlans, { isLogged })} />
+          ) : null}
+          <Route
+            path='/details/:id'
+            render={render(PlanDetails, { isLogged })}
+          />
+          <Route
+            path='/dance-details/:id'
+            render={render(DanceDetails, { isLogged })}
+          />
+          <Route
+            path='/edit/:id'
+            render={render(EditPlan, {
+              isLogged,
+            })}
+          />
+          <Route
+            path='/edit-dance/:id'
+            render={render(EditDance, {
+              isLogged,
+            })}
+          />
+          <Route
+            path='/plans'
+            render={render(Plans, { isLogged, categorized: true })}
+          />
+          <Route
+            path='/search/:query?'
+            render={render(SearchedResults, { isLogged })}
+          />
+          {isLogged && (
+            <Route
+              path='/favorite-plans'
+              render={render(FavoritePlans, { isLogged })}
+            />
+          )}
+
+          <Route component={NotFound} />
+        </Switch>
+        <Footer />
       </Router>
     </React.Fragment>
   );

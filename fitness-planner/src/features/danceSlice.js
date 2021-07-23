@@ -31,7 +31,7 @@ export const getUserCreatedDances = createAsyncThunk(
 
 export const createDance = createAsyncThunk(
   'dance/createDance',
-  async ({ data, history }, { rejectWithValue }) => {
+  async ({ data, history }) => {
     const res = await fetch(`http://localhost:9999/api/dance/`, {
       method: 'POST',
       headers: {
@@ -70,7 +70,7 @@ export const deleteDance = createAsyncThunk(
 
 export const editDance = createAsyncThunk(
   'dance/editDance',
-  async ({ id, data, history }, { rejectWithValue }) => {
+  async ({ id, data, history }) => {
     const res = await fetch(`http://localhost:9999/api/dance/${id}`, {
       method: 'PUT',
       headers: {
@@ -118,22 +118,6 @@ export const danceSlice = createSlice({
     status: null,
     error: null,
     userCreatedDances: null,
-    // dances:
-    //   (JSON.parse(localStorage.getItem('dance')) &&
-    //     JSON.parse(localStorage.getItem('dance')).dances) ||
-    //   null,
-    // status:
-    //   (JSON.parse(localStorage.getItem('dance')) &&
-    //     JSON.parse(localStorage.getItem('dance')).status) ||
-    //   null,
-    // error:
-    //   (JSON.parse(localStorage.getItem('dance')) &&
-    //     JSON.parse(localStorage.getItem('dance')).error) ||
-    //   null,
-    // userCreatedDances:
-    //   (JSON.parse(localStorage.getItem('dance')) &&
-    //     JSON.parse(localStorage.getItem('dance')).userCreatedDances) ||
-    //   null,
   },
   reducers: {
     selectDance: (state, action) => {
@@ -150,10 +134,10 @@ export const danceSlice = createSlice({
       state.status = 'completed';
       return state;
     },
-    [getDances.pending]: (state, { payload }) => {
+    [getDances.pending]: (state) => {
       state.status = 'loading';
     },
-    [getDances.rejected]: (state, { payload }) => {
+    [getDances.rejected]: (state) => {
       state.status = 'failed';
     },
     [createDance.fulfilled]: (state, { payload }) => {
@@ -161,9 +145,9 @@ export const danceSlice = createSlice({
         state.error = payload.errMsg;
         state.status = 'completed';
       } else {
-        state.dances.push(payload);
+        state.dances.unshift(payload);
         if (state.userCreatedDances !== null) {
-          state.userCreatedDances.push(payload);
+          state.userCreatedDances.unshift(payload);
         }
         state.error = null;
         state.status = 'completed';
@@ -180,18 +164,20 @@ export const danceSlice = createSlice({
       state.error = action.payload.errMsg;
     },
     [deleteDance.fulfilled]: (state, { payload }) => {
-      const danceToDelete = state.dances.find(
-        (dance) => dance._id === payload.id
-      );
-      console.log(danceToDelete);
-      const index = state.dances.indexOf(danceToDelete);
-      console.log(index);
-      state.dances.splice(index, 1);
-      if (state.userCreatedDances !== null) {
-        const indexUserDance = state.userCreatedDances.indexOf(danceToDelete);
-        state.userCreatedDances.splice(indexUserDance, 1);
+      const index = state.dances.findIndex((dance) => dance._id === payload.id);
+
+      if (index !== -1) {
+        state.dances.splice(index, 1);
       }
-      // state.dances.filter((dance) => dance._id !== payload.id);
+      if (state.userCreatedDances !== null) {
+        const index = state.userCreatedDances.findIndex(
+          (dance) => dance._id === payload.id
+        );
+        if (index !== -1) {
+          state.userCreatedDances.splice(index, 1);
+        }
+      }
+
       state.error = null;
       state.status = 'completed';
       return state;
@@ -208,21 +194,21 @@ export const danceSlice = createSlice({
       if (payload.errMsg) {
         state.error = payload.errMsg;
         state.status = 'completed';
-      } else {
-        const danceToEdit = state.dances.find(
-          (dance) => dance._id === payload._id
-        );
-
-        const index = state.dances.indexOf(danceToEdit);
-        state.dances[index] = payload;
-        // state.dances.filter((dance) => dance._id !== payload.id);
-        state.error = null;
-        state.status = 'completed';
+        return state;
       }
+
+      const danceToEdit = state.dances.find(
+        (dance) => dance._id === payload._id
+      );
+
+      const index = state.dances.indexOf(danceToEdit);
+      state.dances[index] = payload;
+      state.error = null;
+      state.status = 'completed';
 
       return state;
     },
-    [editDance.pending]: (state, { payload }) => {
+    [editDance.pending]: (state) => {
       state.status = 'loading';
       state.error = null;
     },
@@ -242,7 +228,7 @@ export const danceSlice = createSlice({
 
       return state;
     },
-    [postDanceComment.pending]: (state, { payload }) => {
+    [postDanceComment.pending]: (state) => {
       state.status = 'loading';
       state.error = null;
     },
@@ -257,7 +243,7 @@ export const danceSlice = createSlice({
 
       return state;
     },
-    [getUserCreatedDances.pending]: (state, { payload }) => {
+    [getUserCreatedDances.pending]: (state) => {
       state.status = 'loading';
       state.error = null;
     },
@@ -265,7 +251,7 @@ export const danceSlice = createSlice({
       state.status = 'failed';
       state.error = action.payload;
     },
-    [userLogout.fulfilled]: (state, action) => {
+    [userLogout.fulfilled]: (state) => {
       state.userCreatedDances = null;
     },
   },

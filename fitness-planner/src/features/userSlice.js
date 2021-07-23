@@ -89,41 +89,41 @@ export const userSlice = createSlice({
       state.status = 'completed';
       return state;
     },
-    [userLogin.pending]: (state, { payload }) => {
+    [userLogin.pending]: (state) => {
       state.status = 'loading';
     },
-    [userLogin.rejected]: (state, { payload }) => {
+    [userLogin.rejected]: (state) => {
       state.status = 'failed';
     },
-    [userLogout.fulfilled]: (state, { payload }) => {
+    [userLogout.fulfilled]: (state) => {
       state.user = null;
       state.status = 'completed';
       return state;
     },
-    [userLogout.pending]: (state, { payload }) => {
+    [userLogout.pending]: (state) => {
       state.status = 'loading';
     },
-    [userLogout.rejected]: (state, { payload }) => {
+    [userLogout.rejected]: (state) => {
       state.status = 'failed';
     },
-    [userRegister.fulfilled]: (state, { payload }) => {
+    [userRegister.fulfilled]: (state) => {
       state.status = 'completed';
       return state;
     },
-    [userRegister.pending]: (state, { payload }) => {
+    [userRegister.pending]: (state) => {
       state.status = 'loading';
     },
-    [userRegister.rejected]: (state, { payload }) => {
+    [userRegister.rejected]: (state) => {
       state.status = 'failed';
     },
-    [userToggleFavorite.fulfilled]: (state, { payload }) => {
+    [userToggleFavorite.fulfilled]: (state) => {
       state.status = 'completed';
       return state;
     },
-    [userToggleFavorite.pending]: (state, { payload }) => {
+    [userToggleFavorite.pending]: (state) => {
       state.status = 'loading';
     },
-    [userToggleFavorite.rejected]: (state, { payload }) => {
+    [userToggleFavorite.rejected]: (state) => {
       state.status = 'failed';
     },
   },

@@ -52,7 +52,7 @@ export const postPlanComment = createAsyncThunk(
 
 export const createPlan = createAsyncThunk(
   'plan/createPlan',
-  async ({ data, history }, { rejectWithValue }) => {
+  async ({ data, history }) => {
     console.log(data);
     const res = await fetch(`http://localhost:9999/api/plan/`, {
       method: 'POST',
@@ -127,10 +127,10 @@ export const planSlice = createSlice({
       state.status = 'completed';
       return state;
     },
-    [getPlans.pending]: (state, { payload }) => {
+    [getPlans.pending]: (state) => {
       state.status = 'loading';
     },
-    [getPlans.rejected]: (state, { payload }) => {
+    [getPlans.rejected]: (state) => {
       state.status = 'failed';
     },
     [getUserCreatedPlans.fulfilled]: (state, { payload }) => {
@@ -138,14 +138,13 @@ export const planSlice = createSlice({
       state.status = 'completed';
       return state;
     },
-    [getUserCreatedPlans.pending]: (state, { payload }) => {
+    [getUserCreatedPlans.pending]: (state) => {
       state.status = 'loading';
     },
-    [getUserCreatedPlans.rejected]: (state, { payload }) => {
+    [getUserCreatedPlans.rejected]: (state) => {
       state.status = 'failed';
     },
     [postPlanComment.fulfilled]: (state, { payload }) => {
-      console.log(payload);
       const planToEdit = state.plans.find((plan) => plan._id === payload._id);
       const index = state.plans.indexOf(planToEdit);
       state.plans[index] = payload;
@@ -155,7 +154,7 @@ export const planSlice = createSlice({
 
       return state;
     },
-    [postPlanComment.pending]: (state, { payload }) => {
+    [postPlanComment.pending]: (state) => {
       state.status = 'loading';
     },
     [postPlanComment.rejected]: (state, { payload }) => {
@@ -166,38 +165,42 @@ export const planSlice = createSlice({
         state.error = payload.errMsg;
         state.status = 'completed';
       } else {
-        state.plans.push(payload);
+        state.plans.unshift(payload);
         if (state.userCreatedPlans !== null) {
-          state.userCreatedPlans.push(payload);
+          state.userCreatedPlans.unshift(payload);
         }
         state.error = null;
         state.status = 'completed';
       }
       return state;
     },
-    [createPlan.pending]: (state, { payload }) => {
+    [createPlan.pending]: (state) => {
       state.status = 'loading';
     },
-    [createPlan.rejected]: (state, { payload }) => {
+    [createPlan.rejected]: (state) => {
       state.status = 'failed';
     },
     [deletePlan.fulfilled]: (state, { payload }) => {
-      const planToDelete = state.plans.find((plan) => plan._id === payload.id);
-      console.log(planToDelete);
-      const index = state.plans.indexOf(planToDelete);
-      console.log(index);
-      state.plans.splice(index, 1);
-      if (state.userCreatedPlans !== null) {
-        console.log(planToDelete);
-        const indexUserPlan = state.userCreatedPlans.indexOf(planToDelete);
-        state.userCreatedPlans.splice(indexUserPlan, 1);
+      const index = state.plans.findIndex((plan) => plan._id === payload.id);
+      console.log(payload);
+      if (index !== -1) {
+        state.plans.splice(index, 1);
       }
-      // state.dances.filter((dance) => dance._id !== payload.id);
+      if (state.userCreatedPlans !== null) {
+        const index = state.userCreatedPlans.findIndex(
+          (plan) => plan._id === payload.id
+        );
+        console.log(index);
+        if (index !== -1) {
+          state.userCreatedPlans.splice(index, 1);
+        }
+      }
+
       state.error = null;
       state.status = 'completed';
       return state;
     },
-    [deletePlan.pending]: (state, { payload }) => {
+    [deletePlan.pending]: (state) => {
       state.status = 'loading';
       state.error = null;
     },
@@ -205,7 +208,7 @@ export const planSlice = createSlice({
       state.status = 'failed';
       state.error = action.payload;
     },
-    [userLogout.fulfilled]: (state, action) => {
+    [userLogout.fulfilled]: (state) => {
       state.userCreatedPlans = null;
     },
     [editingPlan.fulfilled]: (state, { payload }) => {
@@ -217,14 +220,13 @@ export const planSlice = createSlice({
 
         const index = state.plans.indexOf(planToEdit);
         state.plans[index] = payload;
-        // state.plans.filter((plan) => plan._id !== payload.id);
         state.error = null;
         state.status = 'completed';
       }
 
       return state;
     },
-    [editingPlan.pending]: (state, { payload }) => {
+    [editingPlan.pending]: (state) => {
       state.status = 'loading';
       state.error = null;
     },

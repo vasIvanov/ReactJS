@@ -124,7 +124,7 @@ module.exports = {
   delete: (req, res, next) => {
     const id = req.params.id;
     models.Plan.deleteOne({ _id: id })
-      .then((removedPlan) => res.send(removedPlan))
+      .then((removedPlan) => res.send({ removedPlan, id }))
       .catch(next);
   },
 };

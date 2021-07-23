@@ -24,10 +24,7 @@ const PlanDetails = ({ match, isLogged, history }) => {
   const handleDelete = () => {
     setShow(false);
     dispatch(deletePlan(plan._id))
-    history.push('/my-plans');
-    // planService.deletePlan(plan._id).then(() => {
-    //   history.push('/my-plans');
-    // });
+    history.push('/plans');
   };
 
   const submitCommentHandler = () => {
@@ -50,38 +47,12 @@ const PlanDetails = ({ match, isLogged, history }) => {
 }, [planId, userId, plans]);
 
   const handleAddClick = () => {
-    // userServices.update({ _id: userId, planId, add: true }).then(() => {
-    //   if (userValue) {
-    //     plans.push(plan);
-    //     setUserData({
-    //       ...userValue,
-    //       plans,
-    //     });
-    //   }
-    //   if (localStorage.getItem('plans')) {
-    //     plans.push(plan);
-    //     localStorage.setItem('plans', JSON.stringify(plans));
-    //   }
-    // });
     dispatch(userToggleFavorite({ _id: userId, planId, add: true, addDance: false }));
     dispatch(toggleFavoritePlan({plan, add: true}))
     history.push('/');
   };
 
   const handleRemoveClick = () => {
-    // userServices.update({ _id: userId, planId, add: false, removePlan: true }).then(() => {
-    //   if (userValue) {
-    //     const filteredPlans = plans.filter((p) => p._id !== planId);
-    //     setUserData({
-    //       ...userValue,
-    //       plans: filteredPlans,
-    //     });
-    //   }
-    //   if (localStorage.getItem('plans')) {
-    //     let newPlans = plans.filter((p) => p._id !== planId);
-    //     localStorage.setItem('plans', JSON.stringify(newPlans));
-    //   }
-    // });
     dispatch(userToggleFavorite({ _id: userId, planId, add: false, removePlan: true }));
     dispatch(toggleFavoritePlan({plan, add: false}))
     history.push('/');

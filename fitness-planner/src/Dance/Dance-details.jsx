@@ -8,7 +8,6 @@ import { toggleFavoriteDance, userToggleFavorite } from '../features/userSlice';
 
 
 const DanceDetails = ({ match, isLogged, history }) => {
-  // const [dance, setDance] = useState('');
   const danceId = match.params.id;
   const dance = useSelector(state => state.dance.dances.find(dance => dance._id === danceId))
   const dispatch = useDispatch();
@@ -30,6 +29,7 @@ const DanceDetails = ({ match, isLogged, history }) => {
   if (dance) {
     isAuthor = userId === dance.author._id;
   }
+  
   useEffect(() => {
       dances.forEach((p) => {
         if (p._id === danceId) {
@@ -41,52 +41,20 @@ const DanceDetails = ({ match, isLogged, history }) => {
 
   const handleAddClick = () => {
     dispatch(userToggleFavorite({ _id: userId, danceId, add: false, addDance: true }));
-    dispatch(toggleFavoriteDance({dance, add: true}))
-
-    // userServices.update({ _id: userId, danceId, add: false, addDance: true }).then(() => {
-    //   if (userValue) {
-    //     dances.push(dance);
-    //     setUserData({
-    //       ...userValue,
-    //       dances,
-    //     });
-    //   }
-    //   if (localStorage.getItem('dances')) {
-    //     dances.push(dance);
-    //     localStorage.setItem('dances', JSON.stringify(dance));
-    //   }
-    //   history.push('/');
-    // });
+    dispatch(toggleFavoriteDance({dance, add: true}));
     history.push('/');
   };
 
   const handleRemoveClick = () => {
     dispatch(userToggleFavorite({ _id: userId, danceId, add: false, removeDance: true }));
     dispatch(toggleFavoriteDance({dance, add: false}))
-    // userServices.update({ _id: userId, danceId, add: false, removeDance: true }).then(() => {
-    //   if (userValue) {
-    //     const filteredDances = dances.filter((p) => p._id !== danceId);
-    //     setUserData({
-    //       ...userValue,
-    //       dances: filteredDances,
-    //     });
-    //   }
-    //   if (localStorage.getItem('dances')) {
-    //     let newPlans = dances.filter((p) => p._id !== danceId);
-    //     localStorage.setItem('dances', JSON.stringify(newPlans));
-    //   }
-    //   history.push('/');
-    // });
     history.push('/');
   };
 
   const handleDelete = () => {
     setShow(false);
     dispatch(deleteDance(dance._id));
-    history.push('/plans')
-    // danceService.deleteDance(dance._id).then(() => {
-    //   history.push('/my-plans');
-    // });
+    history.push('/plans');
   };
   
   return(
