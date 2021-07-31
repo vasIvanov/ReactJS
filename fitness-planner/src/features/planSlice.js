@@ -88,8 +88,6 @@ export const createPlan = createAsyncThunk(
   }
 );
 
-const noTest = 1;
-
 export const deletePlan = createAsyncThunk(
   'plan/deletePlan',
   async (id, { rejectWithValue }) => {
