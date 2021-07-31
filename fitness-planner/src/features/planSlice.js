@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { userLogout } from './userSlice';
-
+const test = '';
 export const getPlans = createAsyncThunk(
   'plan/getPlans',
   async (id, limit, userId, query) => {
